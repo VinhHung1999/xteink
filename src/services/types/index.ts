@@ -61,10 +61,16 @@ export interface ProductComparisonData {
 }
 
 // ========== Pricing & Bundles ==========
+export interface AccessoryColor {
+  name: string;
+  hex: string;
+}
+
 export interface Accessory {
   image: string;
   name: string;
   price: string;
+  colors?: AccessoryColor[]; // Optional: for accessories with color variants
 }
 
 export interface TrustBadge {
