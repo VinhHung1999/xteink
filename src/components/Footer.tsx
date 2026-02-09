@@ -5,7 +5,7 @@ import { getFooterData } from "@/services/api";
 export default function Footer() {
   const footer = use(getFooterData());
   return (
-    <footer id="footer" className="bg-surface/80 px-6 py-16 md:py-20" style={{ borderTop: '1px solid rgba(232,224,214,0.06)' }}>
+    <footer id="footer" className="px-6 py-16 md:py-20" style={{ background: 'rgba(45,45,45,0.8)', borderTop: '1px solid rgba(212,165,116,0.15)' }}>
       <div className="mx-auto max-w-[1320px]">
         <div className="grid gap-10 md:grid-cols-4 md:gap-8">
           {/* Brand */}
