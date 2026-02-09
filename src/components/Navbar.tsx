@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { getNavLinks } from "@/services/api";
 
 export default function Navbar() {
@@ -28,90 +28,87 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Floating pill navbar — Apple Liquid Glass */}
       <nav
-        className={`animate-slide-down fixed top-0 md:top-4 left-0 right-0 md:left-4 md:right-4 z-50 glass-nav transition-all duration-300 ease-out ${
+        className={`animate-slide-down fixed top-0 md:top-4 left-0 right-0 md:left-4 md:right-4 z-50 glass-nav transition-all duration-200 ease-out ${
           scrolled ? "glass-nav-scrolled" : ""
-        } rounded-none md:rounded-3xl`}
+        } md:rounded-2xl`}
       >
         <div className="mx-auto flex h-14 max-w-[1320px] items-center justify-between px-4 md:px-6">
           {/* Mobile: hamburger */}
           <button
-            className="flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 hover:bg-white/20 md:hidden"
+            className="flex h-11 w-11 items-center justify-center md:hidden"
             onClick={() => setDrawerOpen(true)}
             aria-label="Mở menu"
           >
-            <Menu size={22} className="text-[#1A1A1A]" strokeWidth={2} />
+            <Menu size={22} />
           </button>
 
-          {/* Logo — Cormorant Garamond */}
+          {/* Logo */}
           <a
             href="#"
-            className="font-heading text-xl font-semibold tracking-tight text-[#1A1A1A]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            className="font-heading text-xl font-semibold tracking-tight text-ink"
           >
             Xteink
           </a>
 
           {/* Desktop nav links */}
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="nav-link-glass text-sm font-medium text-[#1A1A1A]/80 hover:text-[#1A1A1A]"
-                style={{ fontWeight: 500 }}
+                className="text-sm font-medium text-charcoal/70 transition-colors duration-200 hover:text-gold"
               >
                 {link.label}
               </a>
             ))}
             <a
               href="#price"
-              className="btn-glass-primary ml-2 inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
+              className="btn-glass-primary inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
             >
               Bắt đầu đọc
             </a>
           </div>
 
-          {/* Mobile: CTA icon */}
+          {/* Mobile: cart */}
           <a
             href="#price"
-            className="flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 hover:bg-white/20 md:hidden"
-            aria-label="Bắt đầu đọc"
+            className="flex h-11 w-11 items-center justify-center md:hidden"
+            aria-label="Giỏ hàng"
           >
-            <span className="text-lg font-semibold text-[#D4A574]">→</span>
+            <ShoppingBag size={20} />
           </a>
         </div>
       </nav>
 
-      {/* Mobile drawer overlay — with backdrop blur */}
+      {/* Mobile drawer overlay */}
       {drawerOpen && (
         <div
-          className="drawer-backdrop fixed inset-0 z-[60] md:hidden"
+          className="fixed inset-0 z-[60] bg-[#1A1A1A]/50 backdrop-blur-sm md:hidden"
           style={{ animation: "fade-in 0.2s ease-out" }}
           onClick={() => setDrawerOpen(false)}
         />
       )}
 
-      {/* Mobile drawer — Liquid Glass style */}
+      {/* Mobile drawer */}
       <div
-        className={`drawer-glass fixed top-0 left-0 z-[70] h-full w-72 md:hidden ${
-          drawerOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 z-[70] h-full w-72 md:hidden ${
+          drawerOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
         } transition-transform duration-300 ease-out`}
+        style={{ background: 'rgba(26,26,26,0.92)', backdropFilter: 'blur(24px) saturate(1.4)', WebkitBackdropFilter: 'blur(24px) saturate(1.4)', boxShadow: '4px 0 32px rgba(0,0,0,0.2)', borderRight: '1px solid rgba(232,224,214,0.03)' }}
       >
-        <div className="flex h-14 items-center justify-between px-4 border-b border-white/20">
-          <span
-            className="font-heading text-xl font-semibold tracking-tight text-[#1A1A1A]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
+        <div className="flex h-14 items-center justify-between px-4">
+          <span className="font-heading text-xl font-semibold tracking-tight">
             Xteink
           </span>
           <button
-            className="flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 hover:bg-white/20"
+            className="flex h-11 w-11 items-center justify-center"
             onClick={() => setDrawerOpen(false)}
             aria-label="Đóng menu"
           >
-            <X size={22} className="text-[#1A1A1A]" strokeWidth={2} />
+            <X size={22} />
           </button>
         </div>
         <div className="flex flex-col gap-1 px-4 pt-4">
@@ -120,8 +117,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setDrawerOpen(false)}
-              className="rounded-lg px-4 py-3 text-base font-medium text-[#1A1A1A]/80 hover:text-[#1A1A1A] transition-all duration-300 hover:bg-white/20"
-              style={{ fontWeight: 500 }}
+              className="rounded-lg px-4 py-3 text-base font-medium text-charcoal transition-colors hover:bg-[rgba(212,165,116,0.08)] hover:text-gold"
             >
               {link.label}
             </a>
@@ -129,7 +125,7 @@ export default function Navbar() {
           <a
             href="#price"
             onClick={() => setDrawerOpen(false)}
-            className="mt-4 btn-glass-primary inline-flex h-12 items-center justify-center rounded-xl px-5 text-base font-semibold text-[#1A1A1A]"
+            className="mt-4 btn-glass-primary inline-flex h-12 items-center justify-center rounded-xl px-5 text-base font-medium text-[#1A1A1A]"
           >
             Bắt đầu đọc
           </a>
