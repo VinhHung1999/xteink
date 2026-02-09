@@ -20,7 +20,7 @@ export default function Lifestyle() {
           {moments.map((m, i) => (
             <div
               key={m.caption}
-              className={`scroll-reveal scroll-d${i + 2} group relative overflow-hidden rounded-2xl border border-[rgba(232,224,214,0.04)] shadow-[0_4px_24px_rgba(0,0,0,0.12)] ${
+              className={`scroll-reveal scroll-d${i + 2} group relative overflow-hidden rounded-2xl border border-[rgba(212,165,116,0.12)] shadow-[0_4px_24px_rgba(0,0,0,0.12)] ${
                 i === 0 || i === 3 ? "aspect-[4/3]" : "aspect-[3/2]"
               }`}
             >
@@ -32,8 +32,8 @@ export default function Lifestyle() {
                 className="object-cover img-hover-zoom"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/60 via-transparent to-transparent" />
-              <p className="absolute bottom-4 left-5 right-5 font-heading text-sm font-medium text-[#E8E0D6] md:text-base">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/75 via-[#1A1A1A]/10 to-transparent" />
+              <p className="absolute bottom-4 left-5 right-5 font-heading text-sm font-semibold text-paper md:text-base">
                 {m.caption}
               </p>
             </div>

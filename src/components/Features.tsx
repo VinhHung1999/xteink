@@ -34,10 +34,10 @@ export default function Features() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/70 via-[#1A1A1A]/10 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                <h3 className="font-heading text-lg font-semibold text-[#E8E0D6]">
+                <h3 className="font-heading text-lg font-bold text-paper">
                   {f.title}
                 </h3>
-                <p className="mt-1 text-sm text-[#E8E0D6]/80">{f.description}</p>
+                <p className="mt-1 text-sm text-paper/85">{f.description}</p>
               </div>
             </div>
           ))}

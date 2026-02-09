@@ -219,14 +219,14 @@ body {
 
 /* Glass card — frosted dark translucent surface with warm border */
 .glass-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
   backdrop-filter: blur(20px) saturate(1.3);
   -webkit-backdrop-filter: blur(20px) saturate(1.3);
-  border: 1px solid rgba(212,165,116,0.08);
+  border: 1px solid rgba(212,165,116,0.15);
   box-shadow:
     0 4px 24px rgba(0,0,0,0.3),
     0 12px 48px rgba(0,0,0,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.04);
+    inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 /* Glass card hover lift */
