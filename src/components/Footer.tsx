@@ -76,11 +76,11 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="email@example.com"
-                className="glass-input h-10 flex-1 rounded-lg px-3 text-sm text-ink placeholder:text-warm-cream/30 focus:outline-none"
+                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-ink placeholder:text-warm-cream/30 focus:outline-none"
               />
               <button
                 type="submit"
-                className="btn-glass-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#1A1A1A]"
+                className="btn-glass-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-[#1A1A1A]"
                 aria-label="Đăng ký"
               >
                 <Mail size={16} />

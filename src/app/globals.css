@@ -55,6 +55,11 @@ body {
 }
 .animate-slide-down { animation: slide-down 0.5s ease-out both; }
 
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ===== SCROLL-REVEAL ===== */
 /* NOTE: .scroll-reveal does NOT have opacity:0 in CSS.
    JS adds [data-sr-ready] to body, which activates the hidden state.

@@ -67,7 +67,7 @@ export default function Navbar() {
             ))}
             <a
               href="#price"
-              className="btn-glass-primary ml-2 inline-flex h-10 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
+              className="btn-glass-primary ml-2 inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
             >
               Bắt đầu đọc
             </a>
