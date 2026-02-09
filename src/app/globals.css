@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Dark mode — "Late Night Reading" per design guidelines */
-  --color-paper: #1A1A1A;
-  --color-charcoal: #E8E0D6;
-  --color-gold: #D4A574;
-  --color-deep-gold: #B8864A;
-  --color-sage: #8B9E7E;
-  --color-dusty-rose: #C4A0A0;
-  --color-ink: #E8E0D6;
-  --color-surface: #2D2D2D;
-  --color-warm-cream: #E8E0D6;
+  /* Light mode — "Warm Paper" primary brand theme */
+  --color-paper: #F5F0EB;       /* Paper White - primary background */
+  --color-charcoal: #2D2D2D;    /* Charcoal - body text */
+  --color-gold: #D4A574;        /* Warm Gold - accent */
+  --color-deep-gold: #B8864A;   /* Deep Gold - hover states */
+  --color-sage: #8B9E7E;        /* Sage - success/growth */
+  --color-dusty-rose: #C4A0A0;  /* Dusty Rose - soft highlights */
+  --color-ink: #1A1A1A;         /* Ink - headings, darkest text */
+  --color-surface: #FAF7F3;     /* Surface - card backgrounds */
+  --color-warm-cream: #E8E0D6;  /* Warm Cream - secondary text */
 
   /* Fonts */
   --font-heading: var(--font-cormorant);
@@ -24,12 +24,12 @@ html {
 
 body {
   font-family: var(--font-body), system-ui, sans-serif;
-  color: var(--color-ink);
-  background-color: #1A1A1A;
+  color: var(--color-charcoal);
+  background-color: #F5F0EB;
   background-image:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(184, 134, 74, 0.15) 0%, transparent 100%),
-    radial-gradient(ellipse 60% 40% at 75% 60%, rgba(212, 165, 116, 0.10) 0%, transparent 100%),
-    linear-gradient(180deg, #2A1E10 0%, #1A1A1A 35%, #221A10 60%, #1A1A1A 100%);
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(212, 165, 116, 0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 75% 60%, rgba(245, 240, 235, 0.12) 0%, transparent 100%),
+    linear-gradient(180deg, #FAF7F3 0%, #F5F0EB 35%, #F8F5F2 60%, #F5F0EB 100%);
   background-attachment: fixed;
   line-height: 1.85;
 }
@@ -103,18 +103,18 @@ body {
 [data-sr-ready] .scroll-d6 { transition-delay: 0.36s; }
 [data-sr-ready] .scroll-d7 { transition-delay: 0.42s; }
 
-/* Mysterious section gradients */
+/* Alternate section backgrounds — warm tint, light mode */
 .bg-mysterious {
   background:
-    radial-gradient(ellipse 70% 50% at 15% 50%, rgba(184, 134, 74, 0.08) 0%, transparent 100%),
-    radial-gradient(ellipse 50% 40% at 85% 50%, rgba(212, 165, 116, 0.05) 0%, transparent 100%),
-    #1A1A1A;
+    radial-gradient(ellipse 70% 50% at 15% 50%, rgba(212, 165, 116, 0.06) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 40% at 85% 50%, rgba(184, 134, 74, 0.04) 0%, transparent 100%),
+    #FAF7F3;
 }
 .bg-mysterious-surface {
   background:
-    radial-gradient(ellipse 60% 45% at 80% 30%, rgba(184, 134, 74, 0.07) 0%, transparent 100%),
-    radial-gradient(ellipse 50% 35% at 20% 70%, rgba(212, 165, 116, 0.05) 0%, transparent 100%),
-    linear-gradient(180deg, #2D2518 0%, #2D2D2D 50%, #2D2518 100%);
+    radial-gradient(ellipse 60% 45% at 80% 30%, rgba(212, 165, 116, 0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 35% at 20% 70%, rgba(184, 134, 74, 0.05) 0%, transparent 100%),
+    linear-gradient(180deg, #F8F5F2 0%, #FAF7F3 50%, #F8F5F2 100%);
 }
 
 /* ===== LUXURY EFFECTS ===== */
