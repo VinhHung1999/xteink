@@ -21,10 +21,10 @@ export default function Product() {
           <p className="scroll-reveal text-xs font-semibold uppercase tracking-[0.15em] text-gold md:text-sm">
             {product.subtitle}
           </p>
-          <h2 className="scroll-reveal scroll-d1 mt-4 font-heading text-3xl font-bold tracking-[-0.02em] text-ink md:text-5xl md:leading-[1.1]">
+          <h2 className="scroll-reveal scroll-d1 mt-4 font-heading text-3xl font-bold tracking-[-0.02em] text-paper md:text-5xl md:leading-[1.1]">
             {product.title}
           </h2>
-          <p className="scroll-reveal scroll-d2 mt-5 text-base leading-relaxed text-charcoal/70 md:text-lg">
+          <p className="scroll-reveal scroll-d2 mt-5 text-base leading-relaxed text-paper/70 md:text-lg">
             {product.description}
           </p>
 
@@ -38,10 +38,10 @@ export default function Product() {
                   <f.icon size={22} strokeWidth={1.8} />
                 </div>
                 <div>
-                  <h3 className="font-body text-base font-semibold text-ink">
+                  <h3 className="font-body text-base font-semibold text-paper">
                     {f.title}
                   </h3>
-                  <p className="mt-1 text-sm text-charcoal/70">
+                  <p className="mt-1 text-sm text-paper/70">
                     {f.description}
                   </p>
                 </div>

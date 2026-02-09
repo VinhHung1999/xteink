@@ -8,10 +8,10 @@ export default function Lifestyle() {
     <section className="bg-mysterious px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1320px]">
         <div className="text-center">
-          <h2 className="scroll-reveal text-glow font-heading text-3xl font-normal italic tracking-[-0.01em] text-ink md:text-[2.75rem] md:leading-[1.2]">
+          <h2 className="scroll-reveal text-glow font-heading text-3xl font-bold tracking-[-0.01em] text-paper md:text-[2.75rem] md:leading-[1.2]">
             Những khoảnh khắc đọc sách
           </h2>
-          <p className="scroll-reveal scroll-d1 mt-3 text-base text-charcoal/70">
+          <p className="scroll-reveal scroll-d1 mt-3 text-base text-paper/70">
             X4 nhỏ gọn để bạn đọc ở bất cứ đâu — và bất cứ lúc nào.
           </p>
         </div>

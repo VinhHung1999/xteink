@@ -11,7 +11,7 @@ export default function Features() {
           <p className="scroll-reveal text-xs font-semibold uppercase tracking-[0.15em] text-gold md:text-sm">
             Snap. Flip. Read.
           </p>
-          <h2 className="scroll-reveal scroll-d1 mt-4 font-body text-2xl font-bold uppercase tracking-[0.08em] text-ink md:text-3xl">
+          <h2 className="scroll-reveal scroll-d1 mt-4 font-body text-2xl font-bold uppercase tracking-[0.08em] text-paper md:text-3xl">
             Mọi thứ bạn cần, không gì thừa
           </h2>
         </div>

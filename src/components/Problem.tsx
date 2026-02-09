@@ -6,11 +6,11 @@ export default function Problem() {
           <span className="gold-divider-icon">✦</span>
         </div>
 
-        <h2 className="scroll-reveal scroll-d1 text-glow font-heading text-3xl font-normal italic tracking-[-0.01em] text-ink md:text-[2.75rem] md:leading-[1.2]">
+        <h2 className="scroll-reveal scroll-d1 text-glow font-heading text-3xl font-bold tracking-[-0.01em] text-paper md:text-[2.75rem] md:leading-[1.2]">
           Bạn đã biết cảm giác này
         </h2>
 
-        <div className="mt-8 space-y-5 text-base text-charcoal/70 md:text-lg md:leading-relaxed">
+        <div className="mt-8 space-y-5 text-base text-paper/70 md:text-lg md:leading-relaxed">
           <p className="scroll-reveal scroll-d2">
             Mở điện thoại định đọc sách. Rồi thông báo. Rồi tin nhắn. Rồi lướt
             TikTok thêm &ldquo;chút nữa&rdquo;.

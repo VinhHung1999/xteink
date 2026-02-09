@@ -46,7 +46,7 @@ export default function Navbar() {
           {/* Logo */}
           <a
             href="#"
-            className="font-heading text-xl font-semibold tracking-tight text-ink"
+            className="font-heading text-xl font-semibold tracking-tight text-paper"
           >
             Xteink
           </a>
@@ -57,7 +57,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-charcoal/70 transition-colors duration-200 hover:text-gold"
+                className="text-sm font-medium text-paper/70 transition-colors duration-200 hover:text-gold"
               >
                 {link.label}
               </a>
@@ -117,7 +117,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setDrawerOpen(false)}
-              className="rounded-lg px-4 py-3 text-base font-medium text-charcoal transition-colors hover:bg-[rgba(212,165,116,0.08)] hover:text-gold"
+              className="rounded-lg px-4 py-3 text-base font-medium text-paper transition-colors hover:bg-[rgba(212,165,116,0.08)] hover:text-gold"
             >
               {link.label}
             </a>

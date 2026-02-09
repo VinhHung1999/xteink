@@ -10,7 +10,7 @@ export default function Testimonials() {
           <div className="scroll-reveal gold-divider mb-8">
             <span className="gold-divider-icon">✦</span>
           </div>
-          <h2 className="scroll-reveal scroll-d1 font-body text-2xl font-bold uppercase tracking-[0.08em] text-ink md:text-3xl">
+          <h2 className="scroll-reveal scroll-d1 font-body text-2xl font-bold uppercase tracking-[0.08em] text-paper md:text-3xl">
             Từ những người đã đọc
           </h2>
         </div>
@@ -24,7 +24,7 @@ export default function Testimonials() {
               <span className="quote-mark absolute top-3 left-4 font-heading text-[4rem] leading-none text-gold/15 select-none">
                 &ldquo;
               </span>
-              <blockquote className="relative font-heading text-lg font-normal italic leading-relaxed text-charcoal">
+              <blockquote className="relative font-heading text-lg font-normal italic leading-relaxed text-paper">
                 {t.quote}
               </blockquote>
               <div className="mt-6 flex items-center gap-3">
@@ -34,8 +34,8 @@ export default function Testimonials() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-ink">{t.name}</p>
-                  <p className="text-xs text-charcoal/50">{t.location}</p>
+                  <p className="text-sm font-semibold text-paper">{t.name}</p>
+                  <p className="text-xs text-paper/50">{t.location}</p>
                 </div>
               </div>
             </div>

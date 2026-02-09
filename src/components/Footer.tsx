@@ -12,7 +12,7 @@ export default function Footer() {
           <div>
             <a
               href="#"
-              className="font-heading text-xl font-semibold tracking-tight text-ink"
+              className="font-heading text-xl font-semibold tracking-tight text-paper"
             >
               Xteink
             </a>
@@ -76,7 +76,7 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="email@example.com"
-                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-ink placeholder:text-warm-cream/30 focus:outline-none"
+                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-paper placeholder:text-warm-cream/30 focus:outline-none"
               />
               <button
                 type="submit"

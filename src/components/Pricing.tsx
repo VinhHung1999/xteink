@@ -28,7 +28,7 @@ export default function Pricing() {
               <span className="font-heading text-4xl font-bold tracking-[-0.02em] text-gold-shimmer md:text-6xl">
                 {pricing.price}
               </span>
-              <span className="text-sm text-charcoal/50 line-through">
+              <span className="text-sm text-paper/50 line-through">
                 {pricing.originalPrice}
               </span>
             </div>
@@ -40,14 +40,14 @@ export default function Pricing() {
                   className={`scroll-reveal-right scroll-d${Math.min(i + 1, 7)} flex items-start gap-3`}
                 >
                   <Check size={18} className="mt-0.5 shrink-0 text-sage" strokeWidth={2.5} />
-                  <span className="text-sm text-charcoal/80">{item}</span>
+                  <span className="text-sm text-paper/80">{item}</span>
                 </li>
               ))}
             </ul>
 
             <div className="scroll-reveal scroll-d6 mt-8 flex flex-wrap gap-4">
               {pricing.trustBadges.map((badge) => (
-                <div key={badge.label} className="flex items-center gap-2 text-xs text-charcoal/60">
+                <div key={badge.label} className="flex items-center gap-2 text-xs text-paper/60">
                   <badge.icon size={16} strokeWidth={1.8} />
                   <span>{badge.label}</span>
                 </div>
@@ -63,7 +63,7 @@ export default function Pricing() {
               </a>
               <a
                 href="#accessories"
-                className="btn-glass-secondary inline-flex h-12 items-center rounded-xl px-6 text-base font-medium text-charcoal"
+                className="btn-glass-secondary inline-flex h-12 items-center rounded-xl px-6 text-base font-medium text-paper"
               >
                 Xem phụ kiện
               </a>
@@ -72,7 +72,7 @@ export default function Pricing() {
         </div>
 
         <div id="accessories" className="mt-20">
-          <h3 className="scroll-reveal font-body text-lg font-bold uppercase tracking-[0.08em] text-ink">
+          <h3 className="scroll-reveal font-body text-lg font-bold uppercase tracking-[0.08em] text-paper">
             Phụ kiện
           </h3>
           <div className="mt-6 -mx-4 flex gap-4 overflow-x-auto px-4 pt-4 pb-8 snap-x snap-mandatory">
@@ -84,7 +84,7 @@ export default function Pricing() {
                 <div className="relative aspect-square w-full overflow-hidden rounded-lg">
                   <Image src={a.image} alt={a.name} fill sizes="160px" className="object-cover" loading="lazy" />
                 </div>
-                <p className="mt-2 text-sm font-medium text-ink">{a.name}</p>
+                <p className="mt-2 text-sm font-medium text-paper">{a.name}</p>
                 <p className="text-sm text-gold">{a.price}</p>
               </div>
             ))}
