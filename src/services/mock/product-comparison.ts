@@ -22,7 +22,7 @@ export const mockProductComparison: ProductComparisonData = {
   x3: {
     name: "Xteink X3",
     tag: "2026 New",
-    image: "/images/products/x3/xteink_x3_product_image.jpg",
+    image: "/images/products/x3/gallery/xteink_x3_ultra_compact_magnetic_ereader_space_black_72_99usd.jpg",
     specs: {
       screen: "3.7\"",
       ppi: "250 PPI",

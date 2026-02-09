@@ -1,4 +1,5 @@
 import { use } from "react";
+import Image from "next/image";
 import { getSnapFlipReadSteps } from "@/services/api";
 
 export default function SnapFlipRead() {
@@ -16,6 +17,19 @@ export default function SnapFlipRead() {
           <p className="scroll-reveal scroll-d2 mt-5 text-base text-paper/70 md:text-lg">
             Ba bước để bắt đầu đọc — đơn giản, nhanh chóng, mọi lúc mọi nơi.
           </p>
+        </div>
+
+        {/* Featured Image */}
+        <div className="scroll-reveal scroll-d2 mt-10 mx-auto max-w-3xl overflow-hidden rounded-2xl glass-card">
+          <div className="relative aspect-video w-full">
+            <Image
+              src="/images/home/magnetic_feature/snap_flip_read_magnetic_feature_video_thumbnail.jpg"
+              alt="Snap, Flip, Read — Magnetic Feature"
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-3 md:gap-12">
