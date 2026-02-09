@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
+import SnapFlipRead from "@/components/SnapFlipRead";
 import Product from "@/components/Product";
 import Features from "@/components/Features";
 import Lifestyle from "@/components/Lifestyle";
@@ -15,6 +16,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Problem />
+      <SnapFlipRead />
       <Product />
       <Features />
       <Lifestyle />

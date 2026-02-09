@@ -18,6 +18,7 @@ import {
   LifestyleMoment,
   NavLink,
   FooterData,
+  SnapFlipReadStep,
 } from "./types";
 import { mockProductData } from "./mock/product";
 import { mockFeatures } from "./mock/features";
@@ -26,6 +27,7 @@ import { mockTestimonials } from "./mock/testimonials";
 import { mockLifestyleMoments } from "./mock/lifestyle";
 import { mockNavLinks } from "./mock/navigation";
 import { mockFooterData } from "./mock/footer";
+import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
 
 // Simulate API latency (remove in production)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -91,4 +93,13 @@ export async function getNavLinks(): Promise<NavLink[]> {
 export async function getFooterData(): Promise<FooterData> {
   await delay(50);
   return mockFooterData;
+}
+
+/**
+ * Fetch Snap, Flip, Read steps (USP)
+ * Future endpoint: GET /api/snap-flip-read
+ */
+export async function getSnapFlipReadSteps(): Promise<SnapFlipReadStep[]> {
+  await delay(50);
+  return mockSnapFlipReadSteps;
 }

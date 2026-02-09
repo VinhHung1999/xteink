@@ -29,6 +29,14 @@ export interface Feature {
   description: string;
 }
 
+// ========== Snap Flip Read (USP) ==========
+export interface SnapFlipReadStep {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  step: string; // "Snap", "Flip", "Read"
+}
+
 // ========== Pricing & Bundles ==========
 export interface Accessory {
   image: string;
