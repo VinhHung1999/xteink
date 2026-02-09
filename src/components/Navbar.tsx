@@ -29,7 +29,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`animate-slide-down fixed top-0 md:top-4 left-0 right-0 md:left-4 md:right-4 z-50 glass-nav transition-all duration-200 ease-out ${
+        className={`animate-slide-down fixed top-0 md:top-4 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-[1320px] z-50 glass-nav transition-all duration-200 ease-out ${
           scrolled ? "glass-nav-scrolled" : ""
         } md:rounded-2xl`}
       >
