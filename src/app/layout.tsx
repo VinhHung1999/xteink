@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Be_Vietnam_Pro, Caveat } from "next/font/google";
+import { Playfair_Display, Be_Vietnam_Pro, Playwrite_VN } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-playfair-display",
   display: "swap",
 });
 
@@ -16,9 +16,9 @@ const beVietnam = Be_Vietnam_Pro({
   display: "swap",
 });
 
-const caveat = Caveat({
-  subsets: ["latin"],
-  variable: "--font-caveat",
+const playwriteVN = Playwrite_VN({
+  weight: "400",
+  variable: "--font-playwrite-vn",
   display: "swap",
 });
 
@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${cormorant.variable} ${beVietnam.variable} ${caveat.variable} antialiased`}
+        className={`${playfairDisplay.variable} ${beVietnam.variable} ${playwriteVN.variable} antialiased`}
       >
         {children}
         <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
