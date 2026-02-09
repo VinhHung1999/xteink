@@ -59,7 +59,7 @@ export default function Pricing() {
                 href="#"
                 className="btn-glass-primary inline-flex h-13 items-center rounded-xl px-8 text-base font-semibold text-[#1A1A1A]"
               >
-                Bắt đầu đọc
+                Đặt hàng ngay
               </a>
               <a
                 href="#accessories"
