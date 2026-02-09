@@ -19,6 +19,7 @@ import {
   NavLink,
   FooterData,
   SnapFlipReadStep,
+  ProductComparisonData,
 } from "./types";
 import { mockProductData } from "./mock/product";
 import { mockFeatures } from "./mock/features";
@@ -28,6 +29,7 @@ import { mockLifestyleMoments } from "./mock/lifestyle";
 import { mockNavLinks } from "./mock/navigation";
 import { mockFooterData } from "./mock/footer";
 import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
+import { mockProductComparison } from "./mock/product-comparison";
 
 // Simulate API latency (remove in production)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -102,4 +104,13 @@ export async function getFooterData(): Promise<FooterData> {
 export async function getSnapFlipReadSteps(): Promise<SnapFlipReadStep[]> {
   await delay(50);
   return mockSnapFlipReadSteps;
+}
+
+/**
+ * Fetch product comparison data (X4 vs X3)
+ * Future endpoint: GET /api/product-comparison
+ */
+export async function getProductComparison(): Promise<ProductComparisonData> {
+  await delay(50);
+  return mockProductComparison;
 }

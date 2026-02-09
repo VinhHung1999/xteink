@@ -4,6 +4,7 @@ import Problem from "@/components/Problem";
 import SnapFlipRead from "@/components/SnapFlipRead";
 import Product from "@/components/Product";
 import Features from "@/components/Features";
+import ProductComparison from "@/components/ProductComparison";
 import Lifestyle from "@/components/Lifestyle";
 import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
@@ -19,6 +20,7 @@ export default function Home() {
       <SnapFlipRead />
       <Product />
       <Features />
+      <ProductComparison />
       <Lifestyle />
       <Testimonials />
       <Pricing />

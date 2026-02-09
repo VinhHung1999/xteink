@@ -37,6 +37,29 @@ export interface SnapFlipReadStep {
   step: string; // "Snap", "Flip", "Read"
 }
 
+// ========== Product Comparison (X4 vs X3) ==========
+export interface ProductSpec {
+  screen: string;
+  ppi: string;
+  weight: string;
+  thickness: string;
+  price: string;
+  priceNumeric: number; // for comparison
+}
+
+export interface ProductComparisonModel {
+  name: string;
+  tag?: string; // "Bestseller", "2026 New", etc.
+  image: string;
+  specs: ProductSpec;
+  advantages: string[]; // list of spec keys where this model is better
+}
+
+export interface ProductComparisonData {
+  x4: ProductComparisonModel;
+  x3: ProductComparisonModel;
+}
+
 // ========== Pricing & Bundles ==========
 export interface Accessory {
   image: string;
