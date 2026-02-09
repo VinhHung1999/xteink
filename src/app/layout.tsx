@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Literata, DM_Sans, Caveat } from "next/font/google";
+import { Cormorant_Garamond, Be_Vietnam_Pro, Caveat } from "next/font/google";
 import "./globals.css";
 
-const literata = Literata({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin", "vietnamese"],
-  variable: "--font-literata",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-dm-sans",
+const beVietnam = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-be-vietnam",
   display: "swap",
 });
 
@@ -51,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${literata.variable} ${dmSans.variable} ${caveat.variable} antialiased`}
+        className={`${cormorant.variable} ${beVietnam.variable} ${caveat.variable} antialiased`}
       >
         {children}
         <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
