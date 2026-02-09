@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Be_Vietnam_Pro, Playwrite_VN } from "next/font/google";
+import { Playfair_Display, Be_Vietnam_Pro, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -16,9 +16,10 @@ const beVietnam = Be_Vietnam_Pro({
   display: "swap",
 });
 
-const playwriteVN = Playwrite_VN({
+const greatVibes = Great_Vibes({
+  subsets: ["latin", "vietnamese"],
   weight: "400",
-  variable: "--font-playwrite-vn",
+  variable: "--font-great-vibes",
   display: "swap",
 });
 
@@ -53,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${playfairDisplay.variable} ${beVietnam.variable} ${playwriteVN.variable} antialiased`}
+        className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
         {children}
         <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
