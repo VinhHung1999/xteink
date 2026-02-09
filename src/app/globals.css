@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand Colors */
+  --color-paper: #F5F0EB;
+  --color-charcoal: #2D2D2D;
+  --color-gold: #D4A574;
+  --color-deep-gold: #B8864A;
+  --color-sage: #8B9E7E;
+  --color-dusty-rose: #C4A0A0;
+  --color-ink: #1A1A1A;
+  --color-surface: #FAF7F3;
+  --color-warm-cream: #E8DDD3;
+
+  /* Fonts */
+  --font-heading: var(--font-literata);
+  --font-body: var(--font-dm-sans);
+  --font-accent: var(--font-caveat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  line-height: 1.85;
+}
+
+@media (max-width: 640px) {
+  body {
+    line-height: 1.9;
+  }
+}
+
+/* ===== PAGE-LOAD ANIMATIONS ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up 0.6s ease-out both; }
+.animate-fade-up-d1 { animation: fade-up 0.6s ease-out 0.15s both; }
+.animate-fade-up-d2 { animation: fade-up 0.6s ease-out 0.3s both; }
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-slide-down { animation: slide-down 0.5s ease-out both; }
+
+/* ===== SCROLL-REVEAL ===== */
+/* NOTE: .scroll-reveal does NOT have opacity:0 in CSS.
+   JS adds [data-sr-ready] to body, which activates the hidden state.
+   If JS fails, content stays fully visible. */
+[data-sr-ready] .scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-sr-ready] .scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-sr-ready] .scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-sr-ready] .scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Revealed state */
+[data-sr-ready] .is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Stagger delays */
+[data-sr-ready] .scroll-d1 { transition-delay: 0.06s; }
+[data-sr-ready] .scroll-d2 { transition-delay: 0.12s; }
+[data-sr-ready] .scroll-d3 { transition-delay: 0.18s; }
+[data-sr-ready] .scroll-d4 { transition-delay: 0.24s; }
+[data-sr-ready] .scroll-d5 { transition-delay: 0.30s; }
+[data-sr-ready] .scroll-d6 { transition-delay: 0.36s; }
+[data-sr-ready] .scroll-d7 { transition-delay: 0.42s; }
+
+/* Image hover zoom */
+.img-hover-zoom {
+  transition: transform 0.5s ease-out;
+}
+.group:hover .img-hover-zoom {
+  transform: scale(1.03);
+}
+
+/* Drawer animation */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-sr-ready] .scroll-reveal,
+  [data-sr-ready] .scroll-reveal-left,
+  [data-sr-ready] .scroll-reveal-right,
+  [data-sr-ready] .scroll-reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
