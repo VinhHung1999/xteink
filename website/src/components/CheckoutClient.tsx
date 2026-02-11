@@ -22,14 +22,15 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
   const router = useRouter();
   const { items, totalItems, totalPrice, clearCart } = useCart();
 
-  // Redirect to home if cart is empty (after hydration)
+  // Redirect to home if cart is empty (after hydration), but not during submit
   const [hydrated, setHydrated] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
   useEffect(() => setHydrated(true), []);
   useEffect(() => {
-    if (hydrated && items.length === 0) {
+    if (hydrated && items.length === 0 && !orderPlaced) {
       router.replace("/");
     }
-  }, [hydrated, items.length, router]);
+  }, [hydrated, items.length, orderPlaced, router]);
 
   // Form state
   const [name, setName] = useState("");
@@ -97,6 +98,7 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
 
     // Store order for success page, clear cart, redirect
     sessionStorage.setItem("xteink-last-order", JSON.stringify(orderData));
+    setOrderPlaced(true);
     clearCart();
     router.push("/checkout/success");
   }
