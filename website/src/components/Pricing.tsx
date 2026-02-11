@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import { use } from "react";
 import { getPricingData } from "@/services/api";
+import OrderNowButton from "./OrderNowButton";
 
 export default function Pricing() {
   const pricing = use(getPricingData());
@@ -55,12 +56,7 @@ export default function Pricing() {
             </div>
 
             <div className="scroll-reveal scroll-d7 mt-8 flex flex-wrap gap-4">
-              <a
-                href="#"
-                className="btn-glass-primary inline-flex h-13 items-center rounded-xl px-8 text-base font-semibold text-[#1A1A1A]"
-              >
-                Đặt hàng ngay
-              </a>
+              <OrderNowButton />
               <a
                 href="#accessories"
                 className="btn-glass-secondary inline-flex h-12 items-center rounded-xl px-6 text-base font-medium text-paper"

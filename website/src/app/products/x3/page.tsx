@@ -71,7 +71,14 @@ export default function X3Page() {
               ))}
             </div>
 
-            <AddToCartButton productName="Xteink X3" />
+            <AddToCartButton
+              productId="x3"
+              slug="x3"
+              productName="Xteink X3"
+              image="/images/products/x3/gallery/xteink_x3_ultra_compact_magnetic_ereader_space_black_72_99usd.jpg"
+              price={1790000}
+              type="product"
+            />
           </div>
         </div>
       </div>

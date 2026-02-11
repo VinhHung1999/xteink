@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ZaloWidget from "@/components/ZaloWidget";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
+import { CartProvider } from "@/contexts/CartContext";
+import CartDrawer from "@/components/CartDrawer";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -44,17 +46,20 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
-        <Suspense>
-          <Navbar />
-        </Suspense>
-        {children}
-        <Suspense>
-          <Footer />
-        </Suspense>
-        <Suspense>
-          <ZaloWidget />
-        </Suspense>
-        <ScrollRevealProvider />
+        <CartProvider>
+          <Suspense>
+            <Navbar />
+          </Suspense>
+          {children}
+          <Suspense>
+            <Footer />
+          </Suspense>
+          <Suspense>
+            <ZaloWidget />
+          </Suspense>
+          <ScrollRevealProvider />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

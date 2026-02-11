@@ -4,12 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import type { ProductListingItem } from "@/services/types";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductListingClientProps {
   products: ProductListingItem[];
 }
 
+// Parse "1.590.000₫" → 1590000
+function parsePrice(price: string): number {
+  return parseInt(price.replace(/[^\d]/g, ""), 10) || 0;
+}
+
 export default function ProductListingClient({ products }: ProductListingClientProps) {
+  const { addItem, openDrawer } = useCart();
+
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1320px]">
@@ -81,7 +89,17 @@ export default function ProductListingClient({ products }: ProductListingClientP
                     <ArrowRight size={16} />
                   </Link>
                   <button
-                    onClick={() => alert(`Đã thêm ${product.name} vào giỏ hàng!`)}
+                    onClick={() => {
+                      addItem({
+                        id: product.slug,
+                        slug: product.slug,
+                        name: product.name,
+                        image: product.image,
+                        price: parsePrice(product.price),
+                        type: "product",
+                      });
+                      openDrawer();
+                    }}
                     className="btn-glass-secondary inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium text-paper"
                   >
                     <ShoppingBag size={16} />
