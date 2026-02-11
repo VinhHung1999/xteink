@@ -190,6 +190,32 @@ export interface CartItem {
   type: "product" | "accessory";
 }
 
+// ========== Checkout: Addresses ==========
+export interface Ward {
+  code: string;
+  name: string;
+}
+
+export interface District {
+  code: string;
+  name: string;
+  wards: Ward[];
+}
+
+export interface Province {
+  code: string;
+  name: string;
+  districts: District[];
+}
+
+// ========== Checkout: Payment Methods ==========
+export interface CheckoutPaymentMethod {
+  id: string;
+  name: string;
+  description: string;
+  icon: string; // emoji or text icon (no LucideIcon — used in client form)
+}
+
 // ========== FAQ ==========
 export interface FAQItem {
   question: string;
