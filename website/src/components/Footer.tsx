@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Mail } from "lucide-react";
 import { use } from "react";
 import { getFooterData } from "@/services/api";
@@ -10,12 +11,12 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-4 md:gap-8">
           {/* Brand */}
           <div>
-            <a
-              href="#"
+            <Link
+              href="/"
               className="font-heading text-xl font-semibold tracking-tight text-paper"
             >
               Xteink
-            </a>
+            </Link>
             <p className="mt-3 text-sm leading-relaxed text-warm-cream/70">
               Permission to be quiet.
               <br />
@@ -31,12 +32,12 @@ export default function Footer() {
             <ul className="mt-4 space-y-3">
               {footer.productLinks.map((link) => (
                 <li key={link.label}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-warm-cream/70 transition-colors hover:text-gold"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -50,12 +51,12 @@ export default function Footer() {
             <ul className="mt-4 space-y-3">
               {footer.supportLinks.map((link) => (
                 <li key={link.label}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-warm-cream/70 transition-colors hover:text-gold"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
