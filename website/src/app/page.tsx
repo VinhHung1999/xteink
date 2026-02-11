@@ -1,8 +1,16 @@
 import Hero from "@/components/Hero";
 import Problem from "@/components/Problem";
 import SnapFlipRead from "@/components/SnapFlipRead";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Product from "@/components/Product";
+import Features from "@/components/Features";
+import ProductComparison from "@/components/ProductComparison";
+import Lifestyle from "@/components/Lifestyle";
+import Testimonials from "@/components/Testimonials";
+import Accessories from "@/components/Accessories";
+import Pricing from "@/components/Pricing";
+import PurchaseInfo from "@/components/PurchaseInfo";
+import SocialProof from "@/components/SocialProof";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 
 export default function Home() {
   return (
@@ -10,25 +18,16 @@ export default function Home() {
       <Hero />
       <Problem />
       <SnapFlipRead />
-
-      {/* CTA → Products */}
-      <section className="px-6 py-20 md:py-28 text-center">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="font-heading text-3xl md:text-4xl font-semibold text-paper mb-4 scroll-reveal">
-            Sẵn sàng khám phá?
-          </h2>
-          <p className="text-warm-cream/70 text-lg mb-8 scroll-reveal">
-            Xem chi tiết sản phẩm, so sánh phiên bản, và tìm combo phù hợp với bạn.
-          </p>
-          <Link
-            href="/products"
-            className="btn-glass-primary inline-flex h-14 items-center gap-2 rounded-xl px-8 text-base font-semibold text-[#1A1A1A] scroll-reveal"
-          >
-            Xem sản phẩm
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
+      <Product />
+      <Features />
+      <ProductComparison />
+      <Lifestyle />
+      <Testimonials />
+      <Accessories />
+      <Pricing />
+      <PurchaseInfo />
+      <SocialProof />
+      <MobileStickyCTA />
     </>
   );
 }
