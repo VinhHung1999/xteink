@@ -14,6 +14,7 @@ import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import Footer from "@/components/Footer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import ZaloWidget from "@/components/ZaloWidget";
 
 export default function Home() {
   return (
@@ -34,6 +35,7 @@ export default function Home() {
       <SocialProof />
       <Footer />
       <MobileStickyCTA />
+      <ZaloWidget />
     </>
   );
 }

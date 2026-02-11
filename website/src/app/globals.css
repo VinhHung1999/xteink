@@ -411,6 +411,12 @@ body {
   to { opacity: 1; }
 }
 
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-sr-ready] .scroll-reveal,
