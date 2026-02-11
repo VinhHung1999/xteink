@@ -22,6 +22,7 @@ import {
   ProductComparisonData,
   Accessory,
   PurchaseInfoData,
+  ProductListingItem,
   FAQItem,
   SocialProofData,
   Guide,
@@ -37,6 +38,7 @@ import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
 import { mockProductComparison } from "./mock/product-comparison";
 import { mockAccessories } from "./mock/accessories";
 import { mockPurchaseInfoData } from "./mock/purchase-info";
+import { mockProductListing } from "./mock/product-listing";
 import { mockFAQData } from "./mock/faq";
 import { mockSocialProofData } from "./mock/social-proof";
 import { mockGuides } from "./mock/guides";
@@ -168,4 +170,13 @@ export async function getSocialProofData(): Promise<SocialProofData> {
 export async function getGuidesData(): Promise<Guide[]> {
   await delay(50);
   return mockGuides;
+}
+
+/**
+ * Fetch product listing (X4 + X3 cards)
+ * Future endpoint: GET /api/products
+ */
+export async function getProductListing(): Promise<ProductListingItem[]> {
+  await delay(50);
+  return mockProductListing;
 }
