@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { getNavLinks } from "@/services/api";
 
 export default function Navbar() {
   const navLinks = use(getNavLinks());
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -26,6 +29,11 @@ export default function Navbar() {
     };
   }, [drawerOpen]);
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
   return (
     <>
       <nav
@@ -44,40 +52,44 @@ export default function Navbar() {
           </button>
 
           {/* Logo */}
-          <a
-            href="#"
+          <Link
+            href="/"
             className="font-heading text-xl font-semibold tracking-tight text-paper"
           >
             Xteink
-          </a>
+          </Link>
 
           {/* Desktop nav links */}
           <div className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-paper/70 transition-colors duration-200 hover:text-gold"
+                className={`text-sm font-medium transition-colors duration-200 ${
+                  isActive(link.href)
+                    ? "text-gold"
+                    : "text-paper/70 hover:text-gold"
+                }`}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
-            <a
-              href="#price"
+            <Link
+              href="/products"
               className="btn-glass-primary inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
             >
               Bắt đầu đọc
-            </a>
+            </Link>
           </div>
 
           {/* Mobile: cart */}
-          <a
-            href="#price"
+          <Link
+            href="/products"
             className="flex h-11 w-11 items-center justify-center md:hidden"
             aria-label="Giỏ hàng"
           >
             <ShoppingBag size={20} />
-          </a>
+          </Link>
         </div>
       </nav>
 
@@ -113,22 +125,26 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col gap-1 px-4 pt-4">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               onClick={() => setDrawerOpen(false)}
-              className="rounded-lg px-4 py-3 text-base font-medium text-paper transition-colors hover:bg-[rgba(212,165,116,0.08)] hover:text-gold"
+              className={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
+                isActive(link.href)
+                  ? "bg-[rgba(212,165,116,0.12)] text-gold"
+                  : "text-paper hover:bg-[rgba(212,165,116,0.08)] hover:text-gold"
+              }`}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#price"
+          <Link
+            href="/products"
             onClick={() => setDrawerOpen(false)}
             className="mt-4 btn-glass-primary inline-flex h-12 items-center justify-center rounded-xl px-5 text-base font-medium text-[#1A1A1A]"
           >
             Bắt đầu đọc
-          </a>
+          </Link>
         </div>
       </div>
     </>
