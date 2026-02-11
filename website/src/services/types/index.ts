@@ -106,6 +106,39 @@ export interface NavLink {
   href: string;
 }
 
+// ========== Purchase Info ==========
+export interface PaymentMethod {
+  icon: LucideIcon;
+  name: string;
+  description: string;
+}
+
+export interface ShippingInfo {
+  icon: LucideIcon;
+  region: string;
+  time: string;
+  note?: string;
+}
+
+export interface WarrantyInfo {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export interface BundleItem {
+  icon: LucideIcon;
+  name: string;
+}
+
+export interface PurchaseInfoData {
+  paymentMethods: PaymentMethod[];
+  shippingInfo: ShippingInfo[];
+  warranty: WarrantyInfo[];
+  bundleItems: BundleItem[];
+  freeShippingNote: string;
+}
+
 // ========== Footer ==========
 export interface FooterLink {
   label: string;
