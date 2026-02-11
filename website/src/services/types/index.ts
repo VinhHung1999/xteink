@@ -174,6 +174,14 @@ export interface FAQItem {
   answer: string;
 }
 
+// ========== Guides ==========
+export interface Guide {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  href: string;
+}
+
 // ========== Footer ==========
 export interface FooterLink {
   label: string;

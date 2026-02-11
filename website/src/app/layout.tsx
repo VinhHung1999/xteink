@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Be_Vietnam_Pro, Great_Vibes } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ZaloWidget from "@/components/ZaloWidget";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -56,7 +59,10 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
+        <Navbar />
         {children}
+        <Footer />
+        <ZaloWidget />
         <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
       </body>
     </html>

@@ -24,6 +24,7 @@ import {
   PurchaseInfoData,
   FAQItem,
   SocialProofData,
+  Guide,
 } from "./types";
 import { mockProductData } from "./mock/product";
 import { mockFeatures } from "./mock/features";
@@ -38,6 +39,7 @@ import { mockAccessories } from "./mock/accessories";
 import { mockPurchaseInfoData } from "./mock/purchase-info";
 import { mockFAQData } from "./mock/faq";
 import { mockSocialProofData } from "./mock/social-proof";
+import { mockGuides } from "./mock/guides";
 
 // Simulate API latency (remove in production)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -157,4 +159,13 @@ export async function getFAQData(): Promise<FAQItem[]> {
 export async function getSocialProofData(): Promise<SocialProofData> {
   await delay(50);
   return mockSocialProofData;
+}
+
+/**
+ * Fetch guides data (getting started, transfer books, firmware)
+ * Future endpoint: GET /api/guides
+ */
+export async function getGuidesData(): Promise<Guide[]> {
+  await delay(50);
+  return mockGuides;
 }
