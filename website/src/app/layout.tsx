@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ZaloWidget from "@/components/ZaloWidget";
+import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -33,23 +34,6 @@ export const metadata: Metadata = {
     "Thư viện bỏ túi nhẹ hơn một bộ bài. Máy đọc sách e-ink 4.3 inch, 74g, gắn nam châm lên điện thoại. Chỉ 1.590.000₫.",
 };
 
-const scrollRevealScript = `
-document.addEventListener('DOMContentLoaded', function() {
-  document.body.setAttribute('data-sr-ready', '');
-  var sel = '.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale';
-  var io = new IntersectionObserver(function(entries) {
-    for (var i = 0; i < entries.length; i++) {
-      if (entries[i].isIntersecting) {
-        entries[i].target.classList.add('is-visible');
-        io.unobserve(entries[i].target);
-      }
-    }
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  var els = document.querySelectorAll(sel);
-  for (var j = 0; j < els.length; j++) { io.observe(els[j]); }
-});
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -70,7 +54,7 @@ export default function RootLayout({
         <Suspense>
           <ZaloWidget />
         </Suspense>
-        <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
+        <ScrollRevealProvider />
       </body>
     </html>
   );
