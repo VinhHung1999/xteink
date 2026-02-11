@@ -139,6 +139,12 @@ export interface PurchaseInfoData {
   freeShippingNote: string;
 }
 
+// ========== FAQ ==========
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 // ========== Footer ==========
 export interface FooterLink {
   label: string;

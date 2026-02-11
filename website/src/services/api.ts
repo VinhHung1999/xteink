@@ -22,6 +22,7 @@ import {
   ProductComparisonData,
   Accessory,
   PurchaseInfoData,
+  FAQItem,
 } from "./types";
 import { mockProductData } from "./mock/product";
 import { mockFeatures } from "./mock/features";
@@ -34,6 +35,7 @@ import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
 import { mockProductComparison } from "./mock/product-comparison";
 import { mockAccessories } from "./mock/accessories";
 import { mockPurchaseInfoData } from "./mock/purchase-info";
+import { mockFAQData } from "./mock/faq";
 
 // Simulate API latency (remove in production)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -135,4 +137,13 @@ export async function getAccessories(): Promise<Accessory[]> {
 export async function getPurchaseInfoData(): Promise<PurchaseInfoData> {
   await delay(50);
   return mockPurchaseInfoData;
+}
+
+/**
+ * Fetch FAQ data
+ * Future endpoint: GET /api/faq
+ */
+export async function getFAQData(): Promise<FAQItem[]> {
+  await delay(50);
+  return mockFAQData;
 }
