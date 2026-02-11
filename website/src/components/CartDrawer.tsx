@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
@@ -10,6 +11,7 @@ function formatPrice(price: number): string {
 }
 
 export default function CartDrawer() {
+  const router = useRouter();
   const {
     items,
     isDrawerOpen,
@@ -184,8 +186,8 @@ export default function CartDrawer() {
               <button
                 className="btn-glass-primary mt-4 inline-flex h-12 w-full items-center justify-center rounded-xl text-base font-semibold text-[#1A1A1A]"
                 onClick={() => {
-                  // TODO: checkout flow
                   closeDrawer();
+                  router.push("/checkout");
                 }}
               >
                 Đặt hàng ngay

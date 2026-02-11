@@ -26,6 +26,8 @@ import {
   FAQItem,
   SocialProofData,
   Guide,
+  Province,
+  CheckoutPaymentMethod,
 } from "./types";
 import { mockProductData } from "./mock/product";
 import { mockFeatures } from "./mock/features";
@@ -42,6 +44,8 @@ import { mockProductListing } from "./mock/product-listing";
 import { mockFAQData } from "./mock/faq";
 import { mockSocialProofData } from "./mock/social-proof";
 import { mockGuides } from "./mock/guides";
+import { mockProvinces } from "./mock/addresses";
+import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 
 // Simulate API latency (remove in production)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -179,4 +183,22 @@ export async function getGuidesData(): Promise<Guide[]> {
 export async function getProductListing(): Promise<ProductListingItem[]> {
   await delay(50);
   return mockProductListing;
+}
+
+/**
+ * Fetch provinces for checkout address
+ * Future endpoint: GET /api/addresses/provinces
+ */
+export async function getProvinces(): Promise<Province[]> {
+  await delay(50);
+  return mockProvinces;
+}
+
+/**
+ * Fetch checkout payment methods
+ * Future endpoint: GET /api/checkout/payment-methods
+ */
+export async function getCheckoutPaymentMethods(): Promise<CheckoutPaymentMethod[]> {
+  await delay(50);
+  return mockCheckoutPaymentMethods;
 }
