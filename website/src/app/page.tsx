@@ -5,7 +5,6 @@ import Product from "@/components/Product";
 import Features from "@/components/Features";
 import Lifestyle from "@/components/Lifestyle";
 import Testimonials from "@/components/Testimonials";
-import Accessories from "@/components/Accessories";
 import Pricing from "@/components/Pricing";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 
@@ -19,7 +18,6 @@ export default function Home() {
       <Features />
       <Lifestyle />
       <Testimonials />
-      <Accessories />
       <Pricing />
       <MobileStickyCTA />
     </>
