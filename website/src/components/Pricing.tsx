@@ -55,35 +55,9 @@ export default function Pricing() {
               ))}
             </div>
 
-            <div className="scroll-reveal scroll-d7 mt-8 flex flex-wrap gap-4">
+            <div className="scroll-reveal scroll-d7 mt-8">
               <OrderNowButton />
-              <a
-                href="#accessories"
-                className="btn-glass-secondary inline-flex h-12 items-center rounded-xl px-6 text-base font-medium text-paper"
-              >
-                Xem phụ kiện
-              </a>
             </div>
-          </div>
-        </div>
-
-        <div id="accessories" className="mt-20">
-          <h3 className="scroll-reveal font-body text-lg font-bold uppercase tracking-[0.08em] text-paper">
-            Phụ kiện
-          </h3>
-          <div className="mt-6 -mx-4 flex gap-4 overflow-x-auto px-4 pt-4 pb-8 snap-x snap-mandatory">
-            {pricing.accessories.map((a, i) => (
-              <div
-                key={a.name}
-                className={`scroll-reveal scroll-d${Math.min(i + 1, 7)} glass-card glass-card-hover min-w-[160px] snap-center rounded-xl p-3`}
-              >
-                <div className="relative aspect-square w-full overflow-hidden rounded-lg">
-                  <Image src={a.image} alt={a.name} fill sizes="160px" className="object-cover" loading="lazy" />
-                </div>
-                <p className="mt-2 text-sm font-medium text-paper">{a.name}</p>
-                <p className="text-sm text-gold">{a.price}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
