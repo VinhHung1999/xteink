@@ -179,6 +179,17 @@ export interface SocialProofData {
   testimonials: CommunityTestimonial[];
 }
 
+// ========== Cart ==========
+export interface CartItem {
+  id: string;
+  slug: string;
+  name: string;
+  image: string;
+  price: number; // numeric, in VND
+  quantity: number;
+  type: "product" | "accessory";
+}
+
 // ========== FAQ ==========
 export interface FAQItem {
   question: string;

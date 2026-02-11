@@ -72,7 +72,14 @@ export default function X4Page() {
               ))}
             </div>
 
-            <AddToCartButton productName="Xteink X4" />
+            <AddToCartButton
+              productId="x4"
+              slug="x4"
+              productName="Xteink X4"
+              image="/images/products/x4/gallery/xteink_x4_product_gallery_variant_2.jpg"
+              price={1590000}
+              type="product"
+            />
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import type { NavLink } from "@/services/types";
+import { useCart } from "@/contexts/CartContext";
 
 interface NavbarClientProps {
   navLinks: NavLink[];
@@ -12,6 +13,7 @@ interface NavbarClientProps {
 
 export default function NavbarClient({ navLinks }: NavbarClientProps) {
   const pathname = usePathname();
+  const { totalItems, openDrawer: openCartDrawer } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -79,14 +81,22 @@ export default function NavbarClient({ navLinks }: NavbarClientProps) {
             ))}
           </div>
 
-          {/* Mobile: cart */}
-          <Link
-            href="/products"
-            className="flex h-11 w-11 items-center justify-center md:hidden"
+          {/* Cart icon (mobile + desktop) */}
+          <button
+            className="relative flex h-11 w-11 items-center justify-center"
+            onClick={openCartDrawer}
             aria-label="Giỏ hàng"
           >
             <ShoppingBag size={20} />
-          </Link>
+            {totalItems > 0 && (
+              <span
+                key={totalItems}
+                className="animate-badge-pop absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[10px] font-bold text-[#1A1A1A]"
+              >
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
+          </button>
         </div>
       </nav>
 
