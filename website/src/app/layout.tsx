@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Playfair_Display, Be_Vietnam_Pro, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -59,10 +60,16 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
-        <Navbar />
+        <Suspense>
+          <Navbar />
+        </Suspense>
         {children}
-        <Footer />
-        <ZaloWidget />
+        <Suspense>
+          <Footer />
+        </Suspense>
+        <Suspense>
+          <ZaloWidget />
+        </Suspense>
         <script dangerouslySetInnerHTML={{ __html: scrollRevealScript }} />
       </body>
     </html>
