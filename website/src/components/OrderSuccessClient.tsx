@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 
 interface OrderItem {
@@ -32,17 +31,23 @@ function formatPrice(price: number): string {
 export default function OrderSuccessClient() {
   const router = useRouter();
   const [order, setOrder] = useState<OrderData | null>(null);
+  const loaded = useRef(false);
 
   useEffect(() => {
+    if (loaded.current) return;
     const raw = sessionStorage.getItem("xteink-last-order");
     if (!raw) {
       router.replace("/");
       return;
     }
+    loaded.current = true;
     setOrder(JSON.parse(raw));
-    // Clean up so refreshing doesn't show stale data
-    sessionStorage.removeItem("xteink-last-order");
   }, [router]);
+
+  function handleGoHome() {
+    sessionStorage.removeItem("xteink-last-order");
+    router.push("/");
+  }
 
   if (!order) return null;
 
@@ -142,12 +147,12 @@ export default function OrderSuccessClient() {
 
         {/* Back to home */}
         <div className="scroll-reveal scroll-d2 mt-8 text-center">
-          <Link
-            href="/"
+          <button
+            onClick={handleGoHome}
             className="btn-glass-primary inline-flex h-12 items-center rounded-xl px-8 text-base font-semibold text-[#1A1A1A]"
           >
             Về trang chủ
-          </Link>
+          </button>
         </div>
       </div>
     </section>
