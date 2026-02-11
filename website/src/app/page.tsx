@@ -9,6 +9,7 @@ import Lifestyle from "@/components/Lifestyle";
 import Testimonials from "@/components/Testimonials";
 import Accessories from "@/components/Accessories";
 import Pricing from "@/components/Pricing";
+import PurchaseInfo from "@/components/PurchaseInfo";
 import Footer from "@/components/Footer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 
@@ -26,6 +27,7 @@ export default function Home() {
       <Testimonials />
       <Accessories />
       <Pricing />
+      <PurchaseInfo />
       <Footer />
       <MobileStickyCTA />
     </>
