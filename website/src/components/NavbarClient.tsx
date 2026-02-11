@@ -77,12 +77,6 @@ export default function NavbarClient({ navLinks }: NavbarClientProps) {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/products"
-              className="btn-glass-primary inline-flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-[#1A1A1A]"
-            >
-              Bắt đầu đọc
-            </Link>
           </div>
 
           {/* Mobile: cart */}
@@ -141,13 +135,6 @@ export default function NavbarClient({ navLinks }: NavbarClientProps) {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/products"
-            onClick={() => setDrawerOpen(false)}
-            className="mt-4 btn-glass-primary inline-flex h-12 items-center justify-center rounded-xl px-5 text-base font-medium text-[#1A1A1A]"
-          >
-            Bắt đầu đọc
-          </Link>
         </div>
       </div>
     </>
