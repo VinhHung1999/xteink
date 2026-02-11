@@ -11,6 +11,7 @@ import Accessories from "@/components/Accessories";
 import Pricing from "@/components/Pricing";
 import PurchaseInfo from "@/components/PurchaseInfo";
 import FAQ from "@/components/FAQ";
+import SocialProof from "@/components/SocialProof";
 import Footer from "@/components/Footer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 
@@ -30,6 +31,7 @@ export default function Home() {
       <Pricing />
       <PurchaseInfo />
       <FAQ />
+      <SocialProof />
       <Footer />
       <MobileStickyCTA />
     </>

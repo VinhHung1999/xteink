@@ -139,6 +139,35 @@ export interface PurchaseInfoData {
   freeShippingNote: string;
 }
 
+// ========== Social Proof ==========
+export interface PressReview {
+  name: string;
+  rating: number;
+  maxRating: number;
+  quote?: string;
+}
+
+export interface YouTubeReview {
+  channel: string;
+  subscribers: string;
+  title: string;
+  url: string;
+  thumbnailUrl?: string;
+}
+
+export interface CommunityTestimonial {
+  quote: string;
+  name: string;
+  source: string;
+}
+
+export interface SocialProofData {
+  pressReviews: PressReview[];
+  youtubeReview: YouTubeReview;
+  communityStat: string;
+  testimonials: CommunityTestimonial[];
+}
+
 // ========== FAQ ==========
 export interface FAQItem {
   question: string;
