@@ -106,6 +106,17 @@ export interface NavLink {
   href: string;
 }
 
+// ========== Product Listing ==========
+export interface ProductListingItem {
+  slug: string;
+  name: string;
+  tag?: string;
+  image: string;
+  price: string;
+  description: string;
+  specs: string[];
+}
+
 // ========== Purchase Info ==========
 export interface PaymentMethod {
   icon: LucideIcon;
