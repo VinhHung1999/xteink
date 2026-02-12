@@ -121,7 +121,8 @@ export default function CartDrawer() {
                     </div>
 
                     {/* Info */}
-                    <div className="flex flex-1 flex-col justify-between">
+                    <div className="flex flex-1 flex-col gap-2">
+                      {/* Name + price */}
                       <div>
                         <p className="text-sm font-medium text-paper">
                           {item.name}
@@ -132,44 +133,45 @@ export default function CartDrawer() {
                         <p className="mt-0.5 text-sm font-semibold text-gold">
                           {formatPrice(item.price)}
                         </p>
-                        {/* Color swatches — change color in cart */}
-                        {item.availableColors && item.availableColors.length > 1 && (
-                          <div className="mt-1.5 flex gap-1">
-                            {item.availableColors.map((c) => {
-                              const isActive = c.name === item.color;
-                              return (
-                                <button
-                                  key={c.name}
-                                  type="button"
-                                  title={c.name}
-                                  onClick={() => {
-                                    if (isActive) return;
-                                    const newId = `accessory-${item.slug}-${toSlug(c.name)}`;
-                                    updateColor(item.id, newId, c.name, c.hex);
-                                  }}
-                                  className={`h-5 w-5 rounded-full border transition-all ${
-                                    isActive
-                                      ? "border-gold ring-1 ring-gold/40 scale-110"
-                                      : "border-paper/20 hover:border-gold/40"
-                                  }`}
-                                  style={{ backgroundColor: c.hex }}
-                                  aria-label={`Đổi sang màu ${c.name}`}
-                                  aria-pressed={isActive}
-                                />
-                              );
-                            })}
-                          </div>
-                        )}
                       </div>
 
-                      {/* Quantity controls */}
+                      {/* Color swatches — separate row */}
+                      {item.availableColors && item.availableColors.length > 1 && (
+                        <div className="flex gap-1.5">
+                          {item.availableColors.map((c) => {
+                            const isActive = c.name === item.color;
+                            return (
+                              <button
+                                key={c.name}
+                                type="button"
+                                title={c.name}
+                                onClick={() => {
+                                  if (isActive) return;
+                                  const newId = `accessory-${item.slug}-${toSlug(c.name)}`;
+                                  updateColor(item.id, newId, c.name, c.hex);
+                                }}
+                                className={`h-8 w-8 rounded-full border-2 transition-all ${
+                                  isActive
+                                    ? "border-gold ring-2 ring-gold/30"
+                                    : "border-paper/20 hover:border-gold/40"
+                                }`}
+                                style={{ backgroundColor: c.hex }}
+                                aria-label={`Đổi sang màu ${c.name}`}
+                                aria-pressed={isActive}
+                              />
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Quantity controls — separate row */}
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5">
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-paper/10 text-paper/60 transition-colors hover:border-gold/30 hover:text-paper"
+                            className="flex h-8 w-8 items-center justify-center rounded-md border border-paper/10 text-paper/60 transition-colors hover:border-gold/30 hover:text-paper"
                             aria-label="Giảm số lượng"
                           >
                             <Minus size={14} />
@@ -181,7 +183,7 @@ export default function CartDrawer() {
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-paper/10 text-paper/60 transition-colors hover:border-gold/30 hover:text-paper"
+                            className="flex h-8 w-8 items-center justify-center rounded-md border border-paper/10 text-paper/60 transition-colors hover:border-gold/30 hover:text-paper"
                             aria-label="Tăng số lượng"
                           >
                             <Plus size={14} />
@@ -189,7 +191,7 @@ export default function CartDrawer() {
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="flex h-7 w-7 items-center justify-center rounded-md text-paper/30 transition-colors hover:text-red-400"
+                          className="flex h-8 w-8 items-center justify-center rounded-md text-paper/30 transition-colors hover:text-red-400"
                           aria-label="Xóa sản phẩm"
                         >
                           <Trash2 size={14} />
