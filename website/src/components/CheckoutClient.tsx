@@ -116,14 +116,14 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     }
   }, [totalPrice, provinceCode, fetchShippingFee]);
 
-  // Handle province change: reset children, fetch districts + shipping fee
+  // Handle province change: reset children, fetch districts
+  // (shipping fee is handled by useEffect on provinceCode change)
   function handleProvinceChange(code: string) {
     setProvinceCode(code);
     setDistrictCode("");
     setWardCode("");
     setWards([]);
     fetchDistricts(code);
-    fetchShippingFee(code, totalPrice);
   }
 
   // Handle district change: reset ward, fetch wards
