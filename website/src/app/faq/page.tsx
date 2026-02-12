@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { use } from "react";
 import FAQ from "@/components/FAQ";
+import FAQSkeleton from "@/components/skeletons/FAQSkeleton";
 import { getFAQData } from "@/services/api";
 
 export const metadata: Metadata = {
@@ -31,7 +33,9 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <FAQ />
+      <Suspense fallback={<FAQSkeleton />}>
+        <FAQ />
+      </Suspense>
     </>
   );
 }
