@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
 import { use } from "react";
 import { getFooterData } from "@/services/api";
+import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
   const footer = use(getFooterData());
@@ -70,24 +70,7 @@ export default function Footer() {
             <p className="mt-4 text-sm text-warm-cream/60">
               Nhận tin về sách hay và ưu đãi đặc biệt.
             </p>
-            <form
-              className="mt-4 flex gap-2"
-              action="#"
-            >
-              <input
-                type="email"
-                placeholder="email@example.com"
-                aria-label="Địa chỉ email"
-                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-paper placeholder:text-warm-cream/40 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="btn-glass-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-[#1A1A1A]"
-                aria-label="Đăng ký"
-              >
-                <Mail size={16} />
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
 
