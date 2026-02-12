@@ -28,7 +28,7 @@ export default function NewsletterForm() {
 
   if (submitted) {
     return (
-      <div className="flex items-center gap-2 mt-4 animate-fade-up">
+      <div className="flex items-center gap-2 mt-4 animate-fade-up" data-testid="newsletter-success">
         <CheckCircle size={16} className="text-green-400 shrink-0" />
         <p className="text-sm text-green-400/80">Đăng ký thành công!</p>
       </div>
@@ -36,7 +36,7 @@ export default function NewsletterForm() {
   }
 
   return (
-    <form className="mt-4" onSubmit={handleSubmit} noValidate>
+    <form className="mt-4" onSubmit={handleSubmit} noValidate data-testid="newsletter-form">
       {/* Honeypot — hidden from humans, visible to bots */}
       <input
         type="text"
@@ -58,12 +58,14 @@ export default function NewsletterForm() {
           }}
           placeholder="email@example.com"
           aria-label="Địa chỉ email"
+          data-testid="newsletter-email"
           className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-paper placeholder:text-warm-cream/40 focus:outline-none"
         />
         <button
           type="submit"
           className="btn-glass-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-[#1A1A1A]"
           aria-label="Đăng ký nhận tin"
+          data-testid="newsletter-submit"
         >
           <Mail size={16} />
         </button>
