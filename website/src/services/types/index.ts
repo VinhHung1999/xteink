@@ -190,7 +190,7 @@ export interface CartItem {
   type: "product" | "accessory";
 }
 
-// ========== Checkout: Addresses ==========
+// ========== Checkout: Addresses (flat — fetched per cascade level) ==========
 export interface Ward {
   code: string;
   name: string;
@@ -199,13 +199,11 @@ export interface Ward {
 export interface District {
   code: string;
   name: string;
-  wards: Ward[];
 }
 
 export interface Province {
   code: string;
   name: string;
-  districts: District[];
 }
 
 // ========== Checkout: Payment Methods ==========

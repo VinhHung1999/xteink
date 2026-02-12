@@ -3,10 +3,8 @@
  *
  * Fetches data from the backend API (port 3001).
  * Maps BE icon strings → LucideIcon components via resolveIcon().
+ * Falls back to mock data if BE is unavailable (resilience).
  * Function signatures unchanged — zero component changes needed.
- *
- * Phase 1: 15 content APIs → real fetch
- * Phase 2 (pending): getProvinces, getCheckoutPaymentMethods → real fetch
  */
 
 import {
@@ -26,12 +24,29 @@ import {
   SocialProofData,
   Guide,
   Province,
+  District,
+  Ward,
   CheckoutPaymentMethod,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
-// Phase 2 mocks (checkout — kept until BE1.3-1.4 integration)
-import { mockProvinces } from "./mock/addresses";
+// Mock fallbacks
+import { mockProductData } from "./mock/product";
+import { mockFeatures } from "./mock/features";
+import { mockPricingData } from "./mock/pricing";
+import { mockTestimonials } from "./mock/testimonials";
+import { mockLifestyleMoments } from "./mock/lifestyle";
+import { mockNavLinks } from "./mock/navigation";
+import { mockFooterData } from "./mock/footer";
+import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
+import { mockProductComparison } from "./mock/product-comparison";
+import { mockAccessories } from "./mock/accessories";
+import { mockPurchaseInfoData } from "./mock/purchase-info";
+import { mockProductListing } from "./mock/product-listing";
+import { mockFAQData } from "./mock/faq";
+import { mockSocialProofData } from "./mock/social-proof";
+import { mockGuides } from "./mock/guides";
+import { mockProvinces, mockDistrictsByProvince, mockWardsByDistrict } from "./mock/addresses";
 import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -120,21 +135,25 @@ interface RawGuide {
   href: string;
 }
 
-// ===== 15 Content APIs (real fetch) =====
+// ===== 15 Content APIs =====
 
 /**
  * Fetch product data (Xteink X4)
  * GET /api/products/x4
  */
 export async function getProductData(): Promise<ProductData> {
-  const raw = await fetchAPI<RawProductData>("/api/products/x4");
-  return {
-    ...raw,
-    features: raw.features.map((f) => ({
-      ...f,
-      icon: resolveIcon(f.icon),
-    })),
-  };
+  try {
+    const raw = await fetchAPI<RawProductData>("/api/products/x4");
+    return {
+      ...raw,
+      features: raw.features.map((f) => ({
+        ...f,
+        icon: resolveIcon(f.icon),
+      })),
+    };
+  } catch {
+    return mockProductData;
+  }
 }
 
 /**
@@ -142,7 +161,11 @@ export async function getProductData(): Promise<ProductData> {
  * GET /api/features
  */
 export async function getFeatures(): Promise<Feature[]> {
-  return fetchAPI<Feature[]>("/api/features");
+  try {
+    return await fetchAPI<Feature[]>("/api/features");
+  } catch {
+    return mockFeatures;
+  }
 }
 
 /**
@@ -150,14 +173,18 @@ export async function getFeatures(): Promise<Feature[]> {
  * GET /api/pricing
  */
 export async function getPricingData(): Promise<PricingData> {
-  const raw = await fetchAPI<RawPricingData>("/api/pricing");
-  return {
-    ...raw,
-    trustBadges: raw.trustBadges.map((b) => ({
-      ...b,
-      icon: resolveIcon(b.icon),
-    })),
-  };
+  try {
+    const raw = await fetchAPI<RawPricingData>("/api/pricing");
+    return {
+      ...raw,
+      trustBadges: raw.trustBadges.map((b) => ({
+        ...b,
+        icon: resolveIcon(b.icon),
+      })),
+    };
+  } catch {
+    return mockPricingData;
+  }
 }
 
 /**
@@ -165,7 +192,11 @@ export async function getPricingData(): Promise<PricingData> {
  * GET /api/testimonials
  */
 export async function getTestimonials(): Promise<Testimonial[]> {
-  return fetchAPI<Testimonial[]>("/api/testimonials");
+  try {
+    return await fetchAPI<Testimonial[]>("/api/testimonials");
+  } catch {
+    return mockTestimonials;
+  }
 }
 
 /**
@@ -173,7 +204,11 @@ export async function getTestimonials(): Promise<Testimonial[]> {
  * GET /api/lifestyle-moments
  */
 export async function getLifestyleMoments(): Promise<LifestyleMoment[]> {
-  return fetchAPI<LifestyleMoment[]>("/api/lifestyle-moments");
+  try {
+    return await fetchAPI<LifestyleMoment[]>("/api/lifestyle-moments");
+  } catch {
+    return mockLifestyleMoments;
+  }
 }
 
 /**
@@ -181,7 +216,11 @@ export async function getLifestyleMoments(): Promise<LifestyleMoment[]> {
  * GET /api/navigation
  */
 export async function getNavLinks(): Promise<NavLink[]> {
-  return fetchAPI<NavLink[]>("/api/navigation");
+  try {
+    return await fetchAPI<NavLink[]>("/api/navigation");
+  } catch {
+    return mockNavLinks;
+  }
 }
 
 /**
@@ -189,7 +228,11 @@ export async function getNavLinks(): Promise<NavLink[]> {
  * GET /api/footer
  */
 export async function getFooterData(): Promise<FooterData> {
-  return fetchAPI<FooterData>("/api/footer");
+  try {
+    return await fetchAPI<FooterData>("/api/footer");
+  } catch {
+    return mockFooterData;
+  }
 }
 
 /**
@@ -197,11 +240,15 @@ export async function getFooterData(): Promise<FooterData> {
  * GET /api/snap-flip-read
  */
 export async function getSnapFlipReadSteps(): Promise<SnapFlipReadStep[]> {
-  const raw = await fetchAPI<RawSnapFlipReadStep[]>("/api/snap-flip-read");
-  return raw.map((s) => ({
-    ...s,
-    icon: resolveIcon(s.icon),
-  }));
+  try {
+    const raw = await fetchAPI<RawSnapFlipReadStep[]>("/api/snap-flip-read");
+    return raw.map((s) => ({
+      ...s,
+      icon: resolveIcon(s.icon),
+    }));
+  } catch {
+    return mockSnapFlipReadSteps;
+  }
 }
 
 /**
@@ -209,7 +256,11 @@ export async function getSnapFlipReadSteps(): Promise<SnapFlipReadStep[]> {
  * GET /api/product-comparison
  */
 export async function getProductComparison(): Promise<ProductComparisonData> {
-  return fetchAPI<ProductComparisonData>("/api/product-comparison");
+  try {
+    return await fetchAPI<ProductComparisonData>("/api/product-comparison");
+  } catch {
+    return mockProductComparison;
+  }
 }
 
 /**
@@ -217,7 +268,11 @@ export async function getProductComparison(): Promise<ProductComparisonData> {
  * GET /api/accessories
  */
 export async function getAccessories(): Promise<Accessory[]> {
-  return fetchAPI<Accessory[]>("/api/accessories");
+  try {
+    return await fetchAPI<Accessory[]>("/api/accessories");
+  } catch {
+    return mockAccessories;
+  }
 }
 
 /**
@@ -225,26 +280,30 @@ export async function getAccessories(): Promise<Accessory[]> {
  * GET /api/purchase-info
  */
 export async function getPurchaseInfoData(): Promise<PurchaseInfoData> {
-  const raw = await fetchAPI<RawPurchaseInfoData>("/api/purchase-info");
-  return {
-    paymentMethods: raw.paymentMethods.map((m) => ({
-      ...m,
-      icon: resolveIcon(m.icon),
-    })),
-    shippingInfo: raw.shippingInfo.map((s) => ({
-      ...s,
-      icon: resolveIcon(s.icon),
-    })),
-    warranty: raw.warranty.map((w) => ({
-      ...w,
-      icon: resolveIcon(w.icon),
-    })),
-    bundleItems: raw.bundleItems.map((b) => ({
-      ...b,
-      icon: resolveIcon(b.icon),
-    })),
-    freeShippingNote: raw.freeShippingNote,
-  };
+  try {
+    const raw = await fetchAPI<RawPurchaseInfoData>("/api/purchase-info");
+    return {
+      paymentMethods: raw.paymentMethods.map((m) => ({
+        ...m,
+        icon: resolveIcon(m.icon),
+      })),
+      shippingInfo: raw.shippingInfo.map((s) => ({
+        ...s,
+        icon: resolveIcon(s.icon),
+      })),
+      warranty: raw.warranty.map((w) => ({
+        ...w,
+        icon: resolveIcon(w.icon),
+      })),
+      bundleItems: raw.bundleItems.map((b) => ({
+        ...b,
+        icon: resolveIcon(b.icon),
+      })),
+      freeShippingNote: raw.freeShippingNote,
+    };
+  } catch {
+    return mockPurchaseInfoData;
+  }
 }
 
 /**
@@ -252,7 +311,11 @@ export async function getPurchaseInfoData(): Promise<PurchaseInfoData> {
  * GET /api/faq
  */
 export async function getFAQData(): Promise<FAQItem[]> {
-  return fetchAPI<FAQItem[]>("/api/faq");
+  try {
+    return await fetchAPI<FAQItem[]>("/api/faq");
+  } catch {
+    return mockFAQData;
+  }
 }
 
 /**
@@ -260,7 +323,11 @@ export async function getFAQData(): Promise<FAQItem[]> {
  * GET /api/social-proof
  */
 export async function getSocialProofData(): Promise<SocialProofData> {
-  return fetchAPI<SocialProofData>("/api/social-proof");
+  try {
+    return await fetchAPI<SocialProofData>("/api/social-proof");
+  } catch {
+    return mockSocialProofData;
+  }
 }
 
 /**
@@ -268,11 +335,15 @@ export async function getSocialProofData(): Promise<SocialProofData> {
  * GET /api/guides
  */
 export async function getGuidesData(): Promise<Guide[]> {
-  const raw = await fetchAPI<RawGuide[]>("/api/guides");
-  return raw.map((g) => ({
-    ...g,
-    icon: resolveIcon(g.icon),
-  }));
+  try {
+    const raw = await fetchAPI<RawGuide[]>("/api/guides");
+    return raw.map((g) => ({
+      ...g,
+      icon: resolveIcon(g.icon),
+    }));
+  } catch {
+    return mockGuides;
+  }
 }
 
 /**
@@ -280,28 +351,61 @@ export async function getGuidesData(): Promise<Guide[]> {
  * GET /api/products
  */
 export async function getProductListing(): Promise<ProductListingItem[]> {
-  return fetchAPI<ProductListingItem[]>("/api/products");
+  try {
+    return await fetchAPI<ProductListingItem[]>("/api/products");
+  } catch {
+    return mockProductListing;
+  }
 }
 
-// ===== Phase 2: Checkout APIs (still mock — swap after BE1.3-1.4) =====
-
-// Simulate API latency (remove when swapped to real API)
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// ===== Address APIs (flat cascade) =====
 
 /**
- * Fetch provinces for checkout address
- * TODO Phase 2: GET /api/addresses/provinces
+ * Fetch provinces (flat list)
+ * GET /api/addresses/provinces
  */
 export async function getProvinces(): Promise<Province[]> {
-  await delay(50);
-  return mockProvinces;
+  try {
+    return await fetchAPI<Province[]>("/api/addresses/provinces");
+  } catch {
+    return mockProvinces;
+  }
 }
+
+/**
+ * Fetch districts for a province (flat list)
+ * GET /api/addresses/provinces/:code/districts
+ */
+export async function getDistricts(provinceCode: string): Promise<District[]> {
+  try {
+    return await fetchAPI<District[]>(`/api/addresses/provinces/${provinceCode}/districts`);
+  } catch {
+    return mockDistrictsByProvince[provinceCode] ?? [];
+  }
+}
+
+/**
+ * Fetch wards for a district
+ * GET /api/addresses/districts/:code/wards
+ */
+export async function getWards(districtCode: string): Promise<Ward[]> {
+  try {
+    return await fetchAPI<Ward[]>(`/api/addresses/districts/${districtCode}/wards`);
+  } catch {
+    return mockWardsByDistrict[districtCode] ?? [];
+  }
+}
+
+// ===== Checkout Payment =====
 
 /**
  * Fetch checkout payment methods
- * TODO Phase 2: GET /api/checkout/payment-methods
+ * GET /api/checkout/payment-methods
  */
 export async function getCheckoutPaymentMethods(): Promise<CheckoutPaymentMethod[]> {
-  await delay(50);
-  return mockCheckoutPaymentMethods;
+  try {
+    return await fetchAPI<CheckoutPaymentMethod[]>("/api/checkout/payment-methods");
+  } catch {
+    return mockCheckoutPaymentMethods;
+  }
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import type { Province, District, CheckoutPaymentMethod } from "@/services/types";
+import { getDistricts, getWards } from "@/services/api";
+import type { Province, District, Ward, CheckoutPaymentMethod } from "@/services/types";
 
 interface CheckoutClientProps {
   provinces: Province[];
@@ -45,20 +46,61 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Cascade data
-  const selectedProvince = provinces.find((p) => p.code === provinceCode);
-  const districts: District[] = selectedProvince?.districts ?? [];
-  const selectedDistrict = districts.find((d) => d.code === districtCode);
-  const wards = selectedDistrict?.wards ?? [];
+  // Cascade data (fetched per level from API)
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+  const [loadingWards, setLoadingWards] = useState(false);
 
-  // Reset child selects on parent change
-  useEffect(() => {
+  // Fetch districts when province changes
+  const fetchDistricts = useCallback(async (code: string) => {
+    if (!code) {
+      setDistricts([]);
+      return;
+    }
+    setLoadingDistricts(true);
+    try {
+      const data = await getDistricts(code);
+      setDistricts(data);
+    } catch {
+      setDistricts([]);
+    } finally {
+      setLoadingDistricts(false);
+    }
+  }, []);
+
+  // Fetch wards when district changes
+  const fetchWards = useCallback(async (code: string) => {
+    if (!code) {
+      setWards([]);
+      return;
+    }
+    setLoadingWards(true);
+    try {
+      const data = await getWards(code);
+      setWards(data);
+    } catch {
+      setWards([]);
+    } finally {
+      setLoadingWards(false);
+    }
+  }, []);
+
+  // Handle province change: reset children, fetch districts
+  function handleProvinceChange(code: string) {
+    setProvinceCode(code);
     setDistrictCode("");
     setWardCode("");
-  }, [provinceCode]);
-  useEffect(() => {
+    setWards([]);
+    fetchDistricts(code);
+  }
+
+  // Handle district change: reset ward, fetch wards
+  function handleDistrictChange(code: string) {
+    setDistrictCode(code);
     setWardCode("");
-  }, [districtCode]);
+    fetchWards(code);
+  }
 
   function validate(): boolean {
     const e: Record<string, string> = {};
@@ -81,13 +123,18 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     if (!validate()) return;
     setSubmitting(true);
 
+    // Look up selected names for order summary
+    const provinceName = provinces.find((p) => p.code === provinceCode)?.name ?? "";
+    const districtName = districts.find((d) => d.code === districtCode)?.name ?? "";
+    const wardName = wards.find((w) => w.code === wardCode)?.name ?? "";
+
     // Build order summary for success page
     const orderData = {
       orderId: "XTK" + Date.now().toString(36).toUpperCase(),
       name: name.trim(),
       phone: phone.replace(/[\s-]/g, ""),
       email: email.trim() || undefined,
-      address: `${address.trim()}, ${wards.find((w) => w.code === wardCode)?.name}, ${selectedDistrict?.name}, ${selectedProvince?.name}`,
+      address: `${address.trim()}, ${wardName}, ${districtName}, ${provinceName}`,
       note: note.trim() || undefined,
       paymentMethod: paymentMethods.find((p) => p.id === paymentId)?.name ?? "COD",
       items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
@@ -179,7 +226,7 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 <div className="relative">
                   <select
                     value={provinceCode}
-                    onChange={(e) => setProvinceCode(e.target.value)}
+                    onChange={(e) => handleProvinceChange(e.target.value)}
                     className={selectCls}
                   >
                     <option value="">— Chọn tỉnh/thành —</option>
@@ -205,21 +252,30 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 <div className="relative">
                   <select
                     value={districtCode}
-                    onChange={(e) => setDistrictCode(e.target.value)}
+                    onChange={(e) => handleDistrictChange(e.target.value)}
                     className={selectCls}
-                    disabled={!provinceCode}
+                    disabled={!provinceCode || loadingDistricts}
                   >
-                    <option value="">— Chọn quận/huyện —</option>
+                    <option value="">
+                      {loadingDistricts ? "Đang tải..." : "— Chọn quận/huyện —"}
+                    </option>
                     {districts.map((d) => (
                       <option key={d.code} value={d.code}>
                         {d.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown
-                    size={16}
-                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
-                  />
+                  {loadingDistricts ? (
+                    <Loader2
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-paper/40"
+                    />
+                  ) : (
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
+                    />
+                  )}
                 </div>
                 {errors.district && <p className={errorCls}>{errors.district}</p>}
               </div>
@@ -234,19 +290,28 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                     value={wardCode}
                     onChange={(e) => setWardCode(e.target.value)}
                     className={selectCls}
-                    disabled={!districtCode}
+                    disabled={!districtCode || loadingWards}
                   >
-                    <option value="">— Chọn phường/xã —</option>
+                    <option value="">
+                      {loadingWards ? "Đang tải..." : "— Chọn phường/xã —"}
+                    </option>
                     {wards.map((w) => (
                       <option key={w.code} value={w.code}>
                         {w.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown
-                    size={16}
-                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
-                  />
+                  {loadingWards ? (
+                    <Loader2
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-paper/40"
+                    />
+                  ) : (
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
+                    />
+                  )}
                 </div>
                 {errors.ward && <p className={errorCls}>{errors.ward}</p>}
               </div>
