@@ -1,7 +1,8 @@
 # Team Whiteboard
 
-**Sprint:** 2
-**Goal:** Content polish + "Snap Flip Read" + X3 Product + Accessories
+**Sprint:** 5 (BE)
+**Goal:** Order + Payment — Real checkout flow with order creation, payment processing, shipping
+**Branch:** sprint_5_be
 
 ---
 
@@ -9,12 +10,101 @@
 
 | Role | Status | Current Task | Last Update |
 |------|--------|--------------|-------------|
-| PO   | Active | Sprint 2 review — ready for Boss review | 2026-02-09 19:10 |
-| FE   | Done | All S2 stories delivered + image integration | 2026-02-09 19:00 |
+| PO   | 🔄 Active | Sprint 5 kickoff — assigned BE, notified team | 2026-02-12 14:30 |
+| TL   | ⏳ Standby | Step 1 ✅ approved — awaiting Steps 2-5 review request | 2026-02-12 13:32 |
+| BE   | 📝 Committing | Steps 1-5 complete (17/17 tests ✅) — committing now | 2026-02-12 13:32 |
+| FE   | ⏳ | Awaiting Step 6 (BE2.4 integration) | 2026-02-12 12:55 |
+| SM   | 🔄 Active | DoD verification Steps 1-5 — awaiting commit + TL review | 2026-02-12 13:32 |
+| QA   | ⏳ | Awaiting Step 6 (BE2.4 for testing) | 2026-02-12 12:55 |
 
 ---
 
-## Sprint 2 Stories
+## Sprint 5 (BE) Stories — Steps 1-5 Complete, Awaiting Reviews
+
+| ID | Story | Priority | Size | Assignee | Status |
+|----|-------|----------|------|----------|--------|
+| BE2.1 | Order Schema + Create API | P0 | L | BE + TL | 🔍 Review (Steps 1+3 ✅ coded, Step 1 TL ✅, Step 3 pending TL) |
+| BE2.2 | Payment Flow (COD + Bank Transfer + MoMo/VNPay stubs) | P0 | L | BE + TL | 🔍 Review (Step 4 ✅ coded, awaiting TL review) |
+| BE2.3 | Shipping Fee Calculation | P1 | M | BE + TL | 🔍 Review (Step 2 ✅ coded, awaiting TL review) |
+| BE2.4 | FE Integration — Checkout → POST /api/orders | P0 | M | FE + QA | ⏳ Pending (BE APIs ready, awaiting Step 6) |
+| BE2.5 | Admin Order Management (list + update status) | P1 | M | BE + TL | 🔍 Review (Step 5 ✅ coded, awaiting TL review) |
+
+---
+
+## Sprint 4 Retrospective Summary
+
+**Cycle Time:** ~70 minutes (kickoff → Boss acceptance)
+**Stories:** 5/5 complete | **Bugs:** 0 production bugs | **Blockers:** 1 (server freeze, resolved in 2 min)
+
+### What Went Well
+- Architecture-first approach (TL doc before coding) saved integration time
+- Type contracts matched 1:1 — zero mismatches between BE responses and FE types
+- Mock fallback pattern in api.ts ensured FE never breaks if BE is down
+- Icon-map.ts resolved LucideIcon→string mapping cleanly
+- Fast feedback loops: issues caught and resolved in minutes
+- Zero production bugs across all 19 endpoints
+
+### What Went Wrong
+- FE dev server froze after major api.ts changes — required manual restart
+- X4 price discrepancy (1.49M vs 1.59M) caught late in sprint
+- QA tested checkout with empty cart → false positive blocker
+- SM prematurely declared sprint complete before BE1.4 was QA-tested (DoD gap)
+- FE skipped SM reporting after BE1.5 (communication protocol gap)
+
+### Action Items for Sprint 5
+1. **Restart dev server after major FE changes** — add to DoD checklist
+2. **QA test preconditions** — document which pages require state (checkout needs cart items)
+3. **Data consistency audit before seeding** — verify prices/specs match across all sources
+4. **SM DoD verification checklist** — verify ALL criteria (coded + reviewed + tested + accepted) before declaring complete
+5. **Reinforce two-step protocol** — every task: (a) acknowledge start → (b) report completion to SM
+6. **Add structured specs to BE** — label-value pairs for product detail (FE workaround request)
+7. **Health check step in DoD** — quick server health check before integration testing
+
+---
+
+## Technical Decisions (Ongoing)
+
+- **Stack:** Node.js + Express + TypeScript + Prisma ORM + PostgreSQL
+- **Directory:** `backend/`
+- **BE Port:** 3001 | **FE Port:** 2002
+- **Public URLs:** FE → xteink.hungphu.work | BE → api-xteink.hungphu.work
+- **API Contract:** Must match `website/src/services/types/index.ts` exactly
+- **Seed data:** From FE mock files in `website/src/services/mock/`
+- **CORS:** Multi-origin support (localhost + public URL)
+
+---
+
+## Sprint 4 (BE) Archive ✅ BOSS ACCEPTED (2026-02-12)
+
+| ID | Story | Status | Notes |
+|----|-------|--------|-------|
+| BE1.1 | Project Setup + DB Schema | ✅ Done | 28 Prisma models, PostgreSQL seeded |
+| BE1.2 | Content APIs (15 GET endpoints) | ✅ Done | 15/15 QA tested, all match FE types |
+| BE1.3 | Address API (Full Vietnam) | ✅ Done | 63 provinces, 713 districts, 11,160 wards |
+| BE1.4 | Checkout Payment Methods API | ✅ Done | 5 payment methods |
+| BE1.5 | FE Integration (mock→real) | ✅ Done | All 19 api.ts functions, try/catch fallback |
+
+**Key Deliverables:**
+- 19 GET endpoints live on port 3001 (public: api-xteink.hungphu.work)
+- 12,028 DB records across 28 tables
+- FE api.ts: all functions fetch real BE with mock fallback
+- icon-map.ts: 21 Lucide icon mappings
+- Cloudflare tunnel: api-xteink.hungphu.work → localhost:3001
+
+---
+
+## Sprint 3 Archive
+
+| ID | Story | Status | Commit |
+|----|-------|--------|--------|
+| S3.1 | Purchase Info Section | ✅ Done | 6433a76 |
+| S3.2 | FAQ Section | ✅ Done | 6840b4d |
+| S3.3 | Social Proof — Press + Community | ✅ Done | 6dc996f |
+| S3.4 | Zalo Support Widget | ✅ Done | 398e323 |
+
+---
+
+## Sprint 2 Archive
 
 | ID | Story | Status | Commit |
 |----|-------|--------|--------|
@@ -26,64 +116,10 @@
 
 ---
 
-## Sprint 1 Archive
-
-| ID | Story | Status | Commit |
-|----|-------|--------|--------|
-| S1.1 | Mock API Layer Setup | ✅ Done | 8b790f4 |
-| S1.2 | Navbar Liquid Glass | ❌ Reverted | — |
-| S1.3 | Light Mode Conversion | ❌ Reverted | — |
-| S1.4 | Responsive Polish | ✅ Done | b75bd6e |
-| — | Dark theme + gradients | ✅ Done | 64ff6f2, 41cff24 |
-| — | Font system | ✅ Done | 19352ab, f1bbd2a |
-| — | Navbar + Footer fixes | ✅ Done | c8d50f3, 1d13272 |
-
----
-
-## PO Verification Summary
-
-### S2.1 Content Visibility Polish ✅
-- All headings visible: Paper White / gold-gradient, font-bold
-- Body text readable: proper opacity on dark bg
-- Cards have subtle border + differentiated bg
-- Tested desktop + mobile
-
-### S2.2 "Snap, Flip, Read" ✅
-- 3-step layout: Snap → Flip → Read with icons
-- Scroll-triggered animation
-- Featured magnetic feature image
-- Mobile vertical, desktop horizontal
-
-### S2.3 X3 + Comparison ✅
-- X3 card with real specs (3.7", 250ppi, 60g)
-- X4 vs X3 side-by-side comparison table
-- Color-coded advantages
-- CTAs for both models
-- Real product images
-
-### S2.4 Accessories ✅
-- 3 accessory cards with real product photos
-- Magnetic Case color swatches (6 colors)
-- Silicon Case color swatches (2 colors)
-- Responsive grid
-
-### Image Integration ✅
-- 18 real product photos verified (all paths resolve)
-- Symlink: public/images/ → structured_images/
-- No placeholder images remaining
-
----
-
 ## Notes
 
-- Boss directive: FE-only for now, BE later. FE must use mock API layer.
+- Boss directive: Shift to BE-first — build backend to support existing FE
+- FE-only for now uses mock API layer → BE Sprint 4 replaces with real data
 - Fonts: Playfair Display (heading) + Be Vietnam Pro (body) + Great Vibes (accent)
-- Dev port: 2002, Turbopack disabled (--webpack flag)
-- Sprint 2 branch ready to merge to main
-
----
-
-## Clear After Sprint
-
-After Sprint Review, clear this whiteboard for next Sprint.
-Keep only the template structure.
+- Dev ports: FE 2002, BE 3001
+- Public URL: https://xteink.hungphu.work

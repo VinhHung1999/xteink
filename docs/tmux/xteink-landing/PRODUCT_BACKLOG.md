@@ -1,7 +1,7 @@
 # Product Backlog
 
 **Owner:** PO (Product Owner)
-**Last Updated:** 2026-02-09
+**Last Updated:** 2026-02-12
 
 ---
 
@@ -11,11 +11,13 @@
 |--------|------|---------|--------|
 | 1 | Mock API + Dark theme + Fonts + Responsive | S1.1–S1.4 | ✅ Done |
 | 2 | Content hoàn thiện + "Snap Flip Read" + X3 product | S2.1–S2.4 | ✅ Done |
-| 3 | Purchase flow + FAQ + Social proof | S3.1–S3.4 | Planned |
-| 4 | Subpages: About + Guides | S4.1–S4.3 | Planned |
-| 5 | Library preview + Search/Filter | S5.1–S5.3 | Planned |
-| 6 | Animations + Performance + SEO | S6.1–S6.4 | Planned |
-| 7 | Zalo/Chat integration + Referral | S7.1–S7.3 | Planned |
+| 3 | Purchase flow + FAQ + Social proof | S3.1–S3.4 | ✅ Done |
+| 4 (BE) | BE Foundation + Content APIs | BE1.1–BE1.5 | ✅ Done |
+| 5 (BE) | Order + Payment Integration | BE2.1–BE2.4 | Planned |
+| 6 (FE) | Subpages: About + Guides | S4.1–S4.3 | Planned |
+| 7 (FE) | Library preview + Search/Filter | S5.1–S5.3 | Planned |
+| 8 (FE) | Animations + Performance + SEO | S6.1–S6.4 | Planned |
+| 9 | Engagement + Growth | S7.1–S7.3 | Planned |
 
 ---
 
@@ -187,7 +189,204 @@
 
 ---
 
-## Sprint 4: Subpages — About + Guides
+## Sprint 4: Backend Foundation + Content APIs (BE)
+
+**Sprint Goal:** Dựng hệ thống BE (Node + Express + PostgreSQL) phục vụ toàn bộ FE hiện tại. Thay thế mock data bằng real API.
+
+**Stack:** Node.js + Express + TypeScript + PostgreSQL + Prisma ORM
+**Directory:** `backend/`
+**Port:** 3001
+
+---
+
+### BE1.1: Project Setup + Database Schema
+**Priority:** P0
+**Estimate:** M
+**Assignee:** BE (with TL architecture review)
+
+**Description:** Khởi tạo project Node + Express + TypeScript. Setup PostgreSQL + Prisma ORM. Thiết kế database schema cover toàn bộ data FE đang dùng.
+
+**Acceptance Criteria:**
+- [ ] `backend/` directory với Express + TypeScript + Prisma
+- [ ] PostgreSQL database `xteink` created
+- [ ] Prisma schema covering: Products, Accessories, Features, FAQ, Testimonials, SocialProof, Guides, Navigation, Footer, PurchaseInfo, Addresses (Province/District/Ward)
+- [ ] `npm run dev` starts server on port 3001
+- [ ] `npm run db:seed` seeds all mock data from FE into DB
+- [ ] Basic error handling middleware + CORS config (allow localhost:2002)
+- [ ] Health check endpoint: `GET /api/health`
+- [ ] ESLint + Prettier configured
+
+---
+
+### BE1.2: Content APIs (14 GET endpoints)
+**Priority:** P0
+**Estimate:** L
+**Assignee:** BE
+
+**Description:** Implement tất cả 14 read-only endpoints matching FE type contracts trong `website/src/services/types/index.ts`. Response shape PHẢI match 1:1 với mock data hiện tại.
+
+**Acceptance Criteria:**
+- [ ] `GET /api/products/x4` → ProductData
+- [ ] `GET /api/products` → ProductListingItem[]
+- [ ] `GET /api/features` → Feature[]
+- [ ] `GET /api/pricing` → PricingData
+- [ ] `GET /api/testimonials` → Testimonial[]
+- [ ] `GET /api/lifestyle-moments` → LifestyleMoment[]
+- [ ] `GET /api/navigation` → NavLink[]
+- [ ] `GET /api/footer` → FooterData
+- [ ] `GET /api/snap-flip-read` → SnapFlipReadStep[]
+- [ ] `GET /api/product-comparison` → ProductComparisonData
+- [ ] `GET /api/accessories` → Accessory[]
+- [ ] `GET /api/purchase-info` → PurchaseInfoData
+- [ ] `GET /api/faq` → FAQItem[]
+- [ ] `GET /api/social-proof` → SocialProofData
+- [ ] `GET /api/guides` → Guide[]
+- [ ] All responses match FE types exactly (validate against `types/index.ts`)
+
+---
+
+### BE1.3: Address API (Full Vietnam)
+**Priority:** P0
+**Estimate:** M
+**Assignee:** BE
+
+**Description:** API địa chỉ Việt Nam đầy đủ — 63 tỉnh/thành, quận/huyện, phường/xã. Hỗ trợ cascade select trong checkout form.
+
+**Acceptance Criteria:**
+- [ ] `GET /api/addresses/provinces` → Province[] (63 tỉnh/thành)
+- [ ] `GET /api/addresses/provinces/:code/districts` → District[]
+- [ ] `GET /api/addresses/districts/:code/wards` → Ward[]
+- [ ] Data source: Vietnam government open data hoặc reliable npm package
+- [ ] Response format match FE types: Province { code, name, districts: District[] }
+- [ ] Performance: < 100ms response time
+
+---
+
+### BE1.4: Checkout Payment Methods API
+**Priority:** P0
+**Estimate:** S
+**Assignee:** BE
+
+**Description:** API trả về payment methods cho checkout form.
+
+**Acceptance Criteria:**
+- [ ] `GET /api/checkout/payment-methods` → CheckoutPaymentMethod[]
+- [ ] 5 methods: COD, MoMo, ZaloPay, VNPay, Bank transfer
+- [ ] Response match FE type exactly
+
+---
+
+### BE1.5: FE Integration — Swap Mock → Real API
+**Priority:** P0
+**Estimate:** M
+**Assignee:** FE
+
+**Description:** Update `website/src/services/api.ts` — thay mock imports bằng fetch() calls tới BE. Zero component changes.
+
+**Acceptance Criteria:**
+- [ ] All 17 functions in `api.ts` call real BE endpoints
+- [ ] Environment variable `NEXT_PUBLIC_API_URL` for BE URL
+- [ ] Error handling: fallback to mock data if BE unavailable
+- [ ] All existing pages render correctly with real API data
+- [ ] Build passes, no TypeScript errors
+
+---
+
+## Sprint 5 (BE): Order + Payment (Active)
+
+**Sprint Goal:** Real checkout flow — order creation, payment processing, shipping fee, admin management. FE checkout submits to real API.
+
+**Stack:** Same as Sprint 4 (Express + Prisma + PostgreSQL)
+
+---
+
+### BE2.1: Order Schema + Create API
+**Priority:** P0
+**Estimate:** L
+**Assignee:** BE (with TL architecture review)
+
+**Description:** Prisma models for Order system + POST endpoint to create orders from checkout. GET endpoint to retrieve order by ID (for success page).
+
+**Acceptance Criteria:**
+- [ ] Prisma models: Order, OrderItem, ShippingAddress (or embed in Order)
+- [ ] Order fields: id, orderNumber (auto-generate), status, customerName, customerPhone, customerEmail, shippingAddress, paymentMethod, subtotal, shippingFee, total, notes, createdAt
+- [ ] OrderItem fields: productId, productName, quantity, unitPrice, totalPrice
+- [ ] `POST /api/orders` — create order from checkout payload (cart items + customer info + address + payment method)
+- [ ] `GET /api/orders/:id` — retrieve order details (for success/confirmation page)
+- [ ] Order status enum: PENDING → CONFIRMED → SHIPPING → DELIVERED → CANCELLED
+- [ ] Auto-generate orderNumber (format: XT-YYYYMMDD-XXXX)
+- [ ] Validate: cart not empty, required fields present, valid payment method
+- [ ] Return created order with ID + orderNumber in response
+
+---
+
+### BE2.2: Payment Flow
+**Priority:** P0
+**Estimate:** L
+**Assignee:** BE
+
+**Description:** Payment processing per method. COD = auto-confirm. Bank Transfer = return QR/account info. MoMo/VNPay/ZaloPay = webhook stubs (real integration khi có merchant account).
+
+**Acceptance Criteria:**
+- [ ] COD: Order status → CONFIRMED immediately
+- [ ] Bank Transfer: Return bank account info + QR code data (static for now)
+- [ ] MoMo/VNPay/ZaloPay: Stub endpoints that return "redirect URL" placeholder — ready for real integration later
+- [ ] `POST /api/payments/webhook` — stub endpoint for payment gateway callbacks
+- [ ] Payment status tracking on Order: paymentStatus (PENDING, PAID, FAILED)
+- [ ] Update Order when payment confirmed
+
+---
+
+### BE2.3: Shipping Fee Calculation
+**Priority:** P1
+**Estimate:** M
+**Assignee:** BE
+
+**Description:** Calculate shipping fee based on destination province. Simple tier-based: HCM/HN = giá thấp, tỉnh khác = giá cao hơn. Free shipping trên 1M VND.
+
+**Acceptance Criteria:**
+- [ ] `GET /api/shipping/fee?provinceCode=XX&subtotal=YY` — return shipping fee
+- [ ] Tier: HCM (79) + HN (01) = 25,000₫, other provinces = 35,000₫
+- [ ] Free shipping if subtotal >= 1,000,000₫
+- [ ] Return: { fee, freeShippingThreshold, estimatedDays }
+- [ ] Estimated days: HCM/HN = 1-2 ngày, other = 3-5 ngày
+
+---
+
+### BE2.4: FE Integration — Checkout → Real API
+**Priority:** P0
+**Estimate:** M
+**Assignee:** FE
+
+**Description:** Update CheckoutClient.tsx to POST real order to BE instead of sessionStorage. Success page fetches order from API.
+
+**Acceptance Criteria:**
+- [ ] Checkout form submits to `POST /api/orders` with full payload
+- [ ] Shipping fee fetched dynamically from `GET /api/shipping/fee` on province select
+- [ ] Success page: fetch order details from `GET /api/orders/:id`
+- [ ] Error handling: show user-friendly error if order creation fails
+- [ ] Remove sessionStorage workaround
+- [ ] Loading states during API calls
+
+---
+
+### BE2.5: Admin Order Management
+**Priority:** P1
+**Estimate:** M
+**Assignee:** BE
+
+**Description:** Basic admin endpoints to list and manage orders. No auth for now (internal use).
+
+**Acceptance Criteria:**
+- [ ] `GET /api/admin/orders` — list all orders (paginated, sorted by createdAt desc)
+- [ ] `GET /api/admin/orders?status=PENDING` — filter by status
+- [ ] `PATCH /api/admin/orders/:id/status` — update order status
+- [ ] Return order with items + shipping address in list
+- [ ] Pagination: page + limit query params (default: page=1, limit=20)
+
+---
+
+## Sprint 6 (FE): Subpages — About + Guides (was Sprint 4)
 
 **Sprint Goal:** Tạo subpages cho brand story và hướng dẫn sử dụng.
 
@@ -237,7 +436,7 @@
 
 ---
 
-## Sprint 5: Library Preview + Search
+## Sprint 7 (FE): Library Preview + Search (was Sprint 5)
 
 **Sprint Goal:** Preview library 70K sách + tính năng search/filter.
 
@@ -289,7 +488,7 @@
 
 ---
 
-## Sprint 6: Animations + Performance + SEO
+## Sprint 8 (FE): Animations + Performance + SEO (was Sprint 6)
 
 **Sprint Goal:** Polish animations, optimize performance, SEO foundation.
 
@@ -356,7 +555,7 @@
 
 ---
 
-## Sprint 7: Engagement + Growth
+## Sprint 9: Engagement + Growth (was Sprint 7)
 
 **Sprint Goal:** Tính năng tăng engagement: live chat, referral, newsletter.
 

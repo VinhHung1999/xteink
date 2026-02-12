@@ -241,6 +241,41 @@ tm-send PO "FE -> PO: [Task] DONE. [Summary]."
 
 ---
 
+## Sprint Lessons (Retro)
+
+### Sprint 4: Restart dev server after major API changes
+- After significant changes to `api.ts` or services layer, **restart dev server**
+- FE dev server can freeze/hang after major refactors — manual restart required
+- Add to DoD checklist: "Server restart after major api.ts changes"
+- Saves QA time (prevents false "server unresponsive" blockers)
+
+### Sprint 4: Always report to SM after task completion
+- After completing ANY task, report to SM immediately: `tm-send SM "FE [HH:mm]: [Task] DONE"`
+- Don't skip SM and go directly to TL for review — SM needs to track progress
+- Two-step protocol: (a) acknowledge start → (b) report completion to SM
+- Communication gaps create blind spots in sprint coordination
+
+### Git: Always verify staged files before commit
+- Run `git status` and check file count matches expected changes
+- Never trust partial staging — one forgotten `git add` wastes a review cycle
+
+### Client-side routing breaks DOMContentLoaded scripts
+- When adding Next.js Link routing, immediately audit ALL `DOMContentLoaded` / `window.onload` scripts
+- They only fire once — client-side navigation won't re-trigger them
+- Fix: Use `useEffect` + `usePathname()` dep in a client component
+
+### React 19 `use()` in "use client" = hydration failure
+- NEVER use `use(asyncFn())` inside a `"use client"` component
+- Pattern: async server component (`await`) → client component (props)
+- Wrap async server components in `<Suspense>` in layout
+- Always scan for this pattern when creating new components
+
+### Unreproducible bugs: set time limit
+- Spend max 15min investigating, then report findings + ask for browser/OS/device details
+- Don't deep-dive blindly into bugs that can't be reproduced locally
+
+---
+
 ## Starting Your Role
 
 1. Read: `docs/tmux/xteink-landing/workflow.md`
