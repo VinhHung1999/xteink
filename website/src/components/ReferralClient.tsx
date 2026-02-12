@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, Gift, Users, ShoppingBag, Share2 } from "lucide-react";
 import { trackShare } from "@/utils/analytics";
 
@@ -38,6 +38,11 @@ const STEPS = [
 
 export default function ReferralClient() {
   const [copied, setCopied] = useState(false);
+  const [supportsShare, setSupportsShare] = useState(false);
+
+  useEffect(() => {
+    setSupportsShare("share" in navigator);
+  }, []);
 
   async function copyLink() {
     try {
@@ -127,6 +132,7 @@ export default function ReferralClient() {
                       : "btn-glass-primary text-[#1A1A1A]"
                   }`}
                   aria-label={copied ? "Đã copy" : "Copy link giới thiệu"}
+                  data-testid="referral-copy-btn"
                 >
                   {copied ? <Check size={18} /> : <Copy size={18} />}
                 </button>
@@ -137,16 +143,18 @@ export default function ReferralClient() {
                 <button
                   onClick={shareZalo}
                   className="btn-glass-secondary flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-medium text-paper/80"
+                  data-testid="referral-share-zalo"
                 >
                   Zalo
                 </button>
                 <button
                   onClick={shareFacebook}
                   className="btn-glass-secondary flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-medium text-paper/80"
+                  data-testid="referral-share-facebook"
                 >
                   Facebook
                 </button>
-                {typeof navigator !== "undefined" && "share" in navigator && (
+                {supportsShare && (
                   <button
                     onClick={shareNative}
                     className="btn-glass-secondary flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-medium text-paper/80"
