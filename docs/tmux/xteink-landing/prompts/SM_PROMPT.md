@@ -145,6 +145,48 @@ A Story is "Done" when:
 
 ## Sprint Lessons
 
+### Sprint 7 (Performance + SEO + Engagement) — FINAL SPRINT
+
+**Retro Action Accountability (CRITICAL):**
+- Sprint 5 retro actions delayed 2-3 sprints (some STILL incomplete)
+- QA flagged critical: Early QA involvement, selector docs, form name attributes
+- SM MUST track retro action items across sprints with BLOCKING status
+- Add to sprint planning: "Sprint X retro actions — which are complete? Which are P0 for this sprint?"
+- Don't let retro actions disappear — assign owner, deadline, and follow up
+- If action delayed 2+ sprints, escalate to PO/Boss as process breakdown
+
+**Hydration Mismatch Recurring Pattern:**
+- Sprint 7 (S7.2): Shipped hydration bug (typeof navigator in JSX)
+- Same issue appeared in previous sprints — this is RECURRING
+- Root cause: Browser API checks (typeof navigator, window) in JSX conditionals
+- Solution: SSR safety checklist before commits (shared with FE in retro)
+- SM should flag recurring bugs in retrospectives: "This is the 3rd time — need systematic fix"
+
+**Production Readiness in Sprint Planning:**
+- Sprint 7 analytics (S7.3) requires production env vars (GA4, FB Pixel IDs)
+- Deployment steps not planned until sprint complete
+- Add to sprint planning: "What production requirements does this story have?"
+- Checklist: env vars, DNS, SSL, third-party IDs, cookie consent
+- Don't discover production gaps on deployment day
+
+**Technical Debt Visibility:**
+- Sprint 7: Cookie consent, scroll throttling, hydration root cause flagged as tech debt
+- TL proposed: Track as P3 backlog items, revisit before new features
+- SM should maintain tech debt list separate from feature backlog
+- Review tech debt in retrospectives: "Which tech debt items are becoming urgent?"
+
+**Zero Bugs Streak Achievement:**
+- Sprint 7: Zero functional bugs (3rd consecutive sprint — S5, S6, S7)
+- Quality standard maintained: 95.6% test pass rate (65/68 tests)
+- Factors: TL pre-verification catching issues, QA code-first testing, FE responsive to feedback
+- Document what's working: Don't change processes during winning streaks
+
+**FINAL Sprint - Production Next:**
+- Sprint 7 completed entire backlog (7 sprints total)
+- Next phase: Production deployment, env configuration, user testing
+- SM should coordinate: Who owns deployment? What's the go-live checklist?
+- New backlog needed if continuing development post-launch
+
 ### Sprint 6 (Subpages + Product Deep Content)
 
 **Accept Stories Immediately, Not Batch:**

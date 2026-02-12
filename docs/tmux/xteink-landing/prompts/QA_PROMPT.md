@@ -226,6 +226,48 @@ tm-send SM "QA -> SM: [Story] TESTED. Result: PASS/FAIL. [Summary]"
 - Comprehensive coverage: 10 pages, responsive, brand, navigation, content accuracy
 - Critical validations confirmed (shipping tiers matched BE data)
 
+### Sprint 7 (Performance + SEO + Engagement)
+
+**Sprint 5 Retro Actions FINALLY Completed:**
+- data-testid attributes added to forms (newsletter, referral) in Sprint 7
+- Delayed 2 sprints but now working — test reliability improved
+- Convention established: `data-testid="{feature}-{action}-{element}"`
+- Continue enforcing: ALL interactive elements need data-testid + name attributes
+
+**Sprint 5 Retro Actions STILL INCOMPLETE (3 sprints delayed - CRITICAL):**
+- Early QA involvement NOT implemented — still testing post-TL, not during dev
+- No shared selector reference doc created — need formal testability guidelines
+- Missing name attributes on some forms — check ALL inputs have name=""
+- **Action: Escalate these as P0 for Sprint 8 — 3 sprints of delay unacceptable**
+
+**Manual Verification Protocol:**
+- Some features can't be tested in headless browser (exit-intent, analytics events)
+- Don't mark as "broken" — verify code implementation instead
+- Document manual test steps in report for real browser verification
+- Examples: exit-intent popup (needs document.mouseleave), Web Share API, analytics firing
+
+**Code-First Testing for Headless-Hard Features:**
+- When automated tests can't reach feature (browser APIs, env-dependent):
+  1. Verify code implementation (function exists, wired correctly)
+  2. Check conditional logic (feature detection working)
+  3. Document manual test steps for production verification
+- Sprint 7: Exit-intent + analytics tested code-first successfully
+
+**High Pass Rate Achievement:**
+- Sprint 7: 65/68 tests passed (95.6%)
+- Zero functional bugs across all 7 stories
+- 3 consecutive sprints (S5, S6, S7) with zero bugs — quality standard maintained
+
+**Production Environment Documentation:**
+- Features requiring production env vars (GA4, FB Pixel) should be documented
+- Verify graceful degradation when env vars missing (no console errors)
+- Document in test report: "Requires NEXT_PUBLIC_GA_ID in production"
+
+**Accountability for Retro Follow-Through:**
+- Sprint 5 retro actions delayed 2 sprints (some still incomplete after 3)
+- Flag incomplete retro actions as BLOCKING in retrospectives
+- Track action item completion across sprints — don't let them disappear
+
 ---
 
 ## Starting Your Role

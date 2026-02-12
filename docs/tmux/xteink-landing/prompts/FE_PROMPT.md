@@ -304,6 +304,44 @@ tm-send PO "FE -> PO: [Task] DONE. [Summary]."
 - Coordinate with team: "This page needs nav link — add to nav mock and BE seeds"
 - Missing cross-links (format-checker ↔ guides, library ↔ nav) reduce discoverability
 
+### Sprint 7: SSR safety checklist - CRITICAL before every commit
+- **NEVER put browser API checks in JSX conditionals** (typeof navigator, window, document)
+- Pattern causes hydration mismatch (server: false, client: may be true)
+- **Correct pattern:** Use useState(false) + useEffect to detect client-side features
+- Example: Web Share API detection, matchMedia, localStorage, sessionStorage
+- Before committing any client component, verify:
+  1. No browser API checks in JSX conditionals
+  2. All window/navigator/document usage behind useEffect or useState hydration guard
+- Sprint 7: Shipped hydration bug in S7.2, fixed in 5ccc1e0 — prevent this proactively
+
+### Sprint 7: Add new routes to nav/footer IMMEDIATELY (STILL RECURRING!)
+- **Sprint 6 AND Sprint 7 lesson:** This keeps being forgotten!
+- When creating new pages (/referral, /library, /format-checker), **ADD TO NAV IN SAME COMMIT**
+- Update both: `website/src/services/mock/navigation.ts` AND footer links
+- This is NOT optional — nav updates are part of page creation task
+- Checklist before marking story done: Are new routes in nav/footer?
+
+### Sprint 7: Form field name attributes for QA automation
+- **Sprint 5 retro P0 action (finally completed in Sprint 7):** Add name attributes to all form inputs
+- data-testid alone is not enough — forms also need name attributes
+- Convention: `data-testid="{feature}-{action}-{element}"` + `name="{fieldName}"`
+- Example: `<input type="email" name="email" data-testid="newsletter-email-input" />`
+- Makes QA automation reliable and follows HTML form standards
+
+### Sprint 7: Analytics DRY pattern
+- Create centralized analytics utility (utils/analytics.ts) for event tracking
+- Export simple helpers: trackNewsletterSignup, trackShare, trackAddToCart, trackPurchase
+- Keep analytics code OUT of business logic — fire-and-forget calls
+- Example: `<button onClick={() => { doThing(); trackButtonClick(); }}>` — clean separation
+
+### Sprint 7: Production readiness checklist
+- Before marking sprint complete, verify production requirements:
+  1. Environment variables documented (GA4 ID, FB Pixel ID, API keys)
+  2. Deployment steps planned (DNS, SSL, analytics setup)
+  3. Cookie consent considered (needed for EU, not Vietnam)
+  4. Manual test protocol for headless-hard features (exit-intent, analytics events)
+- Don't wait for deployment day to discover missing env vars
+
 ---
 
 ## Starting Your Role
