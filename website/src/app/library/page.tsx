@@ -72,17 +72,17 @@ export default function LibraryPage() {
         </div>
 
         {/* Category grid */}
-        <div className="mt-16 scroll-reveal scroll-d2">
-          <h2 className="font-heading text-2xl font-semibold text-paper mb-6 text-center">
+        <div className="mt-16">
+          <h2 className="scroll-reveal font-heading text-2xl font-semibold text-paper mb-6 text-center">
             Thể loại
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {categories.map((cat) => {
+            {categories.map((cat, i) => {
               const Icon = cat.icon;
               return (
                 <div
                   key={cat.name}
-                  className="glass-card group rounded-xl p-4 text-center transition-all hover:scale-[1.02]"
+                  className={`glass-card group rounded-xl p-4 text-center transition-all hover:scale-[1.02] scroll-reveal scroll-d${Math.min(i + 1, 7)}`}
                 >
                   <Icon size={24} className={`mx-auto mb-2 ${cat.color}`} />
                   <p className="font-heading text-sm font-semibold text-paper">
@@ -96,15 +96,15 @@ export default function LibraryPage() {
         </div>
 
         {/* Sample book covers */}
-        <div className="mt-16 scroll-reveal scroll-d3">
-          <h2 className="font-heading text-2xl font-semibold text-paper mb-6 text-center">
+        <div className="mt-16">
+          <h2 className="scroll-reveal font-heading text-2xl font-semibold text-paper mb-6 text-center">
             Sách nổi bật
           </h2>
           <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-6">
-            {sampleBooks.map((book) => (
+            {sampleBooks.map((book, i) => (
               <div
                 key={book.title}
-                className="group cursor-default"
+                className={`group cursor-default scroll-reveal scroll-d${Math.min(i + 1, 7)}`}
               >
                 {/* CSS-only book cover */}
                 <div
