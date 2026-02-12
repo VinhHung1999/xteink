@@ -2,15 +2,32 @@
 
 ## Resolved Bugs
 
-_(Add bugs as they are fixed)_
+### FE dev server freeze after major api.ts changes (Sprint 4)
+- **Cause:** Next.js dev server froze after extensive changes to `website/src/services/api.ts` (swapping 19 mock functions to real BE calls). Server became unresponsive (5s timeout, no response).
+- **Symptom:** All requests hang, QA testing blocked
+- **Fix:** Kill and restart dev server: `pkill -f "next dev"` then `cd website && pnpm dev`
+- **Prevention:** Add "restart dev server after major api.ts changes" to FE DoD checklist
+- **Resolution time:** 2 minutes (detected 11:58, resolved 12:00)
 
-```markdown
-### Bug title (Sprint/Context)
-- **Cause:** What caused it
-- **Fix:** How it was resolved
-```
+### X4 price discrepancy across data sources (Sprint 4)
+- **Cause:** Product price inconsistency — some files had 1.49M, others had 1.59M for X4 eReader
+- **Impact:** User confusion, incorrect pricing display
+- **Fix:** Data consistency audit — verified correct price (1.59M) across all sources and updated inconsistent files
+- **Prevention:** TL/BE must verify data consistency across ALL sources (mock files, specs, marketing) before seeding database
+
+### QA checkout test with empty cart = false positive blocker (Sprint 4)
+- **Cause:** QA tested `/checkout` page with empty cart. CheckoutClient has guard that redirects to `/` when cart is empty (by design). QA saw blank page and reported "address cascade not found"
+- **Symptom:** QA reported address selects (province/district/ward) missing, flagged as blocker
+- **Fix:** QA retested with cart items → all 3 address selects found, test passed
+- **Root cause:** Test methodology — checkout requires cart items as precondition
+- **Prevention:** QA must document test preconditions for each page (checkout needs cart, success needs order ID, etc.)
 
 ## Lessons Learned
+
+### React 19 `use()` in "use client" breaks hydration → no event handlers on mobile
+- **Cause:** `use(getNavLinks())` in a `"use client"` component creates a new Promise every render → suspends during hydration → without `<Suspense>` boundary, entire React tree fails to hydrate → DOM is visible but onClick handlers never attach
+- **Symptom:** Desktop links work (native `<a href>`), but mobile `<button onClick>` completely dead
+- **Fix:** Split into async server component (`await getData()`) + client component (receives data via props). Wrap async server components in `<Suspense>` in layout.tsx
 
 ### JS execution broken in Next.js 16 + React 19 + Turbopack
 - `framer-motion`, `react-intersection-observer`, `useEffect` hooks, and `next/script` ALL fail silently — animations/effects never fire
@@ -24,6 +41,22 @@ _(Add bugs as they are fixed)_
 ### Git revert on CSS-heavy commits loses styles
 - **Cause:** `git revert` on commits with extensive CSS changes creates conflicts; resolution often drops styles silently
 - **Fix:** Use `git checkout <good-commit> -- <files>` to restore exact file state, then re-apply only the changes you want
+
+### DOMContentLoaded scroll-reveal breaks on Next.js client-side navigation
+- **Cause:** Inline `<script>` with `DOMContentLoaded` only fires once on initial page load. Client-side `<Link>` navigation doesn't re-fire it → IntersectionObserver never observes new page elements → all `scroll-reveal` elements stuck at `opacity:0` (blank pages)
+- **Fix:** Replace inline script with a `ScrollRevealProvider` client component using `useEffect` with `usePathname()` dependency + `MutationObserver` to detect new DOM elements from async rendering. Proper cleanup on unmount.
+
+### React strict mode double useEffect breaks sessionStorage read-then-delete
+- **Cause:** useEffect reads sessionStorage → sets state → deletes item. Strict mode re-runs useEffect → item already deleted → redirect fires
+- **Fix:** Use `useRef` guard to prevent double execution, move `sessionStorage.removeItem` to user action (button click) instead of useEffect
+
+### Always stage ALL modified files before committing
+- **Cause:** After multipage restructure (12 files changed), only committed 1 file (Footer.tsx) — forgot to `git add` the other 11 modified/untracked files
+- **Fix:** Always run `git status` and verify staged file count matches expected changes before committing
+
+### Nodemon doesn't detect .env file changes — must hard restart
+- **Cause:** nodemon watches `src/**/*.ts` only, not `.env` files
+- **Fix:** `pkill -f nodemon && pkill -f ts-node` then restart. Don't rely on auto-reload for env changes.
 
 ### Dark mode token inversion breaks "absolute" color uses
 - Swapping `paper`↔`ink` for dark mode breaks: image overlays (`from-ink/70`), CTA text on gold (`text-ink`), hero text on images (`text-paper`), footer `bg-charcoal`
