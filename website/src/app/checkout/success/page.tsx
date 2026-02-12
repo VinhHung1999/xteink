@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import OrderSuccessClient from "@/components/OrderSuccessClient";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function OrderSuccessPage() {
-  return <OrderSuccessClient />;
+  return (
+    <Suspense>
+      <OrderSuccessClient />
+    </Suspense>
+  );
 }

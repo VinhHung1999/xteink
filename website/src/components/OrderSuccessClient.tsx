@@ -1,28 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { CheckCircle } from "lucide-react";
-
-interface OrderItem {
-  name: string;
-  quantity: number;
-  price: number;
-}
-
-interface OrderData {
-  orderId: string;
-  name: string;
-  phone: string;
-  email?: string;
-  address: string;
-  note?: string;
-  paymentMethod: string;
-  items: OrderItem[];
-  subtotal: number;
-  shipping: number;
-  total: number;
-}
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { getOrder } from "@/services/api";
+import type { OrderDetailResponse } from "@/services/types";
 
 function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
@@ -30,23 +13,31 @@ function formatPrice(price: number): string {
 
 export default function OrderSuccessClient() {
   const router = useRouter();
-  const [order, setOrder] = useState<OrderData | null>(null);
+  const searchParams = useSearchParams();
+  const orderNumber = searchParams.get("order");
+  const [order, setOrder] = useState<OrderDetailResponse | null>(null);
+  const [loading, setLoading] = useState(true);
   const loaded = useRef(false);
 
   useEffect(() => {
     if (loaded.current) return;
-    const raw = sessionStorage.getItem("xteink-last-order");
-    if (!raw) {
+    if (!orderNumber) {
       router.replace("/");
       return;
     }
     loaded.current = true;
-    setOrder(JSON.parse(raw));
-  }, [router]);
+    getOrder(orderNumber)
+      .then(setOrder)
+      .catch(() => router.replace("/"))
+      .finally(() => setLoading(false));
+  }, [orderNumber, router]);
 
-  function handleGoHome() {
-    sessionStorage.removeItem("xteink-last-order");
-    router.push("/");
+  if (loading) {
+    return (
+      <section className="flex min-h-[60vh] items-center justify-center px-6 py-20">
+        <Loader2 size={32} className="animate-spin text-paper/40" />
+      </section>
+    );
   }
 
   if (!order) return null;
@@ -69,11 +60,11 @@ export default function OrderSuccessClient() {
 
         {/* Order details */}
         <div className="scroll-reveal scroll-d1 mt-10 glass-card rounded-2xl p-6">
-          {/* Order ID */}
+          {/* Order ID + Status */}
           <div className="flex items-center justify-between border-b border-paper/5 pb-4">
             <span className="text-sm text-paper/60">Mã đơn hàng</span>
             <span className="font-mono text-sm font-bold text-gold">
-              {order.orderId}
+              {order.orderNumber}
             </span>
           </div>
 
@@ -81,46 +72,108 @@ export default function OrderSuccessClient() {
           <div className="mt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-paper/60">Họ tên</span>
-              <span className="text-paper">{order.name}</span>
+              <span className="text-paper">{order.customer.name}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-paper/60">Điện thoại</span>
-              <span className="text-paper">{order.phone}</span>
+              <span className="text-paper">{order.customer.phone}</span>
             </div>
-            {order.email && (
+            {order.customer.email && (
               <div className="flex justify-between text-sm">
                 <span className="text-paper/60">Email</span>
-                <span className="text-paper">{order.email}</span>
+                <span className="text-paper">{order.customer.email}</span>
               </div>
             )}
             <div className="flex justify-between gap-4 text-sm">
               <span className="shrink-0 text-paper/60">Địa chỉ</span>
-              <span className="text-right text-paper">{order.address}</span>
+              <span className="text-right text-paper">{order.shippingAddress}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-paper/60">Thanh toán</span>
-              <span className="text-paper">{order.paymentMethod}</span>
+              <span className="text-paper">{order.paymentMethodName}</span>
             </div>
-            {order.note && (
+            {order.notes && (
               <div className="flex justify-between gap-4 text-sm">
                 <span className="shrink-0 text-paper/60">Ghi chú</span>
-                <span className="text-right text-paper/80">{order.note}</span>
+                <span className="text-right text-paper/80">{order.notes}</span>
               </div>
             )}
           </div>
+
+          {/* Bank transfer info */}
+          {order.paymentInfo?.bankName && (
+            <div className="mt-6 rounded-xl border border-gold/20 bg-gold/[0.04] p-4">
+              <p className="text-sm font-semibold text-gold">Thông tin chuyển khoản</p>
+              <div className="mt-3 space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Ngân hàng</span>
+                  <span className="text-paper">{order.paymentInfo.bankName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Số tài khoản</span>
+                  <span className="font-mono text-paper">{order.paymentInfo.accountNumber}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Chủ tài khoản</span>
+                  <span className="text-paper">{order.paymentInfo.accountName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Số tiền</span>
+                  <span className="font-semibold text-gold">
+                    {formatPrice(order.paymentInfo.amount ?? order.total)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Nội dung CK</span>
+                  <span className="font-mono font-bold text-paper">
+                    {order.paymentInfo.transferContent}
+                  </span>
+                </div>
+              </div>
+              {order.paymentInfo.qrDataUrl && (
+                <div className="mt-4 flex justify-center">
+                  <Image
+                    src={order.paymentInfo.qrDataUrl}
+                    alt="QR chuyển khoản"
+                    width={180}
+                    height={180}
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Gateway stub message */}
+          {order.paymentInfo?.message && !order.paymentInfo.bankName && (
+            <div className="mt-6 rounded-xl border border-paper/10 bg-paper/[0.03] p-4">
+              <p className="text-sm text-paper/70">{order.paymentInfo.message}</p>
+            </div>
+          )}
 
           {/* Items */}
           <div className="mt-6 border-t border-paper/5 pt-4">
             <p className="text-sm font-medium text-paper/70">Sản phẩm</p>
             <div className="mt-3 space-y-2">
               {order.items.map((item, i) => (
-                <div key={i} className="flex justify-between text-sm">
-                  <span className="text-paper">
-                    {item.name} × {item.quantity}
-                  </span>
-                  <span className="text-paper">
-                    {formatPrice(item.price * item.quantity)}
-                  </span>
+                <div key={i} className="flex gap-3">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg">
+                    <Image
+                      src={item.productImage}
+                      alt={item.productName}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-1 items-center justify-between text-sm">
+                    <span className="text-paper">
+                      {item.productName} × {item.quantity}
+                    </span>
+                    <span className="text-paper">
+                      {formatPrice(item.totalPrice)}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -134,7 +187,9 @@ export default function OrderSuccessClient() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-paper/60">Phí vận chuyển</span>
-              <span className="text-paper">{formatPrice(order.shipping)}</span>
+              <span className="text-paper">
+                {order.shippingFee === 0 ? "Miễn phí" : formatPrice(order.shippingFee)}
+              </span>
             </div>
             <div className="flex justify-between border-t border-paper/5 pt-3">
               <span className="text-base font-semibold text-paper">Tổng cộng</span>
@@ -148,7 +203,7 @@ export default function OrderSuccessClient() {
         {/* Back to home */}
         <div className="scroll-reveal scroll-d2 mt-8 text-center">
           <button
-            onClick={handleGoHome}
+            onClick={() => router.push("/")}
             className="btn-glass-primary inline-flex h-12 items-center rounded-xl px-8 text-base font-semibold text-[#1A1A1A]"
           >
             Về trang chủ

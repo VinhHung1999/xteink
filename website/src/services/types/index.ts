@@ -227,6 +227,84 @@ export interface CheckoutPaymentMethod {
   icon: string; // emoji or text icon (no LucideIcon — used in client form)
 }
 
+// ========== Order (API payloads + responses) ==========
+
+export interface CreateOrderPayload {
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+  shipping: {
+    provinceCode: string;
+    districtCode: string;
+    wardCode: string;
+    addressDetail: string;
+  };
+  paymentMethodId: string;
+  notes?: string;
+  items: {
+    slug: string;
+    name: string;
+    image: string;
+    unitPrice: number;
+    quantity: number;
+    type: "product" | "accessory";
+  }[];
+}
+
+export interface PaymentInfo {
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
+  amount?: number;
+  transferContent?: string;
+  qrDataUrl?: string;
+  redirectUrl?: string;
+  message?: string;
+}
+
+export interface CreateOrderResponse {
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  total: number;
+  paymentInfo?: PaymentInfo;
+}
+
+export interface OrderDetailResponse {
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  paymentMethodName: string;
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+  shippingAddress: string;
+  notes?: string;
+  items: {
+    productName: string;
+    productImage: string;
+    unitPrice: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  createdAt: string;
+  paymentInfo?: PaymentInfo;
+}
+
+export interface ShippingFeeResponse {
+  fee: number;
+  freeShippingThreshold: number;
+  estimatedDays: string;
+}
+
 // ========== FAQ ==========
 export interface FAQItem {
   question: string;

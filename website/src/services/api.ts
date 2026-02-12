@@ -28,6 +28,10 @@ import {
   District,
   Ward,
   CheckoutPaymentMethod,
+  CreateOrderPayload,
+  CreateOrderResponse,
+  OrderDetailResponse,
+  ShippingFeeResponse,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -460,4 +464,32 @@ export async function getCheckoutPaymentMethods(): Promise<CheckoutPaymentMethod
   } catch {
     return mockCheckoutPaymentMethods;
   }
+}
+
+// ===== Order APIs (Sprint 5) =====
+
+export async function createOrder(payload: CreateOrderPayload): Promise<CreateOrderResponse> {
+  const res = await fetch(`${API_URL}/api/orders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Order creation failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function getOrder(orderNumber: string): Promise<OrderDetailResponse> {
+  return fetchAPI<OrderDetailResponse>(`/api/orders/${orderNumber}`);
+}
+
+export async function getShippingFee(
+  provinceCode: string,
+  subtotal: number
+): Promise<ShippingFeeResponse> {
+  return fetchAPI<ShippingFeeResponse>(
+    `/api/shipping/fee?provinceCode=${provinceCode}&subtotal=${subtotal}`
+  );
 }
