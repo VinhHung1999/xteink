@@ -94,7 +94,7 @@ export default function AccessoriesClient({ accessories }: AccessoriesClientProp
                     <p className="text-xs font-medium text-paper/60 mb-1.5">
                       Màu: <span className="text-paper/80">{selectedColor?.name}</span>
                     </p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {accessory.colors!.map((color, ci) => {
                         const isSelected = ci === selectedIdx;
                         return (
@@ -103,7 +103,7 @@ export default function AccessoriesClient({ accessories }: AccessoriesClientProp
                             type="button"
                             title={color.name}
                             onClick={() => selectColor(accessory.name, ci)}
-                            className={`h-7 w-7 rounded-full border-2 transition-all hover:scale-110 ${
+                            className={`h-8 w-8 rounded-full border-2 transition-all hover:scale-110 ${
                               isSelected
                                 ? "border-gold ring-2 ring-gold/30 scale-110"
                                 : "border-paper/20 hover:border-gold/50"
