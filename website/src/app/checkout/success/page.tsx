@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import OrderSuccessClient from "@/components/OrderSuccessClient";
+import OrderSuccessSkeleton from "@/components/skeletons/OrderSuccessSkeleton";
 
 export const metadata: Metadata = {
   title: "Đặt hàng thành công — Xteink",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function OrderSuccessPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<OrderSuccessSkeleton />}>
       <OrderSuccessClient />
     </Suspense>
   );

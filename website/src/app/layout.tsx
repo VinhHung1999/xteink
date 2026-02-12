@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import NavbarSkeleton from "@/components/skeletons/NavbarSkeleton";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -74,7 +75,7 @@ export default function RootLayout({
           >
             Bỏ qua điều hướng
           </a>
-          <Suspense>
+          <Suspense fallback={<NavbarSkeleton />}>
             <Navbar />
           </Suspense>
           <main id="main-content">{children}</main>

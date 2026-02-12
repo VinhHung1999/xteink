@@ -3,10 +3,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { getOrder } from "@/services/api";
 import type { OrderDetailResponse } from "@/services/types";
 import { trackPurchase } from "@/utils/analytics";
+import OrderSuccessSkeleton from "@/components/skeletons/OrderSuccessSkeleton";
 
 function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
@@ -39,11 +40,7 @@ export default function OrderSuccessClient() {
   }, [orderNumber, router]);
 
   if (loading) {
-    return (
-      <section className="flex min-h-[60vh] items-center justify-center px-6 py-20">
-        <Loader2 size={32} className="animate-spin text-paper/40" />
-      </section>
-    );
+    return <OrderSuccessSkeleton />;
   }
 
   if (!order) return null;
