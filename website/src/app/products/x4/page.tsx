@@ -11,6 +11,27 @@ export const metadata: Metadata = {
   title: "Xteink X4 — Máy đọc sách e-ink 4.3 inch",
   description:
     "Xteink X4: màn hình E-Ink 4.3 inch, 220 PPI, 74g, gắn nam châm lên điện thoại.",
+  openGraph: {
+    title: "Xteink X4 — Máy đọc sách e-ink 4.3 inch",
+    description: "Màn hình E-Ink 4.3\", 220 PPI, 74g. Gắn nam châm lên điện thoại. Chỉ 1.590.000₫.",
+    images: [{ url: "/images/products/x4/gallery/xteink_x4_ultra_thin_magnetic_back_ereader_main_product_photo_69usd.jpg" }],
+  },
+};
+
+const x4JsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: "Xteink X4",
+  description: "Máy đọc sách e-ink 4.3 inch, 220 PPI, 74g — gắn nam châm lên điện thoại, đọc mọi lúc mọi nơi.",
+  image: "https://xteink.hungphu.work/images/products/x4/gallery/xteink_x4_ultra_thin_magnetic_back_ereader_main_product_photo_69usd.jpg",
+  brand: { "@type": "Brand", name: "Xteink" },
+  offers: {
+    "@type": "Offer",
+    price: "1590000",
+    priceCurrency: "VND",
+    availability: "https://schema.org/InStock",
+    url: "https://xteink.hungphu.work/products/x4",
+  },
 };
 
 const gallery = [
@@ -40,6 +61,11 @@ export default async function X4Page() {
   if (!product) return notFound();
 
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(x4JsonLd) }}
+    />
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[960px]">
         <Link
@@ -201,5 +227,6 @@ export default async function X4Page() {
         </div>
       </div>
     </section>
+    </>
   );
 }

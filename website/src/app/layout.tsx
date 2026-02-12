@@ -30,10 +30,29 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const SITE_URL = "https://xteink.hungphu.work";
+const OG_IMAGE = `${SITE_URL}/images/home/hero_banner/redefining_portable_reading_hero_banner.jpg`;
+
 export const metadata: Metadata = {
-  title: "Xteink X4 — Đọc sách, theo cách của bạn",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Xteink X4 — Đọc sách, theo cách của bạn",
+    template: "%s | Xteink",
+  },
   description:
     "Thư viện bỏ túi nhẹ hơn một bộ bài. Máy đọc sách e-ink 4.3 inch, 74g, gắn nam châm lên điện thoại. Chỉ 1.590.000₫.",
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    siteName: "Xteink",
+    title: "Xteink X4 — Đọc sách, theo cách của bạn",
+    description:
+      "Thư viện bỏ túi nhẹ hơn một bộ bài. Máy đọc sách e-ink 4.3 inch, 74g, gắn nam châm lên điện thoại.",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Xteink X4 eReader" }],
+  },
+  alternates: {
+    languages: { "vi-VN": SITE_URL },
+  },
 };
 
 export default function RootLayout({
