@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import type { Province, District, CheckoutPaymentMethod } from "@/services/types";
+import { getDistricts, getWards, getShippingFee, createOrder } from "@/services/api";
+import type { Province, District, Ward, CheckoutPaymentMethod } from "@/services/types";
 
 interface CheckoutClientProps {
   provinces: Province[];
@@ -15,8 +16,6 @@ interface CheckoutClientProps {
 function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
 }
-
-const SHIPPING_FEE = 30000;
 
 export default function CheckoutClient({ provinces, paymentMethods }: CheckoutClientProps) {
   const router = useRouter();
@@ -45,62 +44,175 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Cascade data
-  const selectedProvince = provinces.find((p) => p.code === provinceCode);
-  const districts: District[] = selectedProvince?.districts ?? [];
-  const selectedDistrict = districts.find((d) => d.code === districtCode);
-  const wards = selectedDistrict?.wards ?? [];
+  // Clear a specific field error when user edits that field
+  function clearError(field: string) {
+    if (errors[field]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  }
 
-  // Reset child selects on parent change
+  // Cascade data (fetched per level from API)
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+  const [loadingWards, setLoadingWards] = useState(false);
+
+  // Dynamic shipping fee (from BE)
+  const [shippingFee, setShippingFee] = useState(0);
+  const [shippingEstimate, setShippingEstimate] = useState("");
+  const [loadingShipping, setLoadingShipping] = useState(false);
+
+  // Fetch districts when province changes
+  const fetchDistricts = useCallback(async (code: string) => {
+    if (!code) {
+      setDistricts([]);
+      return;
+    }
+    setLoadingDistricts(true);
+    try {
+      const data = await getDistricts(code);
+      setDistricts(data);
+    } catch {
+      setDistricts([]);
+    } finally {
+      setLoadingDistricts(false);
+    }
+  }, []);
+
+  // Fetch wards when district changes
+  const fetchWards = useCallback(async (code: string) => {
+    if (!code) {
+      setWards([]);
+      return;
+    }
+    setLoadingWards(true);
+    try {
+      const data = await getWards(code);
+      setWards(data);
+    } catch {
+      setWards([]);
+    } finally {
+      setLoadingWards(false);
+    }
+  }, []);
+
+  // Fetch shipping fee from BE
+  const fetchShippingFee = useCallback(async (code: string, subtotal: number) => {
+    if (!code) {
+      setShippingFee(0);
+      setShippingEstimate("");
+      return;
+    }
+    setLoadingShipping(true);
+    try {
+      const data = await getShippingFee(code, subtotal);
+      setShippingFee(data.fee);
+      setShippingEstimate(data.estimatedDays);
+    } catch {
+      setShippingFee(35000); // fallback to highest tier
+      setShippingEstimate("3-5 ngày");
+    } finally {
+      setLoadingShipping(false);
+    }
+  }, []);
+
+  // Re-fetch shipping fee when totalPrice changes (free shipping threshold)
   useEffect(() => {
+    if (provinceCode) {
+      fetchShippingFee(provinceCode, totalPrice);
+    }
+  }, [totalPrice, provinceCode, fetchShippingFee]);
+
+  // Handle province change: reset children, fetch districts
+  // (shipping fee is handled by useEffect on provinceCode change)
+  function handleProvinceChange(code: string) {
+    setProvinceCode(code);
     setDistrictCode("");
     setWardCode("");
-  }, [provinceCode]);
-  useEffect(() => {
+    setWards([]);
+    fetchDistricts(code);
+  }
+
+  // Handle district change: reset ward, fetch wards
+  function handleDistrictChange(code: string) {
+    setDistrictCode(code);
     setWardCode("");
-  }, [districtCode]);
+    fetchWards(code);
+  }
 
   function validate(): boolean {
     const e: Record<string, string> = {};
     if (!name.trim()) e.name = "Vui lòng nhập họ tên";
     if (!phone.trim()) {
       e.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^0\d{9}$/.test(phone.replace(/[\s-]/g, ""))) {
-      e.phone = "Số điện thoại không hợp lệ (VD: 0901234567)";
+    } else if (!/^0\d{9,10}$/.test(phone.replace(/[\s-]/g, ""))) {
+      e.phone = "Số điện thoại không hợp lệ (10-11 số, bắt đầu bằng 0)";
+    }
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      e.email = "Email không hợp lệ";
     }
     if (!provinceCode) e.province = "Vui lòng chọn tỉnh/thành";
     if (!districtCode) e.district = "Vui lòng chọn quận/huyện";
     if (!wardCode) e.ward = "Vui lòng chọn phường/xã";
     if (!address.trim()) e.address = "Vui lòng nhập địa chỉ chi tiết";
     setErrors(e);
+
+    // Scroll to first error field
+    const firstKey = Object.keys(e)[0];
+    if (firstKey) {
+      const el = document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.focus();
+      }
+    }
+
     return Object.keys(e).length === 0;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
+    setErrors({});
 
-    // Build order summary for success page
-    const orderData = {
-      orderId: "XTK" + Date.now().toString(36).toUpperCase(),
-      name: name.trim(),
-      phone: phone.replace(/[\s-]/g, ""),
-      email: email.trim() || undefined,
-      address: `${address.trim()}, ${wards.find((w) => w.code === wardCode)?.name}, ${selectedDistrict?.name}, ${selectedProvince?.name}`,
-      note: note.trim() || undefined,
-      paymentMethod: paymentMethods.find((p) => p.id === paymentId)?.name ?? "COD",
-      items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
-      subtotal: totalPrice,
-      shipping: SHIPPING_FEE,
-      total: totalPrice + SHIPPING_FEE,
-    };
-
-    // Store order for success page, clear cart, redirect
-    sessionStorage.setItem("xteink-last-order", JSON.stringify(orderData));
-    setOrderPlaced(true);
-    clearCart();
-    router.push("/checkout/success");
+    try {
+      const result = await createOrder({
+        customer: {
+          name: name.trim(),
+          phone: phone.replace(/[\s-]/g, ""),
+          email: email.trim() || undefined,
+        },
+        shipping: {
+          provinceCode,
+          districtCode,
+          wardCode,
+          addressDetail: address.trim(),
+        },
+        paymentMethodId: paymentId,
+        notes: note.trim() || undefined,
+        items: items.map((i) => ({
+          slug: i.slug,
+          name: i.name,
+          image: i.image,
+          unitPrice: i.price,
+          quantity: i.quantity,
+          type: i.type,
+        })),
+      });
+      setOrderPlaced(true);
+      clearCart();
+      router.push(`/checkout/success?order=${result.orderNumber}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Đặt hàng thất bại. Vui lòng thử lại.";
+      setErrors({ submit: message });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   // Don't render form until hydrated (avoids flash)
@@ -136,8 +248,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="text"
+                  name="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); clearError("name"); }}
                   placeholder="Nguyễn Văn A"
                   className={inputCls}
                 />
@@ -151,8 +264,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="tel"
+                  name="phone"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
                   placeholder="0901 234 567"
                   className={inputCls}
                 />
@@ -164,11 +278,13 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 <label className={labelCls}>Email (không bắt buộc)</label>
                 <input
                   type="email"
+                  name="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => { setEmail(e.target.value); clearError("email"); }}
                   placeholder="email@example.com"
                   className={inputCls}
                 />
+                {errors.email && <p className={errorCls}>{errors.email}</p>}
               </div>
 
               {/* Province */}
@@ -178,8 +294,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="province"
                     value={provinceCode}
-                    onChange={(e) => setProvinceCode(e.target.value)}
+                    onChange={(e) => { handleProvinceChange(e.target.value); clearError("province"); }}
                     className={selectCls}
                   >
                     <option value="">— Chọn tỉnh/thành —</option>
@@ -204,22 +321,32 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="district"
                     value={districtCode}
-                    onChange={(e) => setDistrictCode(e.target.value)}
+                    onChange={(e) => { handleDistrictChange(e.target.value); clearError("district"); }}
                     className={selectCls}
-                    disabled={!provinceCode}
+                    disabled={!provinceCode || loadingDistricts}
                   >
-                    <option value="">— Chọn quận/huyện —</option>
+                    <option value="">
+                      {loadingDistricts ? "Đang tải..." : "— Chọn quận/huyện —"}
+                    </option>
                     {districts.map((d) => (
                       <option key={d.code} value={d.code}>
                         {d.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown
-                    size={16}
-                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
-                  />
+                  {loadingDistricts ? (
+                    <Loader2
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-paper/40"
+                    />
+                  ) : (
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
+                    />
+                  )}
                 </div>
                 {errors.district && <p className={errorCls}>{errors.district}</p>}
               </div>
@@ -231,22 +358,32 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="ward"
                     value={wardCode}
-                    onChange={(e) => setWardCode(e.target.value)}
+                    onChange={(e) => { setWardCode(e.target.value); clearError("ward"); }}
                     className={selectCls}
-                    disabled={!districtCode}
+                    disabled={!districtCode || loadingWards}
                   >
-                    <option value="">— Chọn phường/xã —</option>
+                    <option value="">
+                      {loadingWards ? "Đang tải..." : "— Chọn phường/xã —"}
+                    </option>
                     {wards.map((w) => (
                       <option key={w.code} value={w.code}>
                         {w.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown
-                    size={16}
-                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
-                  />
+                  {loadingWards ? (
+                    <Loader2
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-paper/40"
+                    />
+                  ) : (
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40"
+                    />
+                  )}
                 </div>
                 {errors.ward && <p className={errorCls}>{errors.ward}</p>}
               </div>
@@ -258,8 +395,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="text"
+                  name="address"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => { setAddress(e.target.value); clearError("address"); }}
                   placeholder="Số nhà, tên đường..."
                   className={inputCls}
                 />
@@ -360,15 +498,34 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-paper/60">Phí vận chuyển</span>
-                    <span className="text-paper">{formatPrice(SHIPPING_FEE)}</span>
+                    <span className="text-paper">
+                      {loadingShipping ? (
+                        "Đang tính..."
+                      ) : provinceCode ? (
+                        shippingFee === 0 ? "Miễn phí" : formatPrice(shippingFee)
+                      ) : (
+                        "—"
+                      )}
+                    </span>
                   </div>
+                  {shippingEstimate && provinceCode && (
+                    <p className="text-xs text-paper/40">
+                      Dự kiến giao hàng: {shippingEstimate}
+                    </p>
+                  )}
                   <div className="flex justify-between border-t border-paper/5 pt-3">
                     <span className="text-base font-semibold text-paper">Tổng cộng</span>
                     <span className="font-heading text-xl font-bold text-gold-shimmer">
-                      {formatPrice(totalPrice + SHIPPING_FEE)}
+                      {formatPrice(totalPrice + shippingFee)}
                     </span>
                   </div>
                 </div>
+
+                {errors.submit && (
+                  <p className="mt-3 rounded-lg bg-red-500/10 p-3 text-center text-sm text-red-400">
+                    {errors.submit}
+                  </p>
+                )}
 
                 <button
                   type="submit"

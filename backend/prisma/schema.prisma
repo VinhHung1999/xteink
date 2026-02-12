@@ -1,0 +1,424 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================
+// PRODUCTS
+// =============================================
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  tag           String?
+  subtitle      String?
+  description   String
+  image         String
+  price         String
+  priceNumeric  Int
+  originalPrice String?
+  screenSpec    String?
+  ppiSpec       String?
+  weightSpec    String?
+  thicknessSpec String?
+  advantages    String[]
+  specsList     String[]
+  features      ProductFeature[]
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ProductFeature {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  icon        String
+  title       String
+  description String
+  sortOrder   Int     @default(0)
+}
+
+// =============================================
+// ACCESSORIES
+// =============================================
+
+model Accessory {
+  id        String           @id @default(cuid())
+  name      String
+  price     String
+  image     String
+  category  String
+  sortOrder Int              @default(0)
+  colors    AccessoryColor[]
+}
+
+model AccessoryColor {
+  id          String    @id @default(cuid())
+  accessoryId String
+  accessory   Accessory @relation(fields: [accessoryId], references: [id], onDelete: Cascade)
+  name        String
+  hex         String
+  sortOrder   Int       @default(0)
+}
+
+// =============================================
+// CONTENT: Features Grid
+// =============================================
+
+model Feature {
+  id          String @id @default(cuid())
+  image       String
+  title       String
+  description String
+  sortOrder   Int    @default(0)
+}
+
+// =============================================
+// CONTENT: Snap Flip Read (USP)
+// =============================================
+
+model SnapFlipReadStep {
+  id          String @id @default(cuid())
+  step        String
+  icon        String
+  title       String
+  description String
+  sortOrder   Int    @default(0)
+}
+
+// =============================================
+// CONTENT: Testimonials
+// =============================================
+
+model Testimonial {
+  id        String @id @default(cuid())
+  quote     String
+  name      String
+  location  String
+  sortOrder Int    @default(0)
+}
+
+// =============================================
+// CONTENT: Lifestyle Moments
+// =============================================
+
+model LifestyleMoment {
+  id        String @id @default(cuid())
+  image     String
+  caption   String
+  sortOrder Int    @default(0)
+}
+
+// =============================================
+// CONTENT: FAQ
+// =============================================
+
+model FAQItem {
+  id        String @id @default(cuid())
+  question  String
+  answer    String
+  sortOrder Int    @default(0)
+
+  @@map("faq_items")
+}
+
+// =============================================
+// CONTENT: Guides
+// =============================================
+
+model Guide {
+  id          String @id @default(cuid())
+  icon        String
+  title       String
+  description String
+  href        String
+  sortOrder   Int    @default(0)
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+
+model NavLink {
+  id        String @id @default(cuid())
+  label     String
+  href      String
+  sortOrder Int    @default(0)
+
+  @@map("nav_links")
+}
+
+// =============================================
+// FOOTER
+// =============================================
+
+model FooterLink {
+  id        String @id @default(cuid())
+  section   String
+  label     String
+  href      String
+  sortOrder Int    @default(0)
+
+  @@map("footer_links")
+}
+
+model FooterPaymentMethod {
+  id        String @id @default(cuid())
+  name      String
+  sortOrder Int    @default(0)
+
+  @@map("footer_payment_methods")
+}
+
+// =============================================
+// PRICING
+// =============================================
+
+model PricingConfig {
+  id            String @id @default(cuid())
+  label         String
+  price         String
+  originalPrice String
+
+  @@map("pricing_config")
+}
+
+model PricingIncludedItem {
+  id        String @id @default(cuid())
+  text      String
+  sortOrder Int    @default(0)
+
+  @@map("pricing_included_items")
+}
+
+model TrustBadge {
+  id        String @id @default(cuid())
+  icon      String
+  label     String
+  sortOrder Int    @default(0)
+
+  @@map("trust_badges")
+}
+
+// =============================================
+// PURCHASE INFO
+// =============================================
+
+model PurchasePaymentMethod {
+  id          String @id @default(cuid())
+  icon        String
+  name        String
+  description String
+  sortOrder   Int    @default(0)
+
+  @@map("purchase_payment_methods")
+}
+
+model ShippingInfo {
+  id        String  @id @default(cuid())
+  icon      String
+  region    String
+  time      String
+  note      String?
+  sortOrder Int     @default(0)
+
+  @@map("shipping_info")
+}
+
+model WarrantyInfo {
+  id          String @id @default(cuid())
+  icon        String
+  title       String
+  description String
+  sortOrder   Int    @default(0)
+
+  @@map("warranty_info")
+}
+
+model BundleItem {
+  id        String @id @default(cuid())
+  icon      String
+  name      String
+  sortOrder Int    @default(0)
+
+  @@map("bundle_items")
+}
+
+// =============================================
+// SOCIAL PROOF
+// =============================================
+
+model PressReview {
+  id        String  @id @default(cuid())
+  name      String
+  rating    Float
+  maxRating Float
+  quote     String?
+  sortOrder Int     @default(0)
+
+  @@map("press_reviews")
+}
+
+model YouTubeReview {
+  id           String  @id @default(cuid())
+  channel      String
+  subscribers  String
+  title        String
+  url          String
+  thumbnailUrl String?
+
+  @@map("youtube_reviews")
+}
+
+model CommunityTestimonial {
+  id        String @id @default(cuid())
+  quote     String
+  name      String
+  source    String
+  sortOrder Int    @default(0)
+
+  @@map("community_testimonials")
+}
+
+// =============================================
+// CHECKOUT
+// =============================================
+
+model CheckoutPaymentMethod {
+  id          String @id @default(cuid())
+  methodId    String @unique
+  name        String
+  description String
+  icon        String
+  sortOrder   Int    @default(0)
+
+  @@map("checkout_payment_methods")
+}
+
+// =============================================
+// ADDRESSES (Vietnam)
+// =============================================
+
+model Province {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  name      String
+  sortOrder Int        @default(0)
+  districts District[]
+}
+
+model District {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String
+  provinceId String
+  province   Province @relation(fields: [provinceId], references: [id], onDelete: Cascade)
+  sortOrder  Int      @default(0)
+  wards      Ward[]
+}
+
+model Ward {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String
+  districtId String
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  sortOrder  Int      @default(0)
+}
+
+// =============================================
+// ORDERS
+// =============================================
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPING
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+model Order {
+  id         String        @id @default(cuid())
+  orderSeq   Int           @default(autoincrement()) @unique
+  orderNumber String       @unique    // "XT-20260212-0001"
+
+  // Status
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentMethod String                        // "cod", "momo", "zalopay", "vnpay", "bank"
+
+  // Customer
+  customerName  String
+  customerPhone String
+  customerEmail String?
+
+  // Shipping address (embedded snapshot — NOT a FK)
+  provinceCode    String
+  provinceName    String
+  districtCode    String
+  districtName    String
+  wardCode        String
+  wardName        String
+  addressDetail   String
+
+  // Money (all in VND, integer)
+  subtotal    Int
+  shippingFee Int
+  total       Int
+
+  // Optional
+  notes       String?
+
+  // Relations
+  items       OrderItem[]
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("orders")
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Snapshot fields (captured at order time)
+  productSlug  String
+  productName  String
+  productImage String
+  unitPrice    Int
+  quantity     Int
+  totalPrice   Int                   // unitPrice × quantity
+  itemType     String               // "product" | "accessory"
+
+  @@map("order_items")
+}
+
+// =============================================
+// SITE CONFIG (key-value for one-off values)
+// =============================================
+
+model SiteConfig {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  @@map("site_config")
+}

@@ -1,0 +1,48 @@
+import { Router } from "express";
+import health from "./health";
+import faq from "./faq";
+import testimonials from "./testimonials";
+import navigation from "./navigation";
+import features from "./features";
+import lifestyle from "./lifestyle";
+import snapFlipRead from "./snap-flip-read";
+import guides from "./guides";
+import accessories from "./accessories";
+import products from "./products";
+import pricing from "./pricing";
+import footer from "./footer";
+import comparison from "./comparison";
+import purchaseInfo from "./purchase-info";
+import socialProof from "./social-proof";
+import addresses from "./addresses";
+import checkout from "./checkout";
+import orders from "./orders";
+import shipping from "./shipping";
+import payments from "./payments";
+import adminOrders from "./admin/orders";
+
+const router = Router();
+
+router.use(health);
+router.use(faq);
+router.use(testimonials);
+router.use(navigation);
+router.use(features);
+router.use(lifestyle);
+router.use(snapFlipRead);
+router.use(guides);
+router.use(accessories);
+router.use(products);
+router.use(pricing);
+router.use(footer);
+router.use(comparison);
+router.use(purchaseInfo);
+router.use(socialProof);
+router.use(addresses);
+router.use(checkout);
+router.use(orders);
+router.use(shipping);
+router.use(payments);
+router.use("/admin", adminOrders);
+
+export default router;

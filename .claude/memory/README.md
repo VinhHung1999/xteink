@@ -13,7 +13,11 @@ memory/
 ├── README.md
 ├── bugs-and-lessons/
 │   └── README.md
-└── architecture/
+├── architecture/
+│   └── README.md
+├── frontend/
+│   └── README.md
+└── backend/
     └── README.md
 ```
 
@@ -54,6 +58,8 @@ One sentence summary.
 |--------|-------------|
 | `bugs-and-lessons/` | Debugging, or before modifying areas with past issues |
 | `architecture/` | Major restructuring, adding new modules/sections, onboarding |
+| `frontend/` | Working on website UI, components, pages, styling |
+| `backend/` | Working on API, database, payment/shipping integrations |
 
 ---
 
