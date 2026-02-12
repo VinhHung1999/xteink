@@ -42,6 +42,7 @@ type CartAction =
   | { type: "ADD_ITEM"; payload: Omit<CartItem, "quantity"> }
   | { type: "REMOVE_ITEM"; payload: { id: string } }
   | { type: "UPDATE_QUANTITY"; payload: { id: string; quantity: number } }
+  | { type: "UPDATE_COLOR"; payload: { id: string; newId: string; color: string; colorHex: string } }
   | { type: "CLEAR_CART" }
   | { type: "OPEN_DRAWER" }
   | { type: "CLOSE_DRAWER" }
@@ -84,6 +85,28 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       saveCart(items);
       return { ...state, items };
     }
+    case "UPDATE_COLOR": {
+      const { id, newId, color, colorHex } = action.payload;
+      const existing = state.items.find((i) => i.id === newId);
+      if (existing && newId !== id) {
+        // Target color already in cart — merge quantities, remove old
+        const items = state.items
+          .map((i) =>
+            i.id === newId
+              ? { ...i, quantity: i.quantity + (state.items.find((x) => x.id === id)?.quantity ?? 0) }
+              : i
+          )
+          .filter((i) => i.id !== id);
+        saveCart(items);
+        return { ...state, items };
+      }
+      // Just update color on the item
+      const items = state.items.map((i) =>
+        i.id === id ? { ...i, id: newId, color, colorHex } : i
+      );
+      saveCart(items);
+      return { ...state, items };
+    }
     case "CLEAR_CART": {
       saveCart([]);
       return { ...state, items: [] };
@@ -110,6 +133,7 @@ interface CartContextValue {
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  updateColor: (id: string, newId: string, color: string, colorHex: string) => void;
   clearCart: () => void;
   openDrawer: () => void;
   closeDrawer: () => void;
@@ -149,6 +173,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } }),
     []
   );
+  const updateColor = useCallback(
+    (id: string, newId: string, color: string, colorHex: string) =>
+      dispatch({ type: "UPDATE_COLOR", payload: { id, newId, color, colorHex } }),
+    []
+  );
   const clearCart = useCallback(
     () => dispatch({ type: "CLEAR_CART" }),
     []
@@ -182,6 +211,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addItem,
         removeItem,
         updateQuantity,
+        updateColor,
         clearCart,
         openDrawer,
         closeDrawer,
