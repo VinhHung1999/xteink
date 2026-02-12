@@ -111,10 +111,10 @@ export default async function X3Page() {
             Tại sao chọn X3?
           </h2>
           <div className="grid gap-5 sm:grid-cols-3">
-            {x3Features.map((f) => {
+            {x3Features.map((f, i) => {
               const Icon = f.icon;
               return (
-                <div key={f.title} className="glass-card rounded-2xl p-6">
+                <div key={f.title} className={`glass-card rounded-2xl p-6 scroll-reveal scroll-d${Math.min(i + 1, 7)}`}>
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10">
                     <Icon size={20} className="text-gold" />
                   </div>

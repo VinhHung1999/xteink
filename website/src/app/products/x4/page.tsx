@@ -98,12 +98,12 @@ export default async function X4Page() {
               Tại sao chọn X4?
             </h2>
             <div className="grid gap-5 sm:grid-cols-3">
-              {product.features.map((f) => {
+              {product.features.map((f, i) => {
                 const Icon = f.icon;
                 return (
                   <div
                     key={f.title}
-                    className="glass-card rounded-2xl p-6"
+                    className={`glass-card rounded-2xl p-6 scroll-reveal scroll-d${Math.min(i + 1, 7)}`}
                   >
                     <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10">
                       <Icon size={20} className="text-gold" />

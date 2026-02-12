@@ -28,13 +28,13 @@ export default function GuidesPage() {
 
         {/* Guide cards */}
         <div className="grid gap-6 md:grid-cols-3">
-          {guides.map((guide) => {
+          {guides.map((guide, i) => {
             const Icon = guide.icon;
             return (
               <Link
                 key={guide.href}
                 href={guide.href}
-                className="glass-card group rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg scroll-reveal"
+                className={`glass-card group rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg scroll-reveal scroll-d${Math.min(i + 1, 7)}`}
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(212,165,116,0.12)]">
                   <Icon size={24} className="text-gold" />
