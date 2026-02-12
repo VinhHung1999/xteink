@@ -61,7 +61,8 @@ export default function LibraryPage() {
               <input
                 type="text"
                 placeholder="Tìm sách theo tên, tác giả, thể loại..."
-                className="flex-1 bg-transparent text-sm text-paper placeholder:text-paper/30 outline-none"
+                aria-label="Tìm kiếm sách"
+                className="flex-1 bg-transparent text-sm text-paper placeholder:text-paper/40 outline-none"
                 disabled
               />
               <span className="shrink-0 rounded-lg bg-gold/10 px-3 py-1 text-xs font-medium text-gold/60">

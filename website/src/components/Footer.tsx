@@ -77,7 +77,8 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="email@example.com"
-                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-paper placeholder:text-warm-cream/30 focus:outline-none"
+                aria-label="Địa chỉ email"
+                className="glass-input h-11 flex-1 rounded-lg px-3 text-sm text-paper placeholder:text-warm-cream/40 focus:outline-none"
               />
               <button
                 type="submit"
