@@ -1,13 +1,12 @@
 /**
  * API Service Layer
  *
- * Provides async functions that components call to fetch data.
- * Currently uses mock data, but structured to easily swap to real API calls.
+ * Fetches data from the backend API (port 3001).
+ * Maps BE icon strings → LucideIcon components via resolveIcon().
+ * Function signatures unchanged — zero component changes needed.
  *
- * When backend is ready:
- * 1. Replace mock imports with fetch/axios calls
- * 2. Update endpoint URLs in comments
- * 3. Keep function signatures identical (no FE code changes)
+ * Phase 1: 15 content APIs → real fetch
+ * Phase 2 (pending): getProvinces, getCheckoutPaymentMethods → real fetch
  */
 
 import {
@@ -29,165 +28,269 @@ import {
   Province,
   CheckoutPaymentMethod,
 } from "./types";
-import { mockProductData } from "./mock/product";
-import { mockFeatures } from "./mock/features";
-import { mockPricingData } from "./mock/pricing";
-import { mockTestimonials } from "./mock/testimonials";
-import { mockLifestyleMoments } from "./mock/lifestyle";
-import { mockNavLinks } from "./mock/navigation";
-import { mockFooterData } from "./mock/footer";
-import { mockSnapFlipReadSteps } from "./mock/snap-flip-read";
-import { mockProductComparison } from "./mock/product-comparison";
-import { mockAccessories } from "./mock/accessories";
-import { mockPurchaseInfoData } from "./mock/purchase-info";
-import { mockProductListing } from "./mock/product-listing";
-import { mockFAQData } from "./mock/faq";
-import { mockSocialProofData } from "./mock/social-proof";
-import { mockGuides } from "./mock/guides";
+import { resolveIcon } from "../utils/icon-map";
+
+// Phase 2 mocks (checkout — kept until BE1.3-1.4 integration)
 import { mockProvinces } from "./mock/addresses";
 import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 
-// Simulate API latency (remove in production)
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+async function fetchAPI<T>(endpoint: string): Promise<T> {
+  const res = await fetch(`${API_URL}${endpoint}`);
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText} — ${endpoint}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// ===== Helper types for BE responses (icon as string) =====
+
+interface RawProductFeature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface RawProductData {
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  features: RawProductFeature[];
+}
+
+interface RawSnapFlipReadStep {
+  icon: string;
+  title: string;
+  description: string;
+  step: string;
+}
+
+interface RawTrustBadge {
+  icon: string;
+  label: string;
+}
+
+interface RawPricingData {
+  label: string;
+  price: string;
+  originalPrice: string;
+  included: string[];
+  trustBadges: RawTrustBadge[];
+  accessories: Accessory[];
+}
+
+interface RawPaymentMethod {
+  icon: string;
+  name: string;
+  description: string;
+}
+
+interface RawShippingInfo {
+  icon: string;
+  region: string;
+  time: string;
+  note?: string;
+}
+
+interface RawWarrantyInfo {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface RawBundleItem {
+  icon: string;
+  name: string;
+}
+
+interface RawPurchaseInfoData {
+  paymentMethods: RawPaymentMethod[];
+  shippingInfo: RawShippingInfo[];
+  warranty: RawWarrantyInfo[];
+  bundleItems: RawBundleItem[];
+  freeShippingNote: string;
+}
+
+interface RawGuide {
+  icon: string;
+  title: string;
+  description: string;
+  href: string;
+}
+
+// ===== 15 Content APIs (real fetch) =====
 
 /**
  * Fetch product data (Xteink X4)
- * Future endpoint: GET /api/products/x4
+ * GET /api/products/x4
  */
 export async function getProductData(): Promise<ProductData> {
-  await delay(50); // Simulate network latency
-  return mockProductData;
+  const raw = await fetchAPI<RawProductData>("/api/products/x4");
+  return {
+    ...raw,
+    features: raw.features.map((f) => ({
+      ...f,
+      icon: resolveIcon(f.icon),
+    })),
+  };
 }
 
 /**
  * Fetch features grid data
- * Future endpoint: GET /api/features
+ * GET /api/features
  */
 export async function getFeatures(): Promise<Feature[]> {
-  await delay(50);
-  return mockFeatures;
+  return fetchAPI<Feature[]>("/api/features");
 }
 
 /**
  * Fetch pricing data (includes product, bundles, accessories)
- * Future endpoint: GET /api/pricing
+ * GET /api/pricing
  */
 export async function getPricingData(): Promise<PricingData> {
-  await delay(50);
-  return mockPricingData;
+  const raw = await fetchAPI<RawPricingData>("/api/pricing");
+  return {
+    ...raw,
+    trustBadges: raw.trustBadges.map((b) => ({
+      ...b,
+      icon: resolveIcon(b.icon),
+    })),
+  };
 }
 
 /**
  * Fetch testimonials
- * Future endpoint: GET /api/testimonials
+ * GET /api/testimonials
  */
 export async function getTestimonials(): Promise<Testimonial[]> {
-  await delay(50);
-  return mockTestimonials;
+  return fetchAPI<Testimonial[]>("/api/testimonials");
 }
 
 /**
  * Fetch lifestyle moments gallery
- * Future endpoint: GET /api/lifestyle-moments
+ * GET /api/lifestyle-moments
  */
 export async function getLifestyleMoments(): Promise<LifestyleMoment[]> {
-  await delay(50);
-  return mockLifestyleMoments;
+  return fetchAPI<LifestyleMoment[]>("/api/lifestyle-moments");
 }
 
 /**
  * Fetch navigation links
- * Future endpoint: GET /api/navigation
+ * GET /api/navigation
  */
 export async function getNavLinks(): Promise<NavLink[]> {
-  await delay(50);
-  return mockNavLinks;
+  return fetchAPI<NavLink[]>("/api/navigation");
 }
 
 /**
  * Fetch footer data
- * Future endpoint: GET /api/footer
+ * GET /api/footer
  */
 export async function getFooterData(): Promise<FooterData> {
-  await delay(50);
-  return mockFooterData;
+  return fetchAPI<FooterData>("/api/footer");
 }
 
 /**
  * Fetch Snap, Flip, Read steps (USP)
- * Future endpoint: GET /api/snap-flip-read
+ * GET /api/snap-flip-read
  */
 export async function getSnapFlipReadSteps(): Promise<SnapFlipReadStep[]> {
-  await delay(50);
-  return mockSnapFlipReadSteps;
+  const raw = await fetchAPI<RawSnapFlipReadStep[]>("/api/snap-flip-read");
+  return raw.map((s) => ({
+    ...s,
+    icon: resolveIcon(s.icon),
+  }));
 }
 
 /**
  * Fetch product comparison data (X4 vs X3)
- * Future endpoint: GET /api/product-comparison
+ * GET /api/product-comparison
  */
 export async function getProductComparison(): Promise<ProductComparisonData> {
-  await delay(50);
-  return mockProductComparison;
+  return fetchAPI<ProductComparisonData>("/api/product-comparison");
 }
 
 /**
  * Fetch accessories (standalone, not bundled with pricing)
- * Future endpoint: GET /api/accessories
+ * GET /api/accessories
  */
 export async function getAccessories(): Promise<Accessory[]> {
-  await delay(50);
-  return mockAccessories;
+  return fetchAPI<Accessory[]>("/api/accessories");
 }
 
 /**
  * Fetch purchase info (payment, shipping, warranty, bundle)
- * Future endpoint: GET /api/purchase-info
+ * GET /api/purchase-info
  */
 export async function getPurchaseInfoData(): Promise<PurchaseInfoData> {
-  await delay(50);
-  return mockPurchaseInfoData;
+  const raw = await fetchAPI<RawPurchaseInfoData>("/api/purchase-info");
+  return {
+    paymentMethods: raw.paymentMethods.map((m) => ({
+      ...m,
+      icon: resolveIcon(m.icon),
+    })),
+    shippingInfo: raw.shippingInfo.map((s) => ({
+      ...s,
+      icon: resolveIcon(s.icon),
+    })),
+    warranty: raw.warranty.map((w) => ({
+      ...w,
+      icon: resolveIcon(w.icon),
+    })),
+    bundleItems: raw.bundleItems.map((b) => ({
+      ...b,
+      icon: resolveIcon(b.icon),
+    })),
+    freeShippingNote: raw.freeShippingNote,
+  };
 }
 
 /**
  * Fetch FAQ data
- * Future endpoint: GET /api/faq
+ * GET /api/faq
  */
 export async function getFAQData(): Promise<FAQItem[]> {
-  await delay(50);
-  return mockFAQData;
+  return fetchAPI<FAQItem[]>("/api/faq");
 }
 
 /**
  * Fetch social proof data (press, YouTube, community)
- * Future endpoint: GET /api/social-proof
+ * GET /api/social-proof
  */
 export async function getSocialProofData(): Promise<SocialProofData> {
-  await delay(50);
-  return mockSocialProofData;
+  return fetchAPI<SocialProofData>("/api/social-proof");
 }
 
 /**
  * Fetch guides data (getting started, transfer books, firmware)
- * Future endpoint: GET /api/guides
+ * GET /api/guides
  */
 export async function getGuidesData(): Promise<Guide[]> {
-  await delay(50);
-  return mockGuides;
+  const raw = await fetchAPI<RawGuide[]>("/api/guides");
+  return raw.map((g) => ({
+    ...g,
+    icon: resolveIcon(g.icon),
+  }));
 }
 
 /**
  * Fetch product listing (X4 + X3 cards)
- * Future endpoint: GET /api/products
+ * GET /api/products
  */
 export async function getProductListing(): Promise<ProductListingItem[]> {
-  await delay(50);
-  return mockProductListing;
+  return fetchAPI<ProductListingItem[]>("/api/products");
 }
+
+// ===== Phase 2: Checkout APIs (still mock — swap after BE1.3-1.4) =====
+
+// Simulate API latency (remove when swapped to real API)
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Fetch provinces for checkout address
- * Future endpoint: GET /api/addresses/provinces
+ * TODO Phase 2: GET /api/addresses/provinces
  */
 export async function getProvinces(): Promise<Province[]> {
   await delay(50);
@@ -196,7 +299,7 @@ export async function getProvinces(): Promise<Province[]> {
 
 /**
  * Fetch checkout payment methods
- * Future endpoint: GET /api/checkout/payment-methods
+ * TODO Phase 2: GET /api/checkout/payment-methods
  */
 export async function getCheckoutPaymentMethods(): Promise<CheckoutPaymentMethod[]> {
   await delay(50);
