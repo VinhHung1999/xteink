@@ -22,6 +22,19 @@ export interface ProductData {
   features: ProductFeature[];
 }
 
+export interface ProductDetailData {
+  slug: string;
+  name: string;
+  tag?: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  price: string;
+  priceNumeric: number;
+  specs: string[];
+  features: ProductFeature[];
+}
+
 // ========== Features Grid ==========
 export interface Feature {
   image: string;

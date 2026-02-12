@@ -9,6 +9,7 @@
 
 import {
   ProductData,
+  ProductDetailData,
   Feature,
   PricingData,
   Testimonial,
@@ -153,6 +154,57 @@ export async function getProductData(): Promise<ProductData> {
     };
   } catch {
     return mockProductData;
+  }
+}
+
+/**
+ * Fetch product detail — combines /api/products/:slug (features) + /api/products (listing data)
+ * Returns unified ProductDetailData with price, tag, specs, and features (icon-resolved).
+ */
+export async function getProductDetail(slug: string): Promise<ProductDetailData | null> {
+  try {
+    const [rawDetail, listing] = await Promise.all([
+      fetchAPI<RawProductData>(`/api/products/${slug}`),
+      fetchAPI<ProductListingItem[]>("/api/products"),
+    ]);
+    const listingItem = listing.find((p) => p.slug === slug);
+    if (!listingItem) return null;
+
+    // Parse "1.590.000₫" → 1590000
+    const priceNumeric = parseInt(listingItem.price.replace(/[.\s₫]/g, ""), 10) || 0;
+
+    return {
+      slug: listingItem.slug,
+      name: listingItem.name,
+      tag: listingItem.tag,
+      subtitle: rawDetail.subtitle,
+      description: listingItem.description,
+      image: listingItem.image,
+      price: listingItem.price,
+      priceNumeric,
+      specs: listingItem.specs,
+      features: rawDetail.features.map((f) => ({
+        ...f,
+        icon: resolveIcon(f.icon),
+      })),
+    };
+  } catch {
+    // Fallback: combine mock data
+    const listing = mockProductListing.find((p) => p.slug === slug);
+    if (!listing) return null;
+    const priceNumeric = parseInt(listing.price.replace(/[.\s₫]/g, ""), 10) || 0;
+    return {
+      slug: listing.slug,
+      name: listing.name,
+      tag: listing.tag,
+      subtitle: slug === "x4" ? mockProductData.subtitle : "Ultra Compact",
+      description: listing.description,
+      image: listing.image,
+      price: listing.price,
+      priceNumeric,
+      specs: listing.specs,
+      features: slug === "x4" ? mockProductData.features : [],
+    };
   }
 }
 
