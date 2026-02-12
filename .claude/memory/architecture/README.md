@@ -16,6 +16,12 @@ System structure, module boundaries, and key patterns.
 - **Reason**: When BE is ready, only swap mock → real endpoints. Zero FE code changes.
 - **Rule**: Every feature that needs data MUST go through the mock API layer, never hardcode data in components
 
+### Multi-Page Structure (Sprint 3+)
+- **Updated:** Restructured from single landing page → 5-page website
+- Routes: `/` (Home), `/products`, `/guides`, `/community`, `/faq`
+- Shared layout: Navbar (active state via `usePathname`), Footer, ZaloWidget in `layout.tsx`
+- Each page reuses existing components — no component changes needed
+
 ### Tech Stack
 - Next.js 16 + React 19 + TypeScript strict + Tailwind CSS v4
 - Working directory: `website/`

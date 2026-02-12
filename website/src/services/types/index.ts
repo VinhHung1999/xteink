@@ -22,6 +22,19 @@ export interface ProductData {
   features: ProductFeature[];
 }
 
+export interface ProductDetailData {
+  slug: string;
+  name: string;
+  tag?: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  price: string;
+  priceNumeric: number;
+  specs: string[];
+  features: ProductFeature[];
+}
+
 // ========== Features Grid ==========
 export interface Feature {
   image: string;
@@ -190,7 +203,7 @@ export interface CartItem {
   type: "product" | "accessory";
 }
 
-// ========== Checkout: Addresses ==========
+// ========== Checkout: Addresses (flat — fetched per cascade level) ==========
 export interface Ward {
   code: string;
   name: string;
@@ -199,13 +212,11 @@ export interface Ward {
 export interface District {
   code: string;
   name: string;
-  wards: Ward[];
 }
 
 export interface Province {
   code: string;
   name: string;
-  districts: District[];
 }
 
 // ========== Checkout: Payment Methods ==========
@@ -214,6 +225,84 @@ export interface CheckoutPaymentMethod {
   name: string;
   description: string;
   icon: string; // emoji or text icon (no LucideIcon — used in client form)
+}
+
+// ========== Order (API payloads + responses) ==========
+
+export interface CreateOrderPayload {
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+  shipping: {
+    provinceCode: string;
+    districtCode: string;
+    wardCode: string;
+    addressDetail: string;
+  };
+  paymentMethodId: string;
+  notes?: string;
+  items: {
+    slug: string;
+    name: string;
+    image: string;
+    unitPrice: number;
+    quantity: number;
+    type: "product" | "accessory";
+  }[];
+}
+
+export interface PaymentInfo {
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
+  amount?: number;
+  transferContent?: string;
+  qrDataUrl?: string;
+  redirectUrl?: string;
+  message?: string;
+}
+
+export interface CreateOrderResponse {
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  total: number;
+  paymentInfo?: PaymentInfo;
+}
+
+export interface OrderDetailResponse {
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  paymentMethodName: string;
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+  shippingAddress: string;
+  notes?: string;
+  items: {
+    productName: string;
+    productImage: string;
+    unitPrice: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  createdAt: string;
+  paymentInfo?: PaymentInfo;
+}
+
+export interface ShippingFeeResponse {
+  fee: number;
+  freeShippingThreshold: number;
+  estimatedDays: string;
 }
 
 // ========== FAQ ==========
