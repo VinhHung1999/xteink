@@ -44,6 +44,17 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
+  // Clear a specific field error when user edits that field
+  function clearError(field: string) {
+    if (errors[field]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  }
+
   // Cascade data (fetched per level from API)
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
@@ -146,6 +157,17 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     if (!wardCode) e.ward = "Vui lòng chọn phường/xã";
     if (!address.trim()) e.address = "Vui lòng nhập địa chỉ chi tiết";
     setErrors(e);
+
+    // Scroll to first error field
+    const firstKey = Object.keys(e)[0];
+    if (firstKey) {
+      const el = document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.focus();
+      }
+    }
+
     return Object.keys(e).length === 0;
   }
 
@@ -223,8 +245,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="text"
+                  name="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); clearError("name"); }}
                   placeholder="Nguyễn Văn A"
                   className={inputCls}
                 />
@@ -238,8 +261,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="tel"
+                  name="phone"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
                   placeholder="0901 234 567"
                   className={inputCls}
                 />
@@ -265,8 +289,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="province"
                     value={provinceCode}
-                    onChange={(e) => handleProvinceChange(e.target.value)}
+                    onChange={(e) => { handleProvinceChange(e.target.value); clearError("province"); }}
                     className={selectCls}
                   >
                     <option value="">— Chọn tỉnh/thành —</option>
@@ -291,8 +316,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="district"
                     value={districtCode}
-                    onChange={(e) => handleDistrictChange(e.target.value)}
+                    onChange={(e) => { handleDistrictChange(e.target.value); clearError("district"); }}
                     className={selectCls}
                     disabled={!provinceCode || loadingDistricts}
                   >
@@ -327,8 +353,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <div className="relative">
                   <select
+                    name="ward"
                     value={wardCode}
-                    onChange={(e) => setWardCode(e.target.value)}
+                    onChange={(e) => { setWardCode(e.target.value); clearError("ward"); }}
                     className={selectCls}
                     disabled={!districtCode || loadingWards}
                   >
@@ -363,8 +390,9 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 </label>
                 <input
                   type="text"
+                  name="address"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => { setAddress(e.target.value); clearError("address"); }}
                   placeholder="Số nhà, tên đường..."
                   className={inputCls}
                 />
