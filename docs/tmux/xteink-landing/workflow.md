@@ -140,18 +140,28 @@ PO → Boss: Present completed sprint for acceptance
 Boss → PO: Feedback
 ```
 
-### Phase 4: Sprint Retrospective (CRITICAL)
+### Phase 4: Sprint Retrospective (MANDATORY — before merge to main)
 ```
-PO: Facilitates retro with FE
+SM: Facilitates retro — asks ALL team members:
   → What went well?
   → What went wrong?
   → What to improve?
-PO: Updates role prompts (PO_PROMPT.md, FE_PROMPT.md) based on lessons learned
-PO: Updates project memory (.claude/memory/) with new patterns/bugs/insights
+SM: Collects insights from PO, TL, BE, FE, QA
+SM: Reminds all members to update .claude/memory/ if lessons learned
+SM: Updates role prompts (PO/TL/BE/FE/QA/SM_PROMPT.md) with new rules/patterns
 PO → Boss: Retro summary + prompt/memory changes made
 ```
 
-### Phase 5: Next Sprint
+**BLOCKING: Sprint CANNOT be merged to main until retro is complete.**
+
+### Phase 5: Sprint Close (after retro)
+```
+PO: Merges sprint branch to main
+PO: Pushes to remote
+PO: Archives sprint in WHITEBOARD
+```
+
+### Phase 6: Next Sprint
 ```
 PO: Updates backlog based on Boss feedback + retro insights
 PO: Selects next sprint items
@@ -184,7 +194,8 @@ git checkout -b feature_{story_id}_{description}
 git checkout sprint_{N}
 git merge feature_{story_id}_{description}
 
-# After Boss acceptance
+# After Boss acceptance + MANDATORY RETRO
+# (Retro MUST complete before merge to main)
 git checkout main
 git merge sprint_{N}
 git push origin main

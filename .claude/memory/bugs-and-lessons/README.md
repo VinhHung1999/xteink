@@ -58,6 +58,20 @@
 - **Cause:** nodemon watches `src/**/*.ts` only, not `.env` files
 - **Fix:** `pkill -f nodemon && pkill -f ts-node` then restart. Don't rely on auto-reload for env changes.
 
+### Checkout form validation must include format checks, not just required (Sprint 5)
+- **Cause:** Checkout form only checked required fields but not format — email "fdfd" accepted, phone "abc" accepted. Backend rejected on submit with generic "dữ liệu không hợp lệ" error, no indication which field was wrong
+- **Fix:** Add format validation: email regex, phone 10-11 digits regex. Show specific error under each field. scrollIntoView + focus on first error field on submit fail. clearError on onChange.
+- **Prevention:** Form validation checklist before QA: (1) required fields (2) format validation (email, phone, postal) (3) scroll-to-error on submit fail (4) error clears on edit (5) specific error messages per field
+
+### Sprint retro must happen BEFORE merge to main (Sprint 5)
+- **Cause:** PO merged sprint_5_be to main before retro. Boss flagged this as process violation.
+- **Fix:** Updated workflow.md — retro is MANDATORY BLOCKING step before merge. Phase 4 (retro) → Phase 5 (merge) → Phase 6 (next sprint)
+- **Prevention:** SM enforces retro before PO can close sprint. No merge without retro complete.
+
+### PO is authority for task assignments, SM tracks but doesn't override (Sprint 5)
+- **Cause:** SM told QA to wait for TL review, PO told QA to start now (parallel). QA confused by conflicting directives.
+- **Fix:** PO decides task assignments and execution order. SM tracks progress and enforces process but does NOT override PO directives on who does what and when.
+
 ### Dark mode token inversion breaks "absolute" color uses
 - Swapping `paper`↔`ink` for dark mode breaks: image overlays (`from-ink/70`), CTA text on gold (`text-ink`), hero text on images (`text-paper`), footer `bg-charcoal`
 - **Fix:** Use hardcoded Tailwind arbitrary values (`text-[#1A1A1A]`, `from-[#1A1A1A]/70`, `text-[#E8E0D6]`) for colors that must stay "absolutely" dark or light regardless of theme
