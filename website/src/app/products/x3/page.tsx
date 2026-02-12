@@ -11,6 +11,27 @@ export const metadata: Metadata = {
   title: "Xteink X3 — Máy đọc sách e-ink ultra-compact",
   description:
     "Xteink X3: màn hình E-Ink 3.7 inch, 250 PPI, 60g, siêu nhỏ gọn.",
+  openGraph: {
+    title: "Xteink X3 — Máy đọc sách e-ink ultra-compact",
+    description: "Màn hình E-Ink 3.7\", 250 PPI, 60g. Ultra-compact. Chỉ 1.790.000₫.",
+    images: [{ url: "/images/products/x3/gallery/xteink_x3_ultra_compact_magnetic_ereader_space_black_72_99usd.jpg" }],
+  },
+};
+
+const x3JsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: "Xteink X3",
+  description: "Máy đọc sách e-ink 3.7 inch, 250 PPI, 60g — siêu nhỏ gọn, sắc nét nhất dòng Xteink.",
+  image: "https://xteink.hungphu.work/images/products/x3/gallery/xteink_x3_ultra_compact_magnetic_ereader_space_black_72_99usd.jpg",
+  brand: { "@type": "Brand", name: "Xteink" },
+  offers: {
+    "@type": "Offer",
+    price: "1790000",
+    priceCurrency: "VND",
+    availability: "https://schema.org/InStock",
+    url: "https://xteink.hungphu.work/products/x3",
+  },
 };
 
 const gallery = [
@@ -54,6 +75,11 @@ export default async function X3Page() {
   if (!product) return notFound();
 
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(x3JsonLd) }}
+    />
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[960px]">
         <Link
@@ -111,10 +137,10 @@ export default async function X3Page() {
             Tại sao chọn X3?
           </h2>
           <div className="grid gap-5 sm:grid-cols-3">
-            {x3Features.map((f) => {
+            {x3Features.map((f, i) => {
               const Icon = f.icon;
               return (
-                <div key={f.title} className="glass-card rounded-2xl p-6">
+                <div key={f.title} className={`glass-card rounded-2xl p-6 scroll-reveal scroll-d${Math.min(i + 1, 7)}`}>
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10">
                     <Icon size={20} className="text-gold" />
                   </div>
@@ -180,5 +206,6 @@ export default async function X3Page() {
         </div>
       </div>
     </section>
+    </>
   );
 }

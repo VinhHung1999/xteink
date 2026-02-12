@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { getOrder } from "@/services/api";
 import type { OrderDetailResponse } from "@/services/types";
+import { trackPurchase } from "@/utils/analytics";
 
 function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
@@ -27,7 +28,12 @@ export default function OrderSuccessClient() {
     }
     loaded.current = true;
     getOrder(orderNumber)
-      .then(setOrder)
+      .then((data) => {
+        setOrder(data);
+        if (data) {
+          trackPurchase(data.orderNumber, data.total);
+        }
+      })
       .catch(() => router.replace("/"))
       .finally(() => setLoading(false));
   }, [orderNumber, router]);
