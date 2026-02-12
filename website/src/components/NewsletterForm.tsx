@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, CheckCircle } from "lucide-react";
+import { trackNewsletterSignup } from "@/utils/analytics";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -22,6 +23,7 @@ export default function NewsletterForm() {
     // Mock submit — in production, POST to API
     setSubmitted(true);
     setError("");
+    trackNewsletterSignup("newsletter_form");
   }
 
   if (submitted) {

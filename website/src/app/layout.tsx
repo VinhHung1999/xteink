@@ -9,6 +9,7 @@ import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -86,6 +87,7 @@ export default function RootLayout({
           <ScrollRevealProvider />
           <CartDrawer />
           <ExitIntentPopup />
+          <AnalyticsProvider />
         </CartProvider>
       </body>
     </html>

@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { trackAddToCart } from "@/utils/analytics";
 import type { CartItem } from "@/services/types";
 
 // ── State ────────────────────────────────────────────────────────────
@@ -133,8 +134,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addItem = useCallback(
-    (item: Omit<CartItem, "quantity">) =>
-      dispatch({ type: "ADD_ITEM", payload: item }),
+    (item: Omit<CartItem, "quantity">) => {
+      dispatch({ type: "ADD_ITEM", payload: item });
+      trackAddToCart(item.name, item.price);
+    },
     []
   );
   const removeItem = useCallback(

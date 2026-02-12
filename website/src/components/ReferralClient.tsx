@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, Check, Gift, Users, ShoppingBag, Share2 } from "lucide-react";
+import { trackShare } from "@/utils/analytics";
 
 const MOCK_REFERRAL_LINK = "https://xteink.hungphu.work/ref/abc123";
 
@@ -43,6 +44,7 @@ export default function ReferralClient() {
       await navigator.clipboard.writeText(MOCK_REFERRAL_LINK);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      trackShare("copy_link", "referral");
     } catch {
       // Fallback for older browsers
       const input = document.createElement("input");
@@ -53,10 +55,12 @@ export default function ReferralClient() {
       document.body.removeChild(input);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      trackShare("copy_link", "referral");
     }
   }
 
   function shareZalo() {
+    trackShare("zalo", "referral");
     window.open(
       `https://zalo.me/share?url=${encodeURIComponent(MOCK_REFERRAL_LINK)}&title=${encodeURIComponent("Mời bạn dùng Xteink X4 — máy đọc sách nhỏ gọn nhất!")}`,
       "_blank",
@@ -65,6 +69,7 @@ export default function ReferralClient() {
   }
 
   function shareFacebook() {
+    trackShare("facebook", "referral");
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(MOCK_REFERRAL_LINK)}`,
       "_blank",
@@ -80,6 +85,7 @@ export default function ReferralClient() {
           text: "Mời bạn dùng thử Xteink X4! Cả hai cùng nhận ưu đãi.",
           url: MOCK_REFERRAL_LINK,
         });
+        trackShare("native_share", "referral");
       } catch {
         // User cancelled share
       }
