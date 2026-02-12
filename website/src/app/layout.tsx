@@ -8,6 +8,8 @@ import ZaloWidget from "@/components/ZaloWidget";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin", "vietnamese"],
@@ -30,10 +32,29 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const SITE_URL = "https://xteink.hungphu.work";
+const OG_IMAGE = `${SITE_URL}/images/home/hero_banner/redefining_portable_reading_hero_banner.jpg`;
+
 export const metadata: Metadata = {
-  title: "Xteink X4 — Đọc sách, theo cách của bạn",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Xteink X4 — Đọc sách, theo cách của bạn",
+    template: "%s | Xteink",
+  },
   description:
     "Thư viện bỏ túi nhẹ hơn một bộ bài. Máy đọc sách e-ink 4.3 inch, 74g, gắn nam châm lên điện thoại. Chỉ 1.590.000₫.",
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    siteName: "Xteink",
+    title: "Xteink X4 — Đọc sách, theo cách của bạn",
+    description:
+      "Thư viện bỏ túi nhẹ hơn một bộ bài. Máy đọc sách e-ink 4.3 inch, 74g, gắn nam châm lên điện thoại.",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Xteink X4 eReader" }],
+  },
+  alternates: {
+    languages: { "vi-VN": SITE_URL },
+  },
 };
 
 export default function RootLayout({
@@ -47,10 +68,16 @@ export default function RootLayout({
         className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
         <CartProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink"
+          >
+            Bỏ qua điều hướng
+          </a>
           <Suspense>
             <Navbar />
           </Suspense>
-          {children}
+          <main id="main-content">{children}</main>
           <Suspense>
             <Footer />
           </Suspense>
@@ -59,6 +86,8 @@ export default function RootLayout({
           </Suspense>
           <ScrollRevealProvider />
           <CartDrawer />
+          <ExitIntentPopup />
+          <AnalyticsProvider />
         </CartProvider>
       </body>
     </html>
