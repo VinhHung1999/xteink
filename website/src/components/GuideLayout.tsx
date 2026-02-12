@@ -74,6 +74,8 @@ export default function GuideLayout({ title, subtitle, sections }: GuideLayoutPr
                 {/* Collapsible header — functional on mobile, decorative on desktop */}
                 <button
                   onClick={() => toggleSection(s.id)}
+                  aria-expanded={openSection === s.id}
+                  aria-controls={`content-${s.id}`}
                   className="flex w-full items-center justify-between p-5 text-left md:cursor-default"
                 >
                   <div className="flex items-center gap-3">
@@ -94,6 +96,9 @@ export default function GuideLayout({ title, subtitle, sections }: GuideLayoutPr
 
                 {/* Content — always visible on desktop, collapsible on mobile */}
                 <div
+                  id={`content-${s.id}`}
+                  role="region"
+                  aria-labelledby={s.id}
                   className={`overflow-hidden transition-all md:!max-h-none md:!opacity-100 ${
                     openSection === s.id
                       ? "max-h-[2000px] opacity-100"

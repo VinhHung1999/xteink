@@ -66,10 +66,16 @@ export default function RootLayout({
         className={`${playfairDisplay.variable} ${beVietnam.variable} ${greatVibes.variable} antialiased`}
       >
         <CartProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink"
+          >
+            Bỏ qua điều hướng
+          </a>
           <Suspense>
             <Navbar />
           </Suspense>
-          {children}
+          <main id="main-content">{children}</main>
           <Suspense>
             <Footer />
           </Suspense>

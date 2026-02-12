@@ -63,6 +63,7 @@ export default function FAQClient({ faqItems }: FAQClientProps) {
                   onClick={() => toggle(i)}
                   className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-white/[0.03]"
                   aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
                 >
                   <h3 className="font-body text-sm font-semibold text-paper md:text-base">
                     {item.question}
@@ -76,6 +77,8 @@ export default function FAQClient({ faqItems }: FAQClientProps) {
                   />
                 </button>
                 <div
+                  id={`faq-answer-${i}`}
+                  role="region"
                   className="grid transition-[grid-template-rows] duration-300 ease-in-out"
                   style={{
                     gridTemplateRows: isOpen ? "1fr" : "0fr",
