@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ChevronDown, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { getDistricts, getWards } from "@/services/api";
+import { getDistricts, getWards, getShippingFee, createOrder } from "@/services/api";
 import type { Province, District, Ward, CheckoutPaymentMethod } from "@/services/types";
 
 interface CheckoutClientProps {
@@ -16,8 +16,6 @@ interface CheckoutClientProps {
 function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
 }
-
-const SHIPPING_FEE = 30000;
 
 export default function CheckoutClient({ provinces, paymentMethods }: CheckoutClientProps) {
   const router = useRouter();
@@ -51,6 +49,11 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
   const [wards, setWards] = useState<Ward[]>([]);
   const [loadingDistricts, setLoadingDistricts] = useState(false);
   const [loadingWards, setLoadingWards] = useState(false);
+
+  // Dynamic shipping fee (from BE)
+  const [shippingFee, setShippingFee] = useState(0);
+  const [shippingEstimate, setShippingEstimate] = useState("");
+  const [loadingShipping, setLoadingShipping] = useState(false);
 
   // Fetch districts when province changes
   const fetchDistricts = useCallback(async (code: string) => {
@@ -86,13 +89,41 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     }
   }, []);
 
-  // Handle province change: reset children, fetch districts
+  // Fetch shipping fee from BE
+  const fetchShippingFee = useCallback(async (code: string, subtotal: number) => {
+    if (!code) {
+      setShippingFee(0);
+      setShippingEstimate("");
+      return;
+    }
+    setLoadingShipping(true);
+    try {
+      const data = await getShippingFee(code, subtotal);
+      setShippingFee(data.fee);
+      setShippingEstimate(data.estimatedDays);
+    } catch {
+      setShippingFee(35000); // fallback to highest tier
+      setShippingEstimate("3-5 ngày");
+    } finally {
+      setLoadingShipping(false);
+    }
+  }, []);
+
+  // Re-fetch shipping fee when totalPrice changes (free shipping threshold)
+  useEffect(() => {
+    if (provinceCode) {
+      fetchShippingFee(provinceCode, totalPrice);
+    }
+  }, [totalPrice, provinceCode, fetchShippingFee]);
+
+  // Handle province change: reset children, fetch districts + shipping fee
   function handleProvinceChange(code: string) {
     setProvinceCode(code);
     setDistrictCode("");
     setWardCode("");
     setWards([]);
     fetchDistricts(code);
+    fetchShippingFee(code, totalPrice);
   }
 
   // Handle district change: reset ward, fetch wards
@@ -118,36 +149,45 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     return Object.keys(e).length === 0;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
+    setErrors({});
 
-    // Look up selected names for order summary
-    const provinceName = provinces.find((p) => p.code === provinceCode)?.name ?? "";
-    const districtName = districts.find((d) => d.code === districtCode)?.name ?? "";
-    const wardName = wards.find((w) => w.code === wardCode)?.name ?? "";
-
-    // Build order summary for success page
-    const orderData = {
-      orderId: "XTK" + Date.now().toString(36).toUpperCase(),
-      name: name.trim(),
-      phone: phone.replace(/[\s-]/g, ""),
-      email: email.trim() || undefined,
-      address: `${address.trim()}, ${wardName}, ${districtName}, ${provinceName}`,
-      note: note.trim() || undefined,
-      paymentMethod: paymentMethods.find((p) => p.id === paymentId)?.name ?? "COD",
-      items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
-      subtotal: totalPrice,
-      shipping: SHIPPING_FEE,
-      total: totalPrice + SHIPPING_FEE,
-    };
-
-    // Store order for success page, clear cart, redirect
-    sessionStorage.setItem("xteink-last-order", JSON.stringify(orderData));
-    setOrderPlaced(true);
-    clearCart();
-    router.push("/checkout/success");
+    try {
+      const result = await createOrder({
+        customer: {
+          name: name.trim(),
+          phone: phone.replace(/[\s-]/g, ""),
+          email: email.trim() || undefined,
+        },
+        shipping: {
+          provinceCode,
+          districtCode,
+          wardCode,
+          addressDetail: address.trim(),
+        },
+        paymentMethodId: paymentId,
+        notes: note.trim() || undefined,
+        items: items.map((i) => ({
+          slug: i.slug,
+          name: i.name,
+          image: i.image,
+          unitPrice: i.price,
+          quantity: i.quantity,
+          type: i.type,
+        })),
+      });
+      setOrderPlaced(true);
+      clearCart();
+      router.push(`/checkout/success?order=${result.orderNumber}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Đặt hàng thất bại. Vui lòng thử lại.";
+      setErrors({ submit: message });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   // Don't render form until hydrated (avoids flash)
@@ -425,15 +465,34 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-paper/60">Phí vận chuyển</span>
-                    <span className="text-paper">{formatPrice(SHIPPING_FEE)}</span>
+                    <span className="text-paper">
+                      {loadingShipping ? (
+                        "Đang tính..."
+                      ) : provinceCode ? (
+                        shippingFee === 0 ? "Miễn phí" : formatPrice(shippingFee)
+                      ) : (
+                        "—"
+                      )}
+                    </span>
                   </div>
+                  {shippingEstimate && provinceCode && (
+                    <p className="text-xs text-paper/40">
+                      Dự kiến giao hàng: {shippingEstimate}
+                    </p>
+                  )}
                   <div className="flex justify-between border-t border-paper/5 pt-3">
                     <span className="text-base font-semibold text-paper">Tổng cộng</span>
                     <span className="font-heading text-xl font-bold text-gold-shimmer">
-                      {formatPrice(totalPrice + SHIPPING_FEE)}
+                      {formatPrice(totalPrice + shippingFee)}
                     </span>
                   </div>
                 </div>
+
+                {errors.submit && (
+                  <p className="mt-3 rounded-lg bg-red-500/10 p-3 text-center text-sm text-red-400">
+                    {errors.submit}
+                  </p>
+                )}
 
                 <button
                   type="submit"
