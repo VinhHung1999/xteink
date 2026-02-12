@@ -1,8 +1,8 @@
 # Team Whiteboard
 
-**Sprint:** 5 (BE)
-**Goal:** Order + Payment — Real checkout flow with order creation, payment processing, shipping
-**Branch:** sprint_5_be
+**Sprint:** 6 (FE)
+**Goal:** Subpages + Product Deep Content — About, Guides, Policy, Library, Product pages
+**Branch:** sprint_6_fe
 
 ---
 
@@ -10,26 +10,29 @@
 
 | Role | Status | Current Task | Last Update |
 |------|--------|--------------|-------------|
-| PO   | ✅ Done | Sprint 5 BOSS ACCEPTED — all deliverables approved | 2026-02-12 19:15 |
-| TL   | ✅ Done | All reviews complete | 2026-02-12 19:15 |
-| BE   | ✅ Done | BE2.1-BE2.5 complete (ecf2605) | 2026-02-12 19:15 |
-| FE   | ✅ Done | Integration + bug fixes + UI polish | 2026-02-12 19:15 |
-| SM   | 🔄 Active | Facilitating Sprint 5 retro | 2026-02-12 19:15 |
-| QA   | ✅ Done | All verifications passed | 2026-02-12 19:15 |
+| PO   | 🔄 Active | Sprint 6 kickoff — assigning FE | 2026-02-12 19:35 |
+| TL   | ✅ Done | ALL 6 SPRINT 6 STORIES APPROVED! S5.2 (8e6f789) | 2026-02-12 20:12 |
+| BE   | ⏳ Standby | No BE work this sprint | 2026-02-12 19:35 |
+| FE   | ✅ Done | ALL 6 SPRINT 6 STORIES CODED! 19 routes total | 2026-02-12 20:13 |
+| SM   | ✅ Done | Sprint 6 RETRO COMPLETE — ready for merge to main | 2026-02-12 20:25 |
+| QA   | 🔄 Active | S5.2 testing (FINAL STORY!) | 5 stories verified ✅ | 2026-02-12 20:15 |
 
 ---
 
-## Post-Sprint 5 Bug Fixes (P0)
+## Sprint 6 (FE) Stories
 
-| Bug | Description | Assignee | Status |
-|-----|-------------|----------|--------|
-| P0-1 | Scroll-to-error + focus on first invalid field | FE | ✅ Fixed (b00e24e) → QA ✅ → awaiting PO ✅ |
-| P0-2 | Errors clear on field edit | FE | ✅ Fixed (b00e24e) → QA ✅ → awaiting PO ✅ |
-| P0-3 | Email validation + scroll + phone regex | FE | ✅ Fixed (5b0cb74) → QA ✅ 4/4 tests → awaiting PO ✅ |
+| ID | Story | Priority | Size | Assignee | Status |
+|----|-------|----------|------|----------|--------|
+| S4.1 | About Page | P1 | L | FE + TL | ✅ DONE (659790c → TL ✅ → QA 4/4 → PO ✅) |
+| S4.2 | Guides | P1 | M | FE + TL | ✅ DONE (9e1a2d8 → TL ✅ → QA 12/12 → PO ✅) |
+| S4.3 | Policy Pages | P2 | S | FE + TL | ✅ DONE (479e8c0 → TL ✅ → QA 12/18 → PO ✅) |
+| S5.1 | Library Preview | P1 | L | FE + TL | ✅ DONE (da26217 → TL ✅ → QA 6/7 → PO ✅) |
+| S5.2 | Format Checker | P2 | S | FE + TL | ✅ DONE (8e6f789 → TL ✅ → QA 6/6 → PO ✅) |
+| S5.3 | Product Deep Content X4+X3 | P1 | M | FE + TL | ✅ DONE (b58396e → TL ✅ → QA 10/10 → PO ✅) |
 
 ---
 
-## Sprint 5 (BE) Stories — PO ACCEPTED ✅
+## Sprint 5 (BE) Archive ✅ BOSS ACCEPTED (2026-02-12)
 
 | ID | Story | Priority | Size | Assignee | Status |
 |----|-------|----------|------|----------|--------|

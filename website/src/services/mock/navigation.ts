@@ -6,4 +6,5 @@ export const mockNavLinks: NavLink[] = [
   { label: "Hướng dẫn", href: "/guides" },
   { label: "Cộng đồng", href: "/community" },
   { label: "FAQ", href: "/faq" },
+  { label: "Về Xteink", href: "/about" },
 ];
