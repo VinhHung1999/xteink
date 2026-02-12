@@ -10,24 +10,34 @@
 
 | Role | Status | Current Task | Last Update |
 |------|--------|--------------|-------------|
-| PO   | 🔄 Active | Sprint 5 kickoff — assigned BE, notified team | 2026-02-12 14:30 |
-| TL   | ⏳ Standby | Step 1 ✅ approved — awaiting Steps 2-5 review request | 2026-02-12 13:32 |
-| BE   | 📝 Committing | Steps 1-5 complete (17/17 tests ✅) — committing now | 2026-02-12 13:32 |
-| FE   | ⏳ | Awaiting Step 6 (BE2.4 integration) | 2026-02-12 12:55 |
-| SM   | 🔄 Active | DoD verification Steps 1-5 — awaiting commit + TL review | 2026-02-12 13:32 |
-| QA   | ⏳ | Awaiting Step 6 (BE2.4 for testing) | 2026-02-12 12:55 |
+| PO   | ✅ Done | Sprint 5 BOSS ACCEPTED — all deliverables approved | 2026-02-12 19:15 |
+| TL   | ✅ Done | All reviews complete | 2026-02-12 19:15 |
+| BE   | ✅ Done | BE2.1-BE2.5 complete (ecf2605) | 2026-02-12 19:15 |
+| FE   | ✅ Done | Integration + bug fixes + UI polish | 2026-02-12 19:15 |
+| SM   | 🔄 Active | Facilitating Sprint 5 retro | 2026-02-12 19:15 |
+| QA   | ✅ Done | All verifications passed | 2026-02-12 19:15 |
 
 ---
 
-## Sprint 5 (BE) Stories — Steps 1-5 Complete, Awaiting Reviews
+## Post-Sprint 5 Bug Fixes (P0)
+
+| Bug | Description | Assignee | Status |
+|-----|-------------|----------|--------|
+| P0-1 | Scroll-to-error + focus on first invalid field | FE | ✅ Fixed (b00e24e) → QA ✅ → awaiting PO ✅ |
+| P0-2 | Errors clear on field edit | FE | ✅ Fixed (b00e24e) → QA ✅ → awaiting PO ✅ |
+| P0-3 | Email validation + scroll + phone regex | FE | ✅ Fixed (5b0cb74) → QA ✅ 4/4 tests → awaiting PO ✅ |
+
+---
+
+## Sprint 5 (BE) Stories — PO ACCEPTED ✅
 
 | ID | Story | Priority | Size | Assignee | Status |
 |----|-------|----------|------|----------|--------|
-| BE2.1 | Order Schema + Create API | P0 | L | BE + TL | 🔍 Review (Steps 1+3 ✅ coded, Step 1 TL ✅, Step 3 pending TL) |
-| BE2.2 | Payment Flow (COD + Bank Transfer + MoMo/VNPay stubs) | P0 | L | BE + TL | 🔍 Review (Step 4 ✅ coded, awaiting TL review) |
-| BE2.3 | Shipping Fee Calculation | P1 | M | BE + TL | 🔍 Review (Step 2 ✅ coded, awaiting TL review) |
-| BE2.4 | FE Integration — Checkout → POST /api/orders | P0 | M | FE + QA | ⏳ Pending (BE APIs ready, awaiting Step 6) |
-| BE2.5 | Admin Order Management (list + update status) | P1 | M | BE + TL | 🔍 Review (Step 5 ✅ coded, awaiting TL review) |
+| BE2.1 | Order Schema + Create API | P0 | L | BE + TL | ✅ Done (Steps 1+3: coded ecf2605 → TL ✅ → PO ✅) |
+| BE2.2 | Payment Flow (COD + Bank Transfer + MoMo/VNPay stubs) | P0 | L | BE + TL | ✅ Done (Step 4: coded ecf2605 → TL ✅ → PO ✅) |
+| BE2.3 | Shipping Fee Calculation | P1 | M | BE + TL | ✅ Done (Step 2: coded ecf2605 → TL ✅ → PO ✅) |
+| BE2.4 | FE Integration — Checkout → POST /api/orders | P0 | M | FE + QA | ✅ Done (Step 6: coded 69d0eb1 → TL ✅ → QA ✅ 4/4 tests → PO ✅) |
+| BE2.5 | Admin Order Management (list + update status) | P1 | M | BE + TL | ✅ Done (Step 5: coded ecf2605 → TL ✅ → PO ✅) |
 
 ---
 
