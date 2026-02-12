@@ -274,6 +274,36 @@ tm-send PO "FE -> PO: [Task] DONE. [Summary]."
 - Spend max 15min investigating, then report findings + ask for browser/OS/device details
 - Don't deep-dive blindly into bugs that can't be reproduced locally
 
+### Sprint 6: Always use next/image, never raw <img>
+- **NEVER use raw `<img>` tags** — always use Next.js `<Image>` component
+- Habit check before reporting done: search codebase for `<img` — should find zero
+- Raw images bypass Next.js optimization and cause performance issues
+- If caught in self-review, fix immediately before reporting to SM
+
+### Sprint 6: Update navigation mock when creating new routes
+- When creating new pages (e.g., /library, /format-checker), **immediately add to nav mock**
+- Don't wait for mid-sprint discovery or QA to flag missing nav links
+- Update `website/src/services/mock/navigation.ts` as part of page creation task
+- Cross-linking between related pages should be planned, not discovered late
+
+### Sprint 6: Desktop viewport audit before reporting done
+- Before reporting task complete, audit on desktop viewport (1920x1080)
+- Check: layout, spacing, text sizes, button sizes, responsive breakpoints
+- Boss feedback pattern from Sprint 5: desktop issues caught late waste review cycles
+- Add to DoD checklist: "Desktop viewport visual verification"
+
+### Sprint 6: Reusable component strategy
+- **Build components for reuse from the start** when pattern repeats 2+ times
+- Examples: GuideLayout (3 pages), ProductGallery (2 pages) — built once, deployed multiple times
+- Identify reusable patterns during planning: "3 policy pages" → "shared PolicyLayout component"
+- Reusable components accelerate sprint velocity significantly
+
+### Sprint 6: Plan nav/footer/cross-linking upfront
+- Nav links, footer updates, cross-page linking should be planned in sprint planning
+- Don't discover mid-sprint that new pages need nav entries or cross-links
+- Coordinate with team: "This page needs nav link — add to nav mock and BE seeds"
+- Missing cross-links (format-checker ↔ guides, library ↔ nav) reduce discoverability
+
 ---
 
 ## Starting Your Role

@@ -461,6 +461,7 @@ async function main() {
     { label: "Hướng dẫn", href: "/guides", sortOrder: 2 },
     { label: "Cộng đồng", href: "/community", sortOrder: 3 },
     { label: "FAQ", href: "/faq", sortOrder: 4 },
+    { label: "Về Xteink", href: "/about", sortOrder: 5 },
   ];
 
   for (const n of navLinks) {
