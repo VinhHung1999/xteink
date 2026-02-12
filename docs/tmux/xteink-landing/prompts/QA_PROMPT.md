@@ -164,6 +164,68 @@ tm-send SM "QA -> SM: [Story] TESTED. Result: PASS/FAIL. [Summary]"
 - Prevents false positive "page not loading" when server is frozen/crashed
 - Sprint 4 lesson: FE dev server freeze caused blocker — health check would catch early
 
+### Sprint 5 (Order + Payment) — ACTIONS STILL PENDING!
+
+**CRITICAL: These action items were identified in Sprint 5 retro but NOT implemented in Sprint 6. MUST implement in Sprint 7!**
+
+**Early QA in Design Reviews (P0):**
+- Join design reviews BEFORE FE starts coding
+- Review mockups/wireframes for testability (selectors, form fields, interactive elements)
+- Flag testability issues early: "This form needs name attributes for testing"
+- Prevents selector mismatches discovered during testing phase
+
+**Shared Selector Reference Doc (P0):**
+- Create testability guidelines document for FE reference
+- Define selector patterns: data-testid > aria-label > name > id > class
+- Document form field requirements: name, id, aria-label attributes
+- Share with FE so components are built testable from the start
+
+**Coordinate Form Field Attributes Upfront (P0):**
+- Before FE implements forms, coordinate on field naming conventions
+- Example: checkout form fields need consistent name/id for automated testing
+- Prevents post-implementation selector debugging cycles
+- Make this part of sprint planning, not reactive testing
+
+### Sprint 6 (Subpages + Product Deep Content)
+
+**Visual + Automated Testing Synergy:**
+- When automated tests fail due to selector issues, **always visually verify**
+- Don't assume functionality is broken — selector may just be wrong
+- Sprint 6: 7/57 tests partial (87.7%), but zero functional bugs
+- Visual verification caught what selectors missed (footer nav, search bar, cross-links)
+- Report: "Selector missed but visually confirmed working" + flag for test improvement
+
+**Test Selector Recurring Issue — Use data-testid:**
+- Selector mismatches are recurring across Sprint 5 and Sprint 6
+- Root cause: FE components don't have dedicated test attributes
+- Solution: Request FE add `data-testid` to all interactive/testable elements
+- Example: `<button data-testid="add-to-cart">` instead of relying on class/text
+- Make data-testid a standard practice (coordinate in Sprint 7 planning)
+
+**Create Test Templates for Common Patterns:**
+- Don't write test scripts from scratch every time
+- Identify reusable patterns: content pages (About, Guides, Policy), galleries, forms
+- Create templates: "Content Page Template" → copy/paste/customize for new pages
+- Saves time and ensures consistent test coverage across similar pages
+
+**Playwright Codegen for Selector Discovery:**
+- Use `npx playwright codegen http://localhost:2002` to discover selectors initially
+- Reduces iteration time when selectors don't match expectations
+- Generates initial test code based on actual DOM — refine from there
+- Especially helpful for complex interactions (drag-drop, multi-file upload)
+
+**Document Test Data/State Requirements:**
+- For each page type, document required test setup
+- Example: "Product pages need mock data seeded, checkout needs cart items"
+- Prevents "page blank" confusion when testing pages with prerequisites
+- Add to test plan template: "Prerequisites: [state requirements]"
+
+**Zero Bugs Achievement:**
+- Sprint 6: 6/6 stories delivered with zero functional bugs
+- Maintained Sprint 4-5 quality standard
+- Comprehensive coverage: 10 pages, responsive, brand, navigation, content accuracy
+- Critical validations confirmed (shipping tiers matched BE data)
+
 ---
 
 ## Starting Your Role

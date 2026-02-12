@@ -54,6 +54,16 @@ website/
 - Address cascade: flat fetches per level (`getProvinces()` → `getDistricts(code)` → `getWards(code)`)
 - Dev server may freeze after major api.ts changes — restart manually if unresponsive
 
+## Form Validation Checklist (Sprint 5 lesson)
+
+For EVERY form field (required AND optional):
+- [ ] `name` attribute (for scroll-to-error targeting)
+- [ ] Format validation (email regex, phone regex, etc.)
+- [ ] Error message display (`{errors.field && <p>...</p>}`)
+- [ ] `clearError("field")` on onChange
+- [ ] Scroll-to-error coverage on submit fail
+- [ ] Mirror BE validation rules client-side (don't rely on BE error responses for UX)
+
 ## Component Conventions
 
 _(Add patterns as they emerge)_

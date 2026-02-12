@@ -71,13 +71,16 @@ tm-send QA "SM [HH:mm]: message"
 2. PO presents what was done vs planned
 3. Boss provides feedback
 
-### Sprint Retrospective (CRITICAL)
+### Sprint Retrospective (MANDATORY — BLOCKING)
+**CRITICAL: Retro MUST complete BEFORE merging sprint to main. This is a Boss directive.**
+
 1. **Facilitate** — Ask each role: What went well? What went wrong? What to improve?
-2. **Collect insights** from all team members
-3. **Update role prompts** — Add lessons to relevant `*_PROMPT.md` files
-4. **Update project memory** — Store patterns/bugs in `.claude/memory/`
+2. **Collect insights** from PO, TL, BE, FE, QA (ALL team members)
+3. **Remind team** — Update `.claude/memory/` if hard-earned lessons learned
+4. **Update role prompts** — Add lessons to relevant `*_PROMPT.md` files (PO/TL/BE/FE/QA/SM)
 5. **Action items** — Assign concrete improvements for next sprint
 6. **Report to Boss** — Summary of retro + what was updated
+7. **BLOCKING** — Sprint cannot be merged to main until retro is complete
 
 ---
 
@@ -141,6 +144,68 @@ A Story is "Done" when:
 ---
 
 ## Sprint Lessons
+
+### Sprint 6 (Subpages + Product Deep Content)
+
+**Accept Stories Immediately, Not Batch:**
+- PO batch-accepted all 6 stories at once instead of accepting each as ready
+- Batch acceptance delays unblocking for subsequent work
+- Correct: When SM reports "Story ready for PO acceptance", PO should accept immediately
+- Don't wait to accumulate multiple stories — accept one-by-one to maintain flow
+
+**Plan Nav/Footer/Cross-Linking in Sprint Planning:**
+- Sprint 6: Nav links and cross-linking discovered mid-sprint, not planned upfront
+- Examples: Library page missing from nav, format-checker not linked from guides
+- Correct: During sprint planning, identify nav/footer/cross-linking requirements
+- Add to planning checklist: "Which pages need nav entries? What cross-links are needed?"
+- Coordinate with BE for nav seed data and FE for implementation
+
+**Parallel Testing Velocity:**
+- Sprint 6: QA tested each story as FE moved to next story — worked excellently
+- FE coded 6 stories → TL reviewed instantly → QA tested in parallel
+- Result: 6 stories coded in 40 minutes, zero bugs
+- Maintain this pattern: Don't wait for all coding to finish before starting QA
+- Parallel workflow keeps entire team productive simultaneously
+
+**Sprint 5 Retro Actions Tracking:**
+- Sprint 5 retro action items were NOT implemented in Sprint 6 (delayed 2 sprints)
+- QA flagged as critical: early design reviews, selector docs, form field coordination
+- SM responsibility: Track retro action items and verify implementation in next sprint
+- Add to sprint planning: "Are previous sprint's retro actions addressed?"
+- Don't let improvement actions get forgotten across sprints
+
+**Fastest Sprint Achievement:**
+- Sprint 6: 6 stories in 40 minutes, zero bugs, 87.7% automated test pass rate
+- Factors: Reusable components (GuideLayout, ProductGallery), parallel testing, instant reviews
+- Document velocity patterns for future planning and estimation
+- Quality maintained: zero functional bugs despite high velocity
+
+**Retro Before Merge Successfully Applied:**
+- Sprint 6: Retro facilitated BEFORE merge to main (Sprint 5 lesson successfully applied)
+- Process improvement from Sprint 5 violation now embedded in workflow
+- Continue enforcing: Retro is BLOCKING before merge to main
+
+### Sprint 5 (Order + Payment + UI Polish)
+
+**MANDATORY Retro Before Merge:**
+- Boss directive: Retro MUST complete before merging sprint to main
+- PO merged Sprint 5 before retro (violated process) — this is now BLOCKING
+- SM must facilitate retro immediately after Boss acceptance, before any merge
+
+**PO Authority on Task Assignment:**
+- PO is the authority for task assignments — SM tracks but does NOT override PO directives
+- Sprint 5: SM told QA to "wait" for TL review, but PO said "start now" — caused confusion
+- Correct: SM coordinates reviews but PO's assignment decisions take precedence
+
+**Commit Verification Before Acceptance:**
+- SM must verify commits exist (`git log` check) before PO accepts work
+- Sprint 5: BE commit verification delayed — SM flagged but PO accepted anyway
+- Add commit hash verification to DoD checklist
+
+**Form Validation Checklist Needed:**
+- Checkout validation initially missed email/phone format checks
+- Need validation checklist: email format, phone format, required fields, error messages
+- Check ALL validations before submitting to QA
 
 ### Sprint 4 (BE Foundation)
 
