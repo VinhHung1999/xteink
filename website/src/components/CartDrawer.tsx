@@ -10,6 +10,10 @@ function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + "₫";
 }
 
+function toSlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, "-");
+}
+
 export default function CartDrawer() {
   const router = useRouter();
   const {
@@ -19,6 +23,7 @@ export default function CartDrawer() {
     totalPrice,
     removeItem,
     updateQuantity,
+    updateColor,
     clearCart,
     closeDrawer,
   } = useCart();
@@ -127,6 +132,34 @@ export default function CartDrawer() {
                         <p className="mt-0.5 text-sm font-semibold text-gold">
                           {formatPrice(item.price)}
                         </p>
+                        {/* Color swatches — change color in cart */}
+                        {item.availableColors && item.availableColors.length > 1 && (
+                          <div className="mt-1.5 flex gap-1">
+                            {item.availableColors.map((c) => {
+                              const isActive = c.name === item.color;
+                              return (
+                                <button
+                                  key={c.name}
+                                  type="button"
+                                  title={c.name}
+                                  onClick={() => {
+                                    if (isActive) return;
+                                    const newId = `accessory-${item.slug}-${toSlug(c.name)}`;
+                                    updateColor(item.id, newId, c.name, c.hex);
+                                  }}
+                                  className={`h-5 w-5 rounded-full border transition-all ${
+                                    isActive
+                                      ? "border-gold ring-1 ring-gold/40 scale-110"
+                                      : "border-paper/20 hover:border-gold/40"
+                                  }`}
+                                  style={{ backgroundColor: c.hex }}
+                                  aria-label={`Đổi sang màu ${c.name}`}
+                                  aria-pressed={isActive}
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
 
                       {/* Quantity controls */}

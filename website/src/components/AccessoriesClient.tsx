@@ -135,6 +135,9 @@ export default function AccessoriesClient({ accessories }: AccessoriesClientProp
                         color: selectedColor.name,
                         colorHex: selectedColor.hex,
                       }),
+                      ...(hasColors && {
+                        availableColors: accessory.colors!.map((c) => ({ name: c.name, hex: c.hex })),
+                      }),
                     });
                     openDrawer();
                   }}
