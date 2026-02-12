@@ -481,7 +481,12 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                         />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-paper">{item.name}</p>
+                        <p className="text-sm font-medium text-paper">
+                          {item.name}
+                          {item.color && (
+                            <span className="text-paper/50"> — {item.color}</span>
+                          )}
+                        </p>
                         <p className="text-xs text-paper/50">x{item.quantity}</p>
                       </div>
                       <p className="text-sm font-medium text-paper">
