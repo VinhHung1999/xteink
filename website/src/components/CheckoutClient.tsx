@@ -149,8 +149,11 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
     if (!name.trim()) e.name = "Vui lòng nhập họ tên";
     if (!phone.trim()) {
       e.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^0\d{9}$/.test(phone.replace(/[\s-]/g, ""))) {
-      e.phone = "Số điện thoại không hợp lệ (VD: 0901234567)";
+    } else if (!/^0\d{9,10}$/.test(phone.replace(/[\s-]/g, ""))) {
+      e.phone = "Số điện thoại không hợp lệ (10-11 số, bắt đầu bằng 0)";
+    }
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      e.email = "Email không hợp lệ";
     }
     if (!provinceCode) e.province = "Vui lòng chọn tỉnh/thành";
     if (!districtCode) e.district = "Vui lòng chọn quận/huyện";
@@ -275,11 +278,13 @@ export default function CheckoutClient({ provinces, paymentMethods }: CheckoutCl
                 <label className={labelCls}>Email (không bắt buộc)</label>
                 <input
                   type="email"
+                  name="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => { setEmail(e.target.value); clearError("email"); }}
                   placeholder="email@example.com"
                   className={inputCls}
                 />
+                {errors.email && <p className={errorCls}>{errors.email}</p>}
               </div>
 
               {/* Province */}
