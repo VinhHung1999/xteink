@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import ProductListing from "@/components/ProductListing";
 import Accessories from "@/components/Accessories";
+import ProductListingSkeleton from "@/components/skeletons/ProductListingSkeleton";
+import AccessoriesSkeleton from "@/components/skeletons/AccessoriesSkeleton";
 
 export const metadata: Metadata = {
   title: "Sản phẩm — Xteink",
@@ -12,10 +14,12 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <>
-      <Suspense>
+      <Suspense fallback={<ProductListingSkeleton />}>
         <ProductListing />
       </Suspense>
-      <Accessories />
+      <Suspense fallback={<AccessoriesSkeleton />}>
+        <Accessories />
+      </Suspense>
     </>
   );
 }
