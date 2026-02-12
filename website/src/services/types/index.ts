@@ -201,6 +201,8 @@ export interface CartItem {
   price: number; // numeric, in VND
   quantity: number;
   type: "product" | "accessory";
+  color?: string;     // e.g. "Đen", "Nâu"
+  colorHex?: string;  // e.g. "#2D2D2D"
 }
 
 // ========== Checkout: Addresses (flat — fetched per cascade level) ==========

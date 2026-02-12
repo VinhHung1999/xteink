@@ -120,6 +120,9 @@ export default function CartDrawer() {
                       <div>
                         <p className="text-sm font-medium text-paper">
                           {item.name}
+                          {item.color && (
+                            <span className="text-paper/50"> — {item.color}</span>
+                          )}
                         </p>
                         <p className="mt-0.5 text-sm font-semibold text-gold">
                           {formatPrice(item.price)}
