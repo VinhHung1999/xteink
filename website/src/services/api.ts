@@ -488,6 +488,15 @@ export async function getOrder(orderNumber: string): Promise<OrderDetailResponse
   return fetchAPI<OrderDetailResponse>(`/api/orders/${orderNumber}`);
 }
 
+export async function trackOrder(
+  orderNumber: string,
+  phone: string
+): Promise<OrderDetailResponse> {
+  return fetchAPI<OrderDetailResponse>(
+    `/api/orders/track?orderNumber=${encodeURIComponent(orderNumber)}&phone=${encodeURIComponent(phone)}`
+  );
+}
+
 export async function getShippingFee(
   provinceCode: string,
   subtotal: number
