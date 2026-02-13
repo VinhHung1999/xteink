@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Search, Loader2, Package, CheckCircle, Truck, MapPin, XCircle } from "lucide-react";
-import { getOrder } from "@/services/api";
+import { trackOrder } from "@/services/api";
 import type { OrderDetailResponse } from "@/services/types";
 
 const STATUS_STEPS = [
@@ -58,15 +58,10 @@ export default function TrackOrderClient() {
     setOrder(null);
 
     try {
-      const result = await getOrder(trimmedOrder);
-      // Verify phone matches
-      if (result.customer.phone !== trimmedPhone) {
-        setError("Số điện thoại không khớp với đơn hàng này");
-        return;
-      }
+      const result = await trackOrder(trimmedOrder, trimmedPhone);
       setOrder(result);
     } catch {
-      setError("Không tìm thấy đơn hàng. Vui lòng kiểm tra lại mã đơn.");
+      setError("Không tìm thấy đơn hàng. Vui lòng kiểm tra lại mã đơn và số điện thoại.");
     } finally {
       setLoading(false);
     }
