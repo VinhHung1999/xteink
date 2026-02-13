@@ -62,8 +62,14 @@ import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+// Use relative URL on client (same-origin via Next.js rewrite proxy) to avoid
+// cross-origin cookie issues with sameSite: lax. Fall back to absolute URL on server.
+function getBaseUrl(): string {
+  return typeof window !== "undefined" ? "" : API_URL;
+}
+
 async function fetchAPI<T>(endpoint: string): Promise<T> {
-  const res = await fetch(`${API_URL}${endpoint}`, { credentials: "include" });
+  const res = await fetch(`${getBaseUrl()}${endpoint}`, { credentials: "include" });
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText} — ${endpoint}`);
   }
@@ -475,7 +481,7 @@ export async function getCheckoutPaymentMethods(): Promise<CheckoutPaymentMethod
 // ===== Order APIs (Sprint 5) =====
 
 export async function createOrder(payload: CreateOrderPayload): Promise<CreateOrderResponse> {
-  const res = await fetch(`${API_URL}/api/orders`, {
+  const res = await fetch(`${getBaseUrl()}/api/orders`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -527,7 +533,7 @@ export async function updateOrderStatus(
   status: OrderStatus
 ): Promise<AdminOrderDetail> {
   const res = await fetch(
-    `${API_URL}/api/admin/orders/${orderId}/status`,
+    `${getBaseUrl()}/api/admin/orders/${orderId}/status`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -545,7 +551,7 @@ export async function updateOrderStatus(
 // ===== Auth =====
 
 export async function authLogin(payload: LoginPayload): Promise<AuthUser> {
-  const res = await fetch(`${API_URL}/api/auth/login`, {
+  const res = await fetch(`${getBaseUrl()}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -560,7 +566,7 @@ export async function authLogin(payload: LoginPayload): Promise<AuthUser> {
 }
 
 export async function authRegister(payload: RegisterPayload): Promise<AuthUser> {
-  const res = await fetch(`${API_URL}/api/auth/register`, {
+  const res = await fetch(`${getBaseUrl()}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -575,7 +581,7 @@ export async function authRegister(payload: RegisterPayload): Promise<AuthUser> 
 }
 
 export async function authLogout(): Promise<void> {
-  await fetch(`${API_URL}/api/auth/logout`, {
+  await fetch(`${getBaseUrl()}/api/auth/logout`, {
     method: "POST",
     credentials: "include",
   });
@@ -587,7 +593,7 @@ export async function authMe(): Promise<AuthUser> {
 }
 
 export async function authRefresh(): Promise<void> {
-  const res = await fetch(`${API_URL}/api/auth/refresh`, {
+  const res = await fetch(`${getBaseUrl()}/api/auth/refresh`, {
     method: "POST",
     credentials: "include",
   });

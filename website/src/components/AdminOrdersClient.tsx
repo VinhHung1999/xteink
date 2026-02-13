@@ -85,6 +85,11 @@ export default function AdminOrdersClient() {
   }, [fetchOrders]);
 
   async function handleStatusUpdate(order: AdminOrderSummary, newStatus: OrderStatus) {
+    const confirmed = window.confirm(
+      `Đổi trạng thái đơn ${order.orderNumber} từ "${STATUS_LABEL[order.status]}" sang "${STATUS_LABEL[newStatus]}"?`
+    );
+    if (!confirmed) return;
+
     setUpdatingId(order.id);
     try {
       await updateOrderStatus(order.id, newStatus);
