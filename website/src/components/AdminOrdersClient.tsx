@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Loader2, RefreshCw } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight, Loader2, LogOut, RefreshCw } from "lucide-react";
 import { getAdminOrders, updateOrderStatus } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 import type { AdminOrderSummary, AdminOrderListResponse, OrderStatus } from "@/services/types";
 
 const STATUS_OPTIONS: OrderStatus[] = ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"];
@@ -58,6 +60,8 @@ export default function AdminOrdersClient() {
   const [page, setPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState<OrderStatus | "">("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -110,14 +114,27 @@ export default function AdminOrdersClient() {
               </p>
             )}
           </div>
-          <button
-            onClick={fetchOrders}
-            disabled={loading}
-            className="flex h-10 items-center gap-2 rounded-lg border border-paper/10 px-4 text-sm text-paper/70 transition-colors hover:border-gold/30 hover:text-paper disabled:opacity-50"
-          >
-            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
-            Làm mới
-          </button>
+          <div className="flex items-center gap-3">
+            {user && (
+              <span className="text-xs text-paper/40">{user.email}</span>
+            )}
+            <button
+              onClick={fetchOrders}
+              disabled={loading}
+              className="flex h-10 items-center gap-2 rounded-lg border border-paper/10 px-4 text-sm text-paper/70 transition-colors hover:border-gold/30 hover:text-paper disabled:opacity-50"
+            >
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+              Làm mới
+            </button>
+            <button
+              onClick={async () => { await logout(); router.replace("/admin/login"); }}
+              className="flex h-10 items-center gap-2 rounded-lg border border-red-500/20 px-4 text-sm text-red-400 transition-colors hover:border-red-500/40 hover:text-red-300"
+              data-testid="admin-logout"
+            >
+              <LogOut size={14} />
+              Đăng xuất
+            </button>
+          </div>
         </div>
 
         {/* Filters */}

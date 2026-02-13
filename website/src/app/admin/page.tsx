@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AdminOrdersClient from "@/components/AdminOrdersClient";
+import AdminPageClient from "@/components/AdminPageClient";
 
 export const metadata: Metadata = {
   title: "Admin — Quản lý đơn hàng",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminOrdersClient />;
+  return <AdminPageClient />;
 }

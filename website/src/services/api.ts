@@ -35,6 +35,9 @@ import {
   AdminOrderListResponse,
   AdminOrderDetail,
   OrderStatus,
+  AuthUser,
+  LoginPayload,
+  RegisterPayload,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -537,4 +540,53 @@ export async function updateOrderStatus(
     throw new Error(err.message || `Error ${res.status}`);
   }
   return res.json();
+}
+
+// ===== Auth =====
+
+export async function authLogin(payload: LoginPayload): Promise<AuthUser> {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Đăng nhập thất bại");
+  }
+  return res.json();
+}
+
+export async function authRegister(payload: RegisterPayload): Promise<AuthUser> {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Đăng ký thất bại");
+  }
+  return res.json();
+}
+
+export async function authLogout(): Promise<void> {
+  await fetch(`${API_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
+export async function authMe(): Promise<AuthUser> {
+  return fetchAPI<AuthUser>("/api/auth/me");
+}
+
+export async function authRefresh(): Promise<void> {
+  const res = await fetch(`${API_URL}/api/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Refresh failed");
 }
