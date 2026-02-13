@@ -60,7 +60,7 @@ import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 async function fetchAPI<T>(endpoint: string): Promise<T> {
-  const res = await fetch(`${API_URL}${endpoint}`);
+  const res = await fetch(`${API_URL}${endpoint}`, { credentials: "include" });
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText} — ${endpoint}`);
   }
@@ -475,6 +475,7 @@ export async function createOrder(payload: CreateOrderPayload): Promise<CreateOr
   const res = await fetch(`${API_URL}/api/orders`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -523,10 +524,11 @@ export async function updateOrderStatus(
   status: OrderStatus
 ): Promise<AdminOrderDetail> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/api/admin/orders/${orderId}/status`,
+    `${API_URL}/api/admin/orders/${orderId}/status`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ status }),
     }
   );
