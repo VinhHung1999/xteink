@@ -268,6 +268,70 @@ tm-send SM "QA -> SM: [Story] TESTED. Result: PASS/FAIL. [Summary]"
 - Flag incomplete retro actions as BLOCKING in retrospectives
 - Track action item completion across sprints — don't let them disappear
 
+### Sprint 8 (Admin + Auth + Order Tracking)
+
+**Security-First Testing SUCCESS:**
+- Sprint 8: Caught CRITICAL XSS vulnerability in Phase 1 testing
+- Prevented production deployment with unsanitized user inputs
+- This is EXACTLY what security testing is for — validation of approach
+- Continue comprehensive security testing on all user-input endpoints
+
+**Shift Security Left (P0 - CRITICAL):**
+- **Test XSS/SQL injection BEFORE Phase 1 testing, ideally during PR review**
+- Sprint 8: XSS found late (Phase 1), blocked sprint for 30-60 min
+- Risk: Could have reached production if not tested
+- Action: Add security tests to PR review checklist
+- Work with TL to integrate security checks earlier in development
+- Goal: Catch vulnerabilities in dev phase, not QA phase
+
+**API Contract Validation Before Testing:**
+- **Review backend routes/responses BEFORE writing test scripts**
+- Sprint 8: Test script assumptions cost 2-3 re-test cycles
+  - Assumed token in response body (was in cookies)
+  - Assumed lowercase statuses (backend uses UPPERCASE)
+  - Assumed endpoint paths (actual paths differed)
+- Pattern: Curl BE endpoints first, verify actual API shape
+- Document: Response structures, auth mechanisms, enum cases
+- Saves: Multiple re-test cycles from wrong assumptions
+
+**Test Data Setup Automation (P1):**
+- Sprint 8: Only 4 orders in DB, couldn't fully test pagination
+- Need: Script to create test orders in all statuses (PENDING, CONFIRMED, SHIPPING, DELIVERED, CANCELLED)
+- Coordinate with BE: Seed database with realistic test data before QA
+- Enables: Full pagination testing, status transition testing, edge case coverage
+- Add to DoD: "Test data seeded before QA phase"
+
+**Parallel Testing Workflow SUCCESS:**
+- Sprint 8: Tested S8.1 + S8.3 while BE fixed S8.1 blocker
+- Minimized idle time, maximized efficiency
+- Found multiple issues early (500 errors, validation gaps)
+- Continue this pattern: Test non-blocked stories while blockers are being fixed
+
+**Cookie-Based Auth Support:**
+- Sprint 8: Updated test scripts to support cookie-based JWT (vs header-based)
+- Modern auth pattern: httpOnly cookies more secure than localStorage
+- Test scripts should handle both patterns gracefully
+- Extract cookies from response, include in subsequent requests
+
+**Comprehensive Test Documentation:**
+- Sprint 8: 6 test reports created (detailed + actionable)
+- Reports enabled quick diagnosis of root causes
+- Pattern: Phase reports + final regression report + testing status doc
+- Continue: Structured reports with clear reproduction steps and recommendations
+
+**Critical vs Non-Critical Test Classification:**
+- Sprint 8: 87% overall pass (31/35), but 100% critical tests passed (23/23)
+- Not all test failures are blockers — distinguish P0 critical from P2 nice-to-have
+- Critical: Security, auth, core functionality
+- Non-critical: Pagination structure preferences, minor response field differences
+- Report both but don't block on P2 issues
+
+**Zero Regressions Achievement:**
+- Sprint 8: Full regression detected ZERO regressions
+- All 3 P0 fixes stable (XSS, auth wrapper, status filtering)
+- Quality maintained: 4th consecutive sprint with high stability
+- Regression testing validates fixes don't break existing functionality
+
 ---
 
 ## Starting Your Role

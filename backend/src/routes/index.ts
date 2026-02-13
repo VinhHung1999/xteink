@@ -19,7 +19,10 @@ import checkout from "./checkout";
 import orders from "./orders";
 import shipping from "./shipping";
 import payments from "./payments";
+import auth from "./auth";
+import track from "./track";
 import adminOrders from "./admin/orders";
+import { requireAdmin } from "../middleware/auth";
 
 const router = Router();
 
@@ -40,9 +43,11 @@ router.use(purchaseInfo);
 router.use(socialProof);
 router.use(addresses);
 router.use(checkout);
+router.use(track);    // Must be before orders — /orders/track before /orders/:orderNumber
 router.use(orders);
 router.use(shipping);
 router.use(payments);
-router.use("/admin", adminOrders);
+router.use(auth);
+router.use("/admin", requireAdmin, adminOrders);
 
 export default router;

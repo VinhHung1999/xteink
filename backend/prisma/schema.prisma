@@ -8,6 +8,29 @@ datasource db {
 }
 
 // =============================================
+// USERS & AUTH
+// =============================================
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+  @@index([role])
+}
+
+// =============================================
 // PRODUCTS
 // =============================================
 
