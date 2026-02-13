@@ -153,6 +153,57 @@ tm-send PO "BE -> PO: [Task] DONE. [Summary]."
 - Reduces FE parsing burden, enables filtering/comparison features
 - Example: `price`, `originalPrice`, `tag`, `specs[]` should be first-class fields
 
+### Sprint 8 (Admin + Auth + Order Tracking)
+
+**Input Sanitization MANDATORY (P0 - CRITICAL):**
+- **EVERY endpoint accepting user text MUST sanitize before DB storage**
+- Sprint 8: XSS vulnerability shipped (unescaped HTML in name field)
+- Add to DoD: "All user inputs sanitized (name, email, phone, address, notes)"
+- Use simple approach: `input.replace(/<[^>]*>/g, '').trim()` or reject < > characters
+- Apply to: auth registration, order creation, any user-generated content
+- This is NON-NEGOTIABLE for any endpoint going to production
+
+**Enum Case Normalization (P0):**
+- **ALWAYS normalize enum inputs before Prisma queries**
+- Sprint 8: `?status=pending` → 500 error (Prisma expects `PENDING`)
+- Pattern: `.toUpperCase()` on all enum query params
+- Add validation: return 400 if not in valid enum values
+- Example: `const status = query.status?.toUpperCase(); if (!['PENDING', 'CONFIRMED', ...].includes(status)) return 400`
+- Prevents 500 errors from case mismatches
+
+**YAGNI Principle - Start Simple:**
+- Don't over-engineer solutions, especially security fixes
+- Sprint 8: Initial XSS fix used entity encoding, corrupted DB data (`&` → `&amp;`)
+- Correct: Started with simplest approach (tag stripping) after TL guidance
+- Build minimum solution first, add complexity only if needed
+- Applies to: authentication flows, validation logic, error handling
+
+**TypeScript Type Checking Upfront:**
+- Check library type signatures BEFORE writing code
+- Sprint 8: `jwt.sign()` expiresIn type mismatch (wants number, not string)
+- Pattern: Read @types documentation first, prevents compile-time debugging
+- Saves time: Fix type issues in design phase, not after implementation
+
+**Express Route Ordering Convention:**
+- **Static routes ALWAYS before parameterized routes**
+- Sprint 8: `/orders/track` shadowed by `/orders/:orderNumber`
+- Correct order: Static → Dynamic → Wildcard
+- Example: `/orders/track` (static) before `/orders/:orderNumber` (dynamic)
+- Document this in your route files with comments
+
+**API Response Shape Contract:**
+- Verify response JSON shape matches FE types EXACTLY
+- Sprint 8: FE wrapper bug - BE returned `{ user: {...} }`, FE expected flat `AuthUser`
+- Before finalizing endpoint: Check FE types in `website/src/services/types/`
+- Test with curl: Verify JSON nesting/wrapping matches contract
+- Don't assume FE will unwrap - send exact shape FE expects
+
+**TL Architecture Guidance Pattern:**
+- When TL provides step-by-step implementation order, follow it exactly
+- Sprint 8: 7-step auth implementation prevented rework
+- TL sees architectural dependencies you might miss
+- If unclear, ask TL before improvising - saves integration time
+
 ---
 
 ## Starting Your Role
