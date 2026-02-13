@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,7 @@ async function main() {
   // Delete in reverse dependency order
   // =============================================
 
+  await prisma.user.deleteMany();
   await prisma.ward.deleteMany();
   await prisma.district.deleteMany();
   await prisma.province.deleteMany();
@@ -777,6 +779,24 @@ async function main() {
   }
 
   console.log("Site Config seeded");
+
+  // =============================================
+  // ADMIN USER
+  // =============================================
+
+  const adminPasswordHash = await bcrypt.hash("admin123", 12);
+  await prisma.user.upsert({
+    where: { email: "admin@xteink.com" },
+    update: {},
+    create: {
+      email: "admin@xteink.com",
+      passwordHash: adminPasswordHash,
+      name: "Xteink Admin",
+      role: "ADMIN",
+    },
+  });
+
+  console.log("Admin user seeded (admin@xteink.com)");
 
   // =============================================
   // MOCK ADDRESSES (3 cities for dev)
