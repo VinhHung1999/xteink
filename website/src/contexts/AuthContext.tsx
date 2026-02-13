@@ -86,7 +86,13 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isAdmin) return null;
+  if (!isAdmin) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#111]">
+        <Loader2 size={32} className="animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }
