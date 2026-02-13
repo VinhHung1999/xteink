@@ -308,6 +308,64 @@ export interface ShippingFeeResponse {
   estimatedDays: string;
 }
 
+// ========== Admin ==========
+export type OrderStatus = "PENDING" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED";
+
+export interface AdminOrderSummary {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: string;
+  customerName: string;
+  customerPhone: string;
+  total: number;
+  itemCount: number;
+  createdAt: string;
+}
+
+export interface AdminOrderListResponse {
+  orders: AdminOrderSummary[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface AdminOrderDetail {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string | null;
+  provinceName: string;
+  districtName: string;
+  wardName: string;
+  addressDetail: string;
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  notes: string | null;
+  items: {
+    id: string;
+    productSlug: string;
+    productName: string;
+    productImage: string;
+    unitPrice: number;
+    quantity: number;
+    totalPrice: number;
+    itemType: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 // ========== FAQ ==========
 export interface FAQItem {
   question: string;
