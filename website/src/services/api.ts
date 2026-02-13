@@ -555,7 +555,8 @@ export async function authLogin(payload: LoginPayload): Promise<AuthUser> {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Đăng nhập thất bại");
   }
-  return res.json();
+  const data = await res.json();
+  return data.user;
 }
 
 export async function authRegister(payload: RegisterPayload): Promise<AuthUser> {
@@ -569,7 +570,8 @@ export async function authRegister(payload: RegisterPayload): Promise<AuthUser> 
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Đăng ký thất bại");
   }
-  return res.json();
+  const data = await res.json();
+  return data.user;
 }
 
 export async function authLogout(): Promise<void> {
@@ -580,7 +582,8 @@ export async function authLogout(): Promise<void> {
 }
 
 export async function authMe(): Promise<AuthUser> {
-  return fetchAPI<AuthUser>("/api/auth/me");
+  const data = await fetchAPI<{ user: AuthUser }>("/api/auth/me");
+  return data.user;
 }
 
 export async function authRefresh(): Promise<void> {
