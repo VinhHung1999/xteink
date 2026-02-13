@@ -32,6 +32,9 @@ import {
   CreateOrderResponse,
   OrderDetailResponse,
   ShippingFeeResponse,
+  AdminOrderListResponse,
+  AdminOrderDetail,
+  OrderStatus,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -492,4 +495,35 @@ export async function getShippingFee(
   return fetchAPI<ShippingFeeResponse>(
     `/api/shipping/fee?provinceCode=${provinceCode}&subtotal=${subtotal}`
   );
+}
+
+// ===== Admin =====
+
+export async function getAdminOrders(
+  page = 1,
+  limit = 20,
+  status?: OrderStatus
+): Promise<AdminOrderListResponse> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (status) params.set("status", status);
+  return fetchAPI<AdminOrderListResponse>(`/api/admin/orders?${params}`);
+}
+
+export async function updateOrderStatus(
+  orderId: string,
+  status: OrderStatus
+): Promise<AdminOrderDetail> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/api/admin/orders/${orderId}/status`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Error ${res.status}`);
+  }
+  return res.json();
 }
