@@ -3,6 +3,7 @@ import prisma from "../lib/prisma";
 import { hashPassword, verifyPassword, signAccessToken, signRefreshToken, verifyRefreshToken, TokenPayload } from "../lib/auth";
 import { setCookies, clearCookies } from "../lib/cookies";
 import { requireAuth } from "../middleware/auth";
+import { sanitize, sanitizeStrip } from "../lib/sanitize";
 
 const router = Router();
 
@@ -27,20 +28,26 @@ router.post("/auth/register", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "VALIDATION_ERROR", message: "Mật khẩu tối thiểu 6 ký tự" });
     }
 
-    // Check duplicate
-    const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+    // Check duplicate (use sanitized email)
+    const safeEmailCheck = sanitizeStrip(email).toLowerCase();
+    const existing = await prisma.user.findUnique({ where: { email: safeEmailCheck } });
     if (existing) {
       return res.status(409).json({ error: "CONFLICT", message: "Email đã được sử dụng" });
     }
+
+    // Sanitize inputs
+    const safeName = sanitize(name);
+    const safeEmail = sanitizeStrip(email).toLowerCase();
+    const safePhone = phone ? sanitizeStrip(phone) : null;
 
     // Create user
     const passwordHash = await hashPassword(password);
     const user = await prisma.user.create({
       data: {
-        email: email.toLowerCase().trim(),
+        email: safeEmail,
         passwordHash,
-        name: name.trim(),
-        phone: phone?.trim() || null,
+        name: safeName,
+        phone: safePhone,
         role: "CUSTOMER",
       },
     });
