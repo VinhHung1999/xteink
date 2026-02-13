@@ -7,11 +7,18 @@ const router = Router();
 // GET /api/admin/orders — List orders (paginated)
 router.get("/orders", async (req: Request, res: Response) => {
   try {
-    const page = Math.max(1, Number(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
-    const statusFilter = typeof req.query.status === "string" ? req.query.status : undefined;
+    const page = Math.max(1, parseInt(String(req.query.page || "1"), 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(String(req.query.limit || "20"), 10) || 20));
 
-    const where = statusFilter ? { status: statusFilter as "PENDING" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED" } : {};
+    // Normalize status filter: accept lowercase, validate against enum
+    const validStatuses = ["PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED"];
+    const rawStatus = typeof req.query.status === "string" ? req.query.status.toUpperCase() : undefined;
+
+    if (rawStatus && !validStatuses.includes(rawStatus)) {
+      return res.status(400).json({ error: "VALIDATION_ERROR", message: `Trạng thái không hợp lệ. Hợp lệ: ${validStatuses.join(", ")}` });
+    }
+
+    const where = rawStatus ? { status: rawStatus as "PENDING" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED" } : {};
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
