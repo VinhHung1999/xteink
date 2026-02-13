@@ -342,6 +342,50 @@ tm-send PO "FE -> PO: [Task] DONE. [Summary]."
   4. Manual test protocol for headless-hard features (exit-intent, analytics events)
 - Don't wait for deployment day to discover missing env vars
 
+### Sprint 8: Curl BE endpoints BEFORE coding API functions (P0)
+- **ALWAYS curl the BE endpoint first to verify response shape**
+- Sprint 8: Auth response wrapper mismatch (BE returns `{ user: {...} }`, FE assumed flat object)
+- Don't assume response structure — verify actual JSON shape
+- Pattern: `curl http://localhost:3001/api/endpoint | jq` before writing `api.ts` function
+- Check: Nesting/wrapping, field names, enum cases, data types
+- Prevents: TL catching contract mismatches during code review
+- Add to DoD: "Verified BE response shape with curl"
+
+### Sprint 8: API contract mismatch prevention
+- BE response shape and FE types MUST match exactly (not just field names)
+- TypeScript `res.json()` returns `any` — gives false confidence
+- Sprint 8: FE expected flat `AuthUser`, BE sent `{ user: AuthUser }`
+- Fix: Always unwrap BE response to match FE types
+- Example: `const data = await res.json(); return data.user` (not just `return res.json()`)
+- Consider: Runtime assertion to catch shape mismatches (e.g., `assert 'role' in data`)
+
+### Sprint 8: formatPrice/formatDate duplication
+- Sprint 8: formatPrice/formatDate duplicated across 3 components
+- Pattern: AdminOrdersClient, TrackOrderClient, CheckoutClient all had same functions
+- Fix for Sprint 9: Extract to `utils/format.ts`
+- Rule: If function appears in 2+ components, extract to utils
+- Saves: Maintenance burden, ensures consistency across app
+
+### Sprint 8: TL architecture guidance - follow exactly
+- Sprint 8: TL provided clear AuthProvider scoping guidance (admin-only vs global)
+- Following TL architecture prevented rework and integration issues
+- Correct approach: AdminLayout with AuthProvider scoped to `/admin/*`
+- Don't improvise on architecture — TL sees system-wide implications you might miss
+- If scope unclear, ask TL before implementing
+
+### Sprint 8: Strong velocity achievement
+- Sprint 8: 3 stories (S8.1, S8.2, S8.3) + security fix + credentials wiring in one session
+- Factors: Clear TL guidance, proactive credentials wiring, quick blocker turnaround (<5 min)
+- Response wrapper bug: Caught by TL, fixed in <5 minutes from report to commit
+- Pattern to maintain: Clear architecture → implement → quick fix cycle when needed
+
+### Sprint 8: Integration smoke test before TL review
+- Sprint 8: No FE-side integration test to catch wrapper bug before TL review
+- Recommendation: Add thin integration smoke test before submitting for review
+- Example: Login flow → verify `isAdmin` resolves → logout
+- Simple curl or manual test would catch API contract mismatches
+- Catches: Response shape issues, auth flow problems, 401 handling
+
 ---
 
 ## Starting Your Role

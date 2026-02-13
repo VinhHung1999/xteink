@@ -32,6 +32,12 @@ import {
   CreateOrderResponse,
   OrderDetailResponse,
   ShippingFeeResponse,
+  AdminOrderListResponse,
+  AdminOrderDetail,
+  OrderStatus,
+  AuthUser,
+  LoginPayload,
+  RegisterPayload,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -57,7 +63,7 @@ import { mockCheckoutPaymentMethods } from "./mock/checkout-payment";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 async function fetchAPI<T>(endpoint: string): Promise<T> {
-  const res = await fetch(`${API_URL}${endpoint}`);
+  const res = await fetch(`${API_URL}${endpoint}`, { credentials: "include" });
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText} — ${endpoint}`);
   }
@@ -472,6 +478,7 @@ export async function createOrder(payload: CreateOrderPayload): Promise<CreateOr
   const res = await fetch(`${API_URL}/api/orders`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -485,6 +492,15 @@ export async function getOrder(orderNumber: string): Promise<OrderDetailResponse
   return fetchAPI<OrderDetailResponse>(`/api/orders/${orderNumber}`);
 }
 
+export async function trackOrder(
+  orderNumber: string,
+  phone: string
+): Promise<OrderDetailResponse> {
+  return fetchAPI<OrderDetailResponse>(
+    `/api/orders/track?orderNumber=${encodeURIComponent(orderNumber)}&phone=${encodeURIComponent(phone)}`
+  );
+}
+
 export async function getShippingFee(
   provinceCode: string,
   subtotal: number
@@ -492,4 +508,88 @@ export async function getShippingFee(
   return fetchAPI<ShippingFeeResponse>(
     `/api/shipping/fee?provinceCode=${provinceCode}&subtotal=${subtotal}`
   );
+}
+
+// ===== Admin =====
+
+export async function getAdminOrders(
+  page = 1,
+  limit = 20,
+  status?: OrderStatus
+): Promise<AdminOrderListResponse> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (status) params.set("status", status);
+  return fetchAPI<AdminOrderListResponse>(`/api/admin/orders?${params}`);
+}
+
+export async function updateOrderStatus(
+  orderId: string,
+  status: OrderStatus
+): Promise<AdminOrderDetail> {
+  const res = await fetch(
+    `${API_URL}/api/admin/orders/${orderId}/status`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Error ${res.status}`);
+  }
+  return res.json();
+}
+
+// ===== Auth =====
+
+export async function authLogin(payload: LoginPayload): Promise<AuthUser> {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Đăng nhập thất bại");
+  }
+  const data = await res.json();
+  return data.user;
+}
+
+export async function authRegister(payload: RegisterPayload): Promise<AuthUser> {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Đăng ký thất bại");
+  }
+  const data = await res.json();
+  return data.user;
+}
+
+export async function authLogout(): Promise<void> {
+  await fetch(`${API_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
+export async function authMe(): Promise<AuthUser> {
+  const data = await fetchAPI<{ user: AuthUser }>("/api/auth/me");
+  return data.user;
+}
+
+export async function authRefresh(): Promise<void> {
+  const res = await fetch(`${API_URL}/api/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Refresh failed");
 }

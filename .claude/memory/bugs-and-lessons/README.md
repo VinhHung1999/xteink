@@ -72,6 +72,12 @@
 - **Cause:** SM told QA to wait for TL review, PO told QA to start now (parallel). QA confused by conflicting directives.
 - **Fix:** PO decides task assignments and execution order. SM tracks progress and enforces process but does NOT override PO directives on who does what and when.
 
+### BE auth responses wrap user in `{ user: {...} }` — must unwrap (Sprint 8)
+- **Cause:** BE auth endpoints (`/api/auth/login`, `/register`, `/me`) return `{ user: { id, email, name, role } }`, not a flat user object. FE `authLogin`/`authRegister`/`authMe` returned `res.json()` directly without unwrapping.
+- **Symptom:** `user.role` undefined → `isAdmin` always false → admin dashboard inaccessible after login
+- **Fix:** `const data = await res.json(); return data.user;` in all 3 functions (commit 95f3f18)
+- **Prevention:** Always check BE response shape (curl/Postman) before writing FE API functions. Wrapper objects (`{ user }`, `{ data }`, `{ result }`) are extremely common.
+
 ### Dark mode token inversion breaks "absolute" color uses
 - Swapping `paper`↔`ink` for dark mode breaks: image overlays (`from-ink/70`), CTA text on gold (`text-ink`), hero text on images (`text-paper`), footer `bg-charcoal`
 - **Fix:** Use hardcoded Tailwind arbitrary values (`text-[#1A1A1A]`, `from-[#1A1A1A]/70`, `text-[#E8E0D6]`) for colors that must stay "absolutely" dark or light regardless of theme

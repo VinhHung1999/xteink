@@ -3,6 +3,7 @@ import prisma from "../lib/prisma";
 import { validateCreateOrder } from "../middleware/validate";
 import { calculateShippingFee } from "../lib/shipping";
 import { formatOrderNumber } from "../lib/order-number";
+import { sanitize, sanitizeStrip } from "../lib/sanitize";
 
 const router = Router();
 
@@ -60,28 +61,28 @@ router.post("/orders", validateCreateOrder, async (req: Request, res: Response) 
           status: initialStatus,
           paymentStatus: initialPaymentStatus,
           paymentMethod: paymentMethodId,
-          customerName: customer.name.trim(),
-          customerPhone: customer.phone.replace(/[\s-]/g, ""),
-          customerEmail: customer.email || null,
+          customerName: sanitize(customer.name),
+          customerPhone: sanitizeStrip(customer.phone).replace(/[\s-]/g, ""),
+          customerEmail: customer.email ? sanitizeStrip(customer.email) : null,
           provinceCode: shipping.provinceCode,
           provinceName: province.name,
           districtCode: shipping.districtCode,
           districtName: district.name,
           wardCode: shipping.wardCode,
           wardName: ward.name,
-          addressDetail: shipping.addressDetail.trim(),
+          addressDetail: sanitize(shipping.addressDetail),
           subtotal,
           shippingFee,
           total,
-          notes: notes || null,
+          notes: notes ? sanitize(notes) : null,
           items: {
             create: items.map((item: {
               slug: string; name: string; image: string;
               unitPrice: number; quantity: number; type: string;
             }) => ({
-              productSlug: item.slug,
-              productName: item.name,
-              productImage: item.image,
+              productSlug: sanitizeStrip(item.slug),
+              productName: sanitize(item.name),
+              productImage: sanitizeStrip(item.image),
               unitPrice: item.unitPrice,
               quantity: item.quantity,
               totalPrice: item.unitPrice * item.quantity,
