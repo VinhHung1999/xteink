@@ -64,8 +64,8 @@ const PAYMENT_STATUS_COLOR: Record<string, string> = {
 
 // Fallback transitions when BE hasn't delivered the transitions field yet
 const FALLBACK_FORWARD: Record<OrderStatus, OrderStatus[]> = {
-  PENDING: ["CONFIRMED"],
-  CONFIRMED: ["SHIPPING"],
+  PENDING: ["CONFIRMED", "CANCELLED"],
+  CONFIRMED: ["SHIPPING", "CANCELLED"],
   SHIPPING: ["DELIVERED"],
   DELIVERED: [],
   CANCELLED: [],
@@ -569,7 +569,7 @@ export default function AdminOrdersClient() {
         )}
 
         {/* Desktop Table */}
-        <div className="mt-6 hidden lg:block glass-card rounded-2xl overflow-hidden">
+        <div className="mt-6 hidden lg:block glass-card rounded-2xl">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-paper/5">
