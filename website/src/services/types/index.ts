@@ -312,6 +312,11 @@ export interface ShippingFeeResponse {
 export type OrderStatus = "PENDING" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED";
 export type PaymentStatus = "PENDING" | "PAID" | "FAILED";
 
+export interface OrderTransitions {
+  forward: OrderStatus[];
+  reverse: OrderStatus[];
+}
+
 export interface AdminOrderSummary {
   id: string;
   orderNumber: string;
@@ -323,6 +328,7 @@ export interface AdminOrderSummary {
   total: number;
   itemCount: number;
   createdAt: string;
+  transitions?: OrderTransitions;
 }
 
 export interface AdminOrderListResponse {
