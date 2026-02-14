@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import prisma from "../../lib/prisma";
-import { isValidTransition } from "../../lib/order-status";
+import { isValidTransition, isReversion, getForwardTransitions, getReverseTransitions } from "../../lib/order-status";
 
 const router = Router();
 
@@ -43,6 +43,10 @@ router.get("/orders", async (req: Request, res: Response) => {
         total: o.total,
         itemCount: o._count.items,
         createdAt: o.createdAt.toISOString(),
+        transitions: {
+          forward: getForwardTransitions(o.status),
+          reverse: getReverseTransitions(o.status),
+        },
       })),
       pagination: {
         page,
@@ -85,13 +89,19 @@ router.patch("/orders/:id/status", async (req: Request, res: Response) => {
     }
 
     // Side effect: if confirming a bank transfer, mark as PAID
-    const shouldMarkPaid = newStatus === "CONFIRMED" && order.paymentMethod === "bank";
+    const shouldMarkPaid = newStatus === "CONFIRMED" && order.paymentMethod === "bank" && !isReversion(order.status, newStatus);
+
+    // Reverse side effect: ONLY revert payment for CONFIRMED→PENDING + bank + currently PAID
+    const shouldRevertPayment = isReversion(order.status, newStatus)
+      && order.status === "CONFIRMED" && newStatus === "PENDING"
+      && order.paymentMethod === "bank" && order.paymentStatus === "PAID";
 
     const updated = await prisma.order.update({
       where: { id },
       data: {
         status: newStatus as "PENDING" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED",
         ...(shouldMarkPaid ? { paymentStatus: "PAID" as const } : {}),
+        ...(shouldRevertPayment ? { paymentStatus: "PENDING" as const } : {}),
       },
       include: { items: true },
     });
