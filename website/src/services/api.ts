@@ -40,6 +40,7 @@ import {
   RegisterPayload,
   AdminStats,
   AdminChartResponse,
+  CreateAdminOrderResponse,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -551,6 +552,22 @@ export async function updateOrderStatus(
       body: JSON.stringify({ status }),
     }
   );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Error ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function createAdminOrder(
+  payload: CreateOrderPayload
+): Promise<CreateAdminOrderResponse> {
+  const res = await fetch(`${getBaseUrl()}/api/admin/orders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || `Error ${res.status}`);

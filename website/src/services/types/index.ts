@@ -390,6 +390,14 @@ export interface AdminOrderDetail {
   updatedAt: string;
 }
 
+export interface CreateAdminOrderResponse {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  total: number;
+}
+
 // ========== Admin Stats ==========
 export interface AdminStats {
   ordersToday: number;

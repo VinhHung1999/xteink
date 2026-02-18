@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Loader2,
   LogOut,
+  Plus,
   RefreshCw,
   RotateCcw,
   Search,
@@ -540,6 +541,13 @@ export default function AdminOrdersClient() {
               <span className="text-xs text-paper/40">{user.email}</span>
             )}
             <button
+              onClick={() => router.push("/admin/orders/create")}
+              className="flex h-10 items-center gap-2 rounded-xl bg-gold/20 px-4 text-sm font-medium text-gold transition-colors hover:bg-gold/30"
+            >
+              <Plus size={14} />
+              Tao don
+            </button>
+            <button
               onClick={fetchOrders}
               disabled={loading}
               className="glass-card flex h-10 items-center gap-2 rounded-xl px-4 text-sm text-paper/70 transition-colors hover:text-paper disabled:opacity-50"
@@ -548,7 +556,7 @@ export default function AdminOrdersClient() {
                 size={14}
                 className={loading ? "animate-spin" : ""}
               />
-              Làm mới
+              Lam moi
             </button>
             <button
               onClick={async () => {
