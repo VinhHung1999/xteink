@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AdminOrderCreateClient from "@/components/AdminOrderCreateClient";
 
 export const metadata: Metadata = {
-  title: "Tao don hang — Admin",
+  title: "Tạo đơn hàng — Admin",
   robots: { index: false, follow: false },
 };
 

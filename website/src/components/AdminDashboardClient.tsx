@@ -76,10 +76,10 @@ function OrdersBarChart({ data }: { data: AdminChartDay[] }) {
     <div ref={containerRef} className="glass-card rounded-2xl p-5">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-paper">
-          Don hang 30 ngay
+          Đơn hàng 30 ngày
         </h2>
         <p className="text-xs text-paper/40">
-          Tong: {data.reduce((s, d) => s + d.orders, 0)} don
+          Tổng: {data.reduce((s, d) => s + d.orders, 0)} đơn
         </p>
       </div>
 
@@ -118,7 +118,7 @@ function OrdersBarChart({ data }: { data: AdminChartDay[] }) {
                   className={day.orders > 0 ? "fill-gold/60" : "fill-paper/5"}
                 />
                 <title>
-                  {day.date}: {day.orders} don — {formatPriceFull(day.revenue)}
+                  {day.date}: {day.orders} đơn — {formatPriceFull(day.revenue)}
                 </title>
               </g>
             );
@@ -164,7 +164,7 @@ function DashboardContent() {
       setStats(statsResult);
       setChartData(chartResult.data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Loi tai dashboard");
+      setError(e instanceof Error ? e.message : "Lỗi tải dashboard");
     } finally {
       setLoading(false);
     }
@@ -190,7 +190,7 @@ function DashboardContent() {
               Dashboard
             </h1>
             <p className="mt-1 text-sm text-paper/50">
-              Tong quan hoat dong kinh doanh
+              Tổng quan hoạt động kinh doanh
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -206,7 +206,7 @@ function DashboardContent() {
                 size={14}
                 className={loading ? "animate-spin" : ""}
               />
-              Lam moi
+              Làm mới
             </button>
             <button
               onClick={async () => {
@@ -238,37 +238,37 @@ function DashboardContent() {
             <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               <StatCard
                 icon={ShoppingBag}
-                label="Don hom nay"
+                label="Đơn hôm nay"
                 value={String(stats.ordersToday)}
                 color="bg-gold/20 text-gold"
               />
               <StatCard
                 icon={Clock}
-                label="Cho xu ly"
+                label="Chờ xử lý"
                 value={String(stats.pendingOrders)}
                 color="bg-cyan-500/20 text-cyan-400"
               />
               <StatCard
                 icon={Package}
-                label="Tong don"
+                label="Tổng đơn"
                 value={String(stats.totalOrders)}
                 color="bg-sage/20 text-sage"
               />
               <StatCard
                 icon={DollarSign}
-                label="Doanh thu hom nay"
+                label="Doanh thu hôm nay"
                 value={formatPrice(stats.revenueToday)}
                 color="bg-gold/20 text-gold"
               />
               <StatCard
                 icon={TrendingUp}
-                label="Doanh thu tuan"
+                label="Doanh thu tuần"
                 value={formatPrice(stats.revenueThisWeek)}
                 color="bg-sage/20 text-sage"
               />
               <StatCard
                 icon={DollarSign}
-                label="Tong doanh thu"
+                label="Tổng doanh thu"
                 value={formatPrice(stats.totalRevenue)}
                 sub={formatPriceFull(stats.totalRevenue)}
                 color="bg-gold/20 text-gold"
@@ -296,10 +296,10 @@ function DashboardContent() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-paper">
-                  Quan ly don hang
+                  Quản lý đơn hàng
                 </p>
                 <p className="text-xs text-paper/40">
-                  Xem, tim kiem, cap nhat trang thai
+                  Xem, tìm kiếm, cập nhật trạng thái
                 </p>
               </div>
             </div>
@@ -316,10 +316,10 @@ function DashboardContent() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-paper">
-                  Tao don thu cong
+                  Tạo đơn thủ công
                 </p>
                 <p className="text-xs text-paper/40">
-                  Don tu Zalo, Facebook DM
+                  Đơn từ Zalo, Facebook DM
                 </p>
               </div>
             </div>

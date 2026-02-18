@@ -22,11 +22,11 @@ import type { AdminOrderDetail, OrderStatus } from "@/services/types";
 // ===== Constants =====
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
-  PENDING: "Cho xu ly",
-  CONFIRMED: "Da xac nhan",
-  SHIPPING: "Dang giao",
-  DELIVERED: "Da giao",
-  CANCELLED: "Da huy",
+  PENDING: "Chờ xử lý",
+  CONFIRMED: "Đã xác nhận",
+  SHIPPING: "Đang giao",
+  DELIVERED: "Đã giao",
+  CANCELLED: "Đã hủy",
 };
 
 const STATUS_COLOR: Record<OrderStatus, string> = {
@@ -99,7 +99,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
       const result = await getAdminOrderDetail(orderId);
       setOrder(result);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Khong the tai don hang");
+      setError(e instanceof Error ? e.message : "Không thể tải đơn hàng");
     } finally {
       setLoading(false);
     }
@@ -126,10 +126,10 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
             className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper"
           >
             <ArrowLeft size={16} />
-            Quay lai
+            Quay lại
           </button>
           <div className="mt-8 glass-card rounded-2xl p-6 text-center">
-            <p className="text-red-400">{error || "Khong tim thay don hang"}</p>
+            <p className="text-red-400">{error || "Không tìm thấy đơn hàng"}</p>
           </div>
         </div>
       </div>
@@ -145,7 +145,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
           className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper"
         >
           <ArrowLeft size={16} />
-          Quay lai danh sach
+          Quay lại danh sách
         </button>
 
         <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -154,7 +154,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
               {order.orderNumber}
             </h1>
             <p className="mt-1 text-sm text-paper/50">
-              Dat luc {formatDate(order.createdAt)}
+              Đặt lúc {formatDate(order.createdAt)}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
           <div className="glass-card rounded-2xl p-5 space-y-4">
             <h2 className="flex items-center gap-2 text-base font-semibold text-paper">
               <Package size={18} className="text-gold" />
-              Thong tin khach hang
+              Thông tin khách hàng
             </h2>
 
             <div className="space-y-3">
@@ -195,7 +195,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
                 >
                   {order.customer.phone}
                 </a>
-                <CopyButton text={order.customer.phone} label="SDT" />
+                <CopyButton text={order.customer.phone} label="SĐT" />
               </div>
 
               {/* Email */}
@@ -217,7 +217,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
                   </p>
                   <CopyButton
                     text={order.shipping.fullAddress}
-                    label="dia chi"
+                    label="địa chỉ"
                   />
                 </div>
               </div>
@@ -228,33 +228,33 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
           <div className="glass-card rounded-2xl p-5 space-y-4">
             <h2 className="flex items-center gap-2 text-base font-semibold text-paper">
               <CreditCard size={18} className="text-gold" />
-              Thanh toan
+              Thanh toán
             </h2>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-paper/60">Phuong thuc</span>
+                <span className="text-paper/60">Phương thức</span>
                 <span className="font-medium text-paper">
                   {order.paymentMethodName}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-paper/60">Tam tinh</span>
+                <span className="text-paper/60">Tạm tính</span>
                 <span className="text-paper">
                   {formatPrice(order.subtotal)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-paper/60">Phi van chuyen</span>
+                <span className="text-paper/60">Phí vận chuyển</span>
                 <span className="text-paper">
                   {order.shippingFee === 0
-                    ? "Mien phi"
+                    ? "Miễn phí"
                     : formatPrice(order.shippingFee)}
                 </span>
               </div>
               <div className="flex justify-between border-t border-paper/5 pt-2">
                 <span className="text-base font-semibold text-paper">
-                  Tong cong
+                  Tổng cộng
                 </span>
                 <span className="font-heading text-xl font-bold text-gold">
                   {formatPrice(order.total)}
@@ -264,14 +264,14 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
 
             {order.notes && (
               <div className="rounded-xl bg-paper/[0.03] p-3">
-                <p className="text-xs text-paper/40">Ghi chu</p>
+                <p className="text-xs text-paper/40">Ghi chú</p>
                 <p className="mt-1 text-sm text-paper/70">{order.notes}</p>
               </div>
             )}
 
             <div className="flex items-center gap-2 text-xs text-paper/30">
               <Clock size={12} />
-              Cap nhat: {formatDate(order.updatedAt)}
+              Cập nhật: {formatDate(order.updatedAt)}
             </div>
           </div>
         </div>
@@ -280,18 +280,18 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
         {order.bankTransferInfo && (
           <div className="mt-6 glass-card rounded-2xl p-5 space-y-3">
             <h2 className="text-base font-semibold text-paper">
-              Thong tin chuyen khoan
+              Thông tin chuyển khoản
             </h2>
             <div className="grid gap-4 md:grid-cols-[1fr_auto]">
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-paper/60">Ngan hang</span>
+                  <span className="text-paper/60">Ngân hàng</span>
                   <span className="text-paper">
                     {order.bankTransferInfo.bankName}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-paper/60">So tai khoan</span>
+                  <span className="text-paper/60">Số tài khoản</span>
                   <span className="font-mono text-paper">
                     {order.bankTransferInfo.accountNumber}
                     <CopyButton
@@ -301,24 +301,24 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-paper/60">Chu tai khoan</span>
+                  <span className="text-paper/60">Chủ tài khoản</span>
                   <span className="text-paper">
                     {order.bankTransferInfo.accountHolder}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-paper/60">So tien</span>
+                  <span className="text-paper/60">Số tiền</span>
                   <span className="font-semibold text-gold">
                     {formatPrice(order.bankTransferInfo.amount)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-paper/60">Noi dung CK</span>
+                  <span className="text-paper/60">Nội dung CK</span>
                   <span className="font-mono text-paper">
                     {order.bankTransferInfo.content}
                     <CopyButton
                       text={order.bankTransferInfo.content}
-                      label="noi dung"
+                      label="nội dung"
                     />
                   </span>
                 </div>
@@ -327,7 +327,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
                 <div className="flex justify-center">
                   <Image
                     src={order.bankTransferInfo.qrUrl}
-                    alt="QR chuyen khoan"
+                    alt="QR chuyển khoản"
                     width={160}
                     height={160}
                     className="rounded-xl"
@@ -342,7 +342,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
         {/* Order Items */}
         <div className="mt-6 glass-card rounded-2xl p-5">
           <h2 className="text-base font-semibold text-paper">
-            San pham ({order.items.length})
+            Sản phẩm ({order.items.length})
           </h2>
 
           <div className="mt-4 space-y-3">

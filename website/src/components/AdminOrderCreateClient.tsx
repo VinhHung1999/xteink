@@ -222,20 +222,20 @@ function CreateFormContent() {
   // Validation
   function validate(): boolean {
     const e: Record<string, string> = {};
-    if (lineItems.length === 0) e.items = "Vui long chon it nhat 1 san pham";
-    if (!name.trim()) e.name = "Vui long nhap ho ten";
+    if (lineItems.length === 0) e.items = "Vui lòng chọn ít nhất 1 sản phẩm";
+    if (!name.trim()) e.name = "Vui lòng nhập họ tên";
     if (!phone.trim()) {
-      e.phone = "Vui long nhap SDT";
+      e.phone = "Vui lòng nhập SĐT";
     } else if (!/^0\d{9,10}$/.test(phone.replace(/[\s-]/g, ""))) {
-      e.phone = "SDT khong hop le (10-11 so, bat dau bang 0)";
+      e.phone = "SĐT không hợp lệ (10-11 số, bắt đầu bằng 0)";
     }
     if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      e.email = "Email khong hop le";
+      e.email = "Email không hợp lệ";
     }
-    if (!provinceCode) e.province = "Vui long chon tinh/thanh";
-    if (!districtCode) e.district = "Vui long chon quan/huyen";
-    if (!wardCode) e.ward = "Vui long chon phuong/xa";
-    if (!address.trim()) e.address = "Vui long nhap dia chi chi tiet";
+    if (!provinceCode) e.province = "Vui lòng chọn tỉnh/thành";
+    if (!districtCode) e.district = "Vui lòng chọn quận/huyện";
+    if (!wardCode) e.ward = "Vui lòng chọn phường/xã";
+    if (!address.trim()) e.address = "Vui lòng nhập địa chỉ chi tiết";
     setErrors(e);
 
     const firstKey = Object.keys(e)[0];
@@ -278,7 +278,7 @@ function CreateFormContent() {
       });
       router.push(`/admin/orders/${result.id}`);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Tao don that bai";
+      const message = err instanceof Error ? err.message : "Tạo đơn thất bại";
       setErrors({ submit: message });
     } finally {
       setSubmitting(false);
@@ -309,14 +309,14 @@ function CreateFormContent() {
           className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper"
         >
           <ArrowLeft size={16} />
-          Quay lai danh sach
+          Quay lại danh sách
         </button>
 
         <h1 className="mt-4 font-heading text-2xl font-bold text-paper md:text-3xl">
-          Tao don hang thu cong
+          Tạo đơn hàng thủ công
         </h1>
         <p className="mt-1 text-sm text-paper/50">
-          Don tu Zalo, Facebook DM
+          Đơn từ Zalo, Facebook DM
         </p>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -325,11 +325,11 @@ function CreateFormContent() {
             <div className="space-y-6">
               {/* Product Selector */}
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <h2 className="text-base font-semibold text-paper">San pham</h2>
+                <h2 className="text-base font-semibold text-paper">Sản phẩm</h2>
 
                 {/* Products */}
                 <div className="space-y-2">
-                  <p className="text-xs text-paper/40">Thiet bi</p>
+                  <p className="text-xs text-paper/40">Thiết bị</p>
                   <div className="flex flex-wrap gap-2">
                     {products.map((p) => (
                       <button
@@ -346,7 +346,7 @@ function CreateFormContent() {
 
                 {/* Accessories */}
                 <div className="space-y-2">
-                  <p className="text-xs text-paper/40">Phu kien</p>
+                  <p className="text-xs text-paper/40">Phụ kiện</p>
                   <div className="flex flex-wrap gap-2">
                     {accessories.map((a) => (
                       <button
@@ -416,18 +416,18 @@ function CreateFormContent() {
 
               {/* Customer Info */}
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <h2 className="text-base font-semibold text-paper">Khach hang</h2>
+                <h2 className="text-base font-semibold text-paper">Khách hàng</h2>
 
                 <div>
-                  <label className={labelCls}>Ho ten <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>Họ tên <span className="text-red-400">*</span></label>
                   <input type="text" name="name" value={name}
                     onChange={(e) => { setName(e.target.value); clearError("name"); }}
-                    placeholder="Nguyen Van A" className={inputCls} />
+                    placeholder="Nguyễn Văn A" className={inputCls} />
                   {errors.name && <p className={errorCls}>{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className={labelCls}>SDT <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>SĐT <span className="text-red-400">*</span></label>
                   <input type="tel" name="phone" value={phone}
                     onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
                     placeholder="0901 234 567" className={inputCls} />
@@ -435,7 +435,7 @@ function CreateFormContent() {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Email (khong bat buoc)</label>
+                  <label className={labelCls}>Email (không bắt buộc)</label>
                   <input type="email" name="email" value={email}
                     onChange={(e) => { setEmail(e.target.value); clearError("email"); }}
                     placeholder="email@example.com" className={inputCls} />
@@ -445,15 +445,15 @@ function CreateFormContent() {
 
               {/* Address */}
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <h2 className="text-base font-semibold text-paper">Dia chi giao hang</h2>
+                <h2 className="text-base font-semibold text-paper">Địa chỉ giao hàng</h2>
 
                 <div>
-                  <label className={labelCls}>Tinh / Thanh pho <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>Tỉnh / Thành phố <span className="text-red-400">*</span></label>
                   <div className="relative">
                     <select name="province" value={provinceCode}
                       onChange={(e) => handleProvinceChange(e.target.value)}
                       className={selectCls}>
-                      <option value="">— Chon tinh/thanh —</option>
+                      <option value="">— Chọn tỉnh/thành —</option>
                       {provinces.map((p) => <option key={p.code} value={p.code}>{p.name}</option>)}
                     </select>
                     <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-paper/40" />
@@ -462,12 +462,12 @@ function CreateFormContent() {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Quan / Huyen <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>Quận / Huyện <span className="text-red-400">*</span></label>
                   <div className="relative">
                     <select name="district" value={districtCode}
                       onChange={(e) => { handleDistrictChange(e.target.value); clearError("district"); }}
                       className={selectCls} disabled={!provinceCode || loadingDistricts}>
-                      <option value="">{loadingDistricts ? "Dang tai..." : "— Chon quan/huyen —"}</option>
+                      <option value="">{loadingDistricts ? "Đang tải..." : "— Chọn quận/huyện —"}</option>
                       {districts.map((d) => <option key={d.code} value={d.code}>{d.name}</option>)}
                     </select>
                     {loadingDistricts
@@ -478,12 +478,12 @@ function CreateFormContent() {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Phuong / Xa <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>Phường / Xã <span className="text-red-400">*</span></label>
                   <div className="relative">
                     <select name="ward" value={wardCode}
                       onChange={(e) => { setWardCode(e.target.value); clearError("ward"); }}
                       className={selectCls} disabled={!districtCode || loadingWards}>
-                      <option value="">{loadingWards ? "Dang tai..." : "— Chon phuong/xa —"}</option>
+                      <option value="">{loadingWards ? "Đang tải..." : "— Chọn phường/xã —"}</option>
                       {wards.map((w) => <option key={w.code} value={w.code}>{w.name}</option>)}
                     </select>
                     {loadingWards
@@ -494,17 +494,17 @@ function CreateFormContent() {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Dia chi chi tiet <span className="text-red-400">*</span></label>
+                  <label className={labelCls}>Địa chỉ chi tiết <span className="text-red-400">*</span></label>
                   <input type="text" name="address" value={address}
                     onChange={(e) => { setAddress(e.target.value); clearError("address"); }}
-                    placeholder="So nha, ten duong..." className={inputCls} />
+                    placeholder="Số nhà, tên đường..." className={inputCls} />
                   {errors.address && <p className={errorCls}>{errors.address}</p>}
                 </div>
               </div>
 
               {/* Payment + Note */}
               <div className="glass-card rounded-2xl p-5 space-y-4">
-                <h2 className="text-base font-semibold text-paper">Thanh toan</h2>
+                <h2 className="text-base font-semibold text-paper">Thanh toán</h2>
                 <div className="space-y-2">
                   {paymentMethods.map((pm) => (
                     <label
@@ -530,9 +530,9 @@ function CreateFormContent() {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Ghi chu (khong bat buoc)</label>
+                  <label className={labelCls}>Ghi chú (không bắt buộc)</label>
                   <textarea value={note} onChange={(e) => setNote(e.target.value)}
-                    placeholder="Ghi chu cho don hang..." rows={2}
+                    placeholder="Ghi chú cho đơn hàng..." rows={2}
                     className={inputCls + " resize-none"} />
                 </div>
               </div>
@@ -541,10 +541,10 @@ function CreateFormContent() {
             {/* Right: Order Summary */}
             <div>
               <div className="sticky top-20 glass-card rounded-2xl p-5 space-y-4">
-                <h2 className="text-base font-semibold text-paper">Tom tat don hang</h2>
+                <h2 className="text-base font-semibold text-paper">Tóm tắt đơn hàng</h2>
 
                 {lineItems.length === 0 ? (
-                  <p className="text-sm text-paper/40">Chua chon san pham</p>
+                  <p className="text-sm text-paper/40">Chưa chọn sản phẩm</p>
                 ) : (
                   <div className="space-y-2">
                     {lineItems.map((item) => (
@@ -562,21 +562,21 @@ function CreateFormContent() {
 
                 <div className="space-y-2 border-t border-paper/5 pt-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-paper/60">Tam tinh</span>
+                    <span className="text-paper/60">Tạm tính</span>
                     <span className="text-paper">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-paper/60">Phi van chuyen</span>
+                    <span className="text-paper/60">Phí vận chuyển</span>
                     <span className="text-paper">
                       {loadingShipping
-                        ? "Dang tinh..."
+                        ? "Đang tính..."
                         : provinceCode
-                          ? shippingFee === 0 ? "Mien phi" : formatPrice(shippingFee)
+                          ? shippingFee === 0 ? "Miễn phí" : formatPrice(shippingFee)
                           : "\u2014"}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-paper/5 pt-2">
-                    <span className="text-base font-semibold text-paper">Tong cong</span>
+                    <span className="text-base font-semibold text-paper">Tổng cộng</span>
                     <span className="font-heading text-xl font-bold text-gold">
                       {formatPrice(subtotal + shippingFee)}
                     </span>
@@ -594,7 +594,7 @@ function CreateFormContent() {
                   disabled={submitting || lineItems.length === 0}
                   className="btn-glass-primary w-full inline-flex h-12 items-center justify-center rounded-xl text-base font-semibold text-[#1A1A1A] disabled:opacity-50"
                 >
-                  {submitting ? "Dang tao..." : "Tao don hang"}
+                  {submitting ? "Đang tạo..." : "Tạo đơn hàng"}
                 </button>
               </div>
             </div>

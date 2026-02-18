@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AdminPageClient from "@/components/AdminPageClient";
 
 export const metadata: Metadata = {
-  title: "Quan ly don hang — Admin",
+  title: "Quản lý đơn hàng — Admin",
   robots: { index: false, follow: false },
 };
 

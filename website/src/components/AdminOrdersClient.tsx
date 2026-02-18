@@ -524,6 +524,15 @@ export default function AdminOrdersClient() {
   return (
     <div className="bg-mysterious min-h-screen px-4 py-6 md:px-8">
       <div className="mx-auto max-w-[1400px]">
+        {/* Back to Dashboard */}
+        <button
+          onClick={() => router.push("/admin")}
+          className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper mb-4"
+        >
+          <ChevronLeft size={16} />
+          Dashboard
+        </button>
+
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -545,7 +554,7 @@ export default function AdminOrdersClient() {
               className="flex h-10 items-center gap-2 rounded-xl bg-gold/20 px-4 text-sm font-medium text-gold transition-colors hover:bg-gold/30"
             >
               <Plus size={14} />
-              Tao don
+              Tạo đơn
             </button>
             <button
               onClick={fetchOrders}
@@ -556,7 +565,7 @@ export default function AdminOrdersClient() {
                 size={14}
                 className={loading ? "animate-spin" : ""}
               />
-              Lam moi
+              Làm mới
             </button>
             <button
               onClick={async () => {
