@@ -6,6 +6,7 @@ import {
   useReducer,
   useEffect,
   useCallback,
+  useRef,
   type ReactNode,
 } from "react";
 import { trackAddToCart } from "@/utils/analytics";
@@ -19,11 +20,31 @@ interface CartState {
 
 const STORAGE_KEY = "xteink-cart";
 
+function isValidCartItem(item: unknown): item is CartItem {
+  if (!item || typeof item !== "object") return false;
+  const o = item as Record<string, unknown>;
+  return (
+    typeof o.id === "string" &&
+    typeof o.slug === "string" &&
+    typeof o.name === "string" &&
+    typeof o.image === "string" &&
+    typeof o.price === "number" &&
+    o.price > 0 &&
+    typeof o.quantity === "number" &&
+    o.quantity > 0 &&
+    (o.type === "product" || o.type === "accessory")
+  );
+}
+
 function loadCart(): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed: unknown[] = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    // Filter out corrupted/malformed entries
+    return parsed.filter(isValidCartItem);
   } catch {
     return [];
   }
@@ -150,7 +171,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   });
 
   // Hydrate from localStorage after mount (avoids SSR mismatch)
+  const hydratedRef = useRef(false);
   useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
     const stored = loadCart();
     if (stored.length > 0) {
       dispatch({ type: "HYDRATE", payload: stored });
