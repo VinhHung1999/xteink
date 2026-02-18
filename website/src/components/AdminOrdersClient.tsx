@@ -465,8 +465,22 @@ export default function AdminOrdersClient() {
     }
   }, [page, filterStatus, searchQuery]);
 
+  // Debounce search: auto-search 300ms after typing stops
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      const trimmed = searchInput.trim();
+      if (trimmed !== searchQuery) {
+        setSearchQuery(trimmed);
+        setPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [searchInput, searchQuery]);
+
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
+    clearTimeout(debounceRef.current);
     setSearchQuery(searchInput.trim());
     setPage(1);
   }

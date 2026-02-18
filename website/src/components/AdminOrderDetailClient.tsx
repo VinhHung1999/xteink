@@ -111,7 +111,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="bg-mysterious min-h-screen flex items-center justify-center">
         <Loader2 size={32} className="animate-spin text-paper/30" />
       </div>
     );
@@ -122,7 +122,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
       <div className="bg-mysterious min-h-screen px-4 py-6 md:px-8">
         <div className="mx-auto max-w-[1000px]">
           <button
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push("/admin/orders")}
             className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper"
           >
             <ArrowLeft size={16} />
@@ -136,21 +136,12 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
     );
   }
 
-  const fullAddress = [
-    order.addressDetail,
-    order.wardName,
-    order.districtName,
-    order.provinceName,
-  ]
-    .filter(Boolean)
-    .join(", ");
-
   return (
     <div className="bg-mysterious min-h-screen px-4 py-6 md:px-8">
       <div className="mx-auto max-w-[1000px]">
         {/* Back + Header */}
         <button
-          onClick={() => router.push("/admin")}
+          onClick={() => router.push("/admin/orders")}
           className="inline-flex items-center gap-2 text-sm text-paper/50 transition-colors hover:text-paper"
         >
           <ArrowLeft size={16} />
@@ -191,7 +182,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
             <div className="space-y-3">
               <div>
                 <p className="text-lg font-semibold text-paper">
-                  {order.customerName}
+                  {order.customer.name}
                 </p>
               </div>
 
@@ -199,20 +190,20 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
               <div className="flex items-center gap-2">
                 <Phone size={16} className="shrink-0 text-gold" />
                 <a
-                  href={`tel:${order.customerPhone}`}
+                  href={`tel:${order.customer.phone}`}
                   className="text-lg font-mono font-semibold text-gold transition-colors hover:text-gold/80"
                 >
-                  {order.customerPhone}
+                  {order.customer.phone}
                 </a>
-                <CopyButton text={order.customerPhone} label="SDT" />
+                <CopyButton text={order.customer.phone} label="SDT" />
               </div>
 
               {/* Email */}
-              {order.customerEmail && (
+              {order.customer.email && (
                 <div className="flex items-center gap-2">
                   <Mail size={16} className="shrink-0 text-paper/40" />
                   <span className="text-sm text-paper/70">
-                    {order.customerEmail}
+                    {order.customer.email}
                   </span>
                 </div>
               )}
@@ -221,8 +212,13 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
               <div className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-paper/40" />
                 <div className="flex-1">
-                  <p className="text-sm text-paper/70">{fullAddress}</p>
-                  <CopyButton text={fullAddress} label="dia chi" />
+                  <p className="text-sm text-paper/70">
+                    {order.shipping.fullAddress}
+                  </p>
+                  <CopyButton
+                    text={order.shipping.fullAddress}
+                    label="dia chi"
+                  />
                 </div>
               </div>
             </div>
@@ -239,12 +235,14 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
               <div className="flex justify-between text-sm">
                 <span className="text-paper/60">Phuong thuc</span>
                 <span className="font-medium text-paper">
-                  {order.paymentMethod.toUpperCase()}
+                  {order.paymentMethodName}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-paper/60">Tam tinh</span>
-                <span className="text-paper">{formatPrice(order.subtotal)}</span>
+                <span className="text-paper">
+                  {formatPrice(order.subtotal)}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-paper/60">Phi van chuyen</span>
@@ -277,6 +275,69 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
             </div>
           </div>
         </div>
+
+        {/* Bank Transfer Info */}
+        {order.bankTransferInfo && (
+          <div className="mt-6 glass-card rounded-2xl p-5 space-y-3">
+            <h2 className="text-base font-semibold text-paper">
+              Thong tin chuyen khoan
+            </h2>
+            <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Ngan hang</span>
+                  <span className="text-paper">
+                    {order.bankTransferInfo.bankName}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">So tai khoan</span>
+                  <span className="font-mono text-paper">
+                    {order.bankTransferInfo.accountNumber}
+                    <CopyButton
+                      text={order.bankTransferInfo.accountNumber}
+                      label="STK"
+                    />
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Chu tai khoan</span>
+                  <span className="text-paper">
+                    {order.bankTransferInfo.accountHolder}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">So tien</span>
+                  <span className="font-semibold text-gold">
+                    {formatPrice(order.bankTransferInfo.amount)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-paper/60">Noi dung CK</span>
+                  <span className="font-mono text-paper">
+                    {order.bankTransferInfo.content}
+                    <CopyButton
+                      text={order.bankTransferInfo.content}
+                      label="noi dung"
+                    />
+                  </span>
+                </div>
+              </div>
+              {order.bankTransferInfo.qrUrl && (
+                <div className="flex justify-center">
+                  <Image
+                    src={order.bankTransferInfo.qrUrl}
+                    alt="QR chuyen khoan"
+                    width={160}
+                    height={160}
+                    className="rounded-xl"
+                    unoptimized
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Order Items */}
         <div className="mt-6 glass-card rounded-2xl p-5">

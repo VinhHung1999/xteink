@@ -38,6 +38,8 @@ import {
   AuthUser,
   LoginPayload,
   RegisterPayload,
+  AdminStats,
+  AdminChartResponse,
 } from "./types";
 import { resolveIcon } from "../utils/icon-map";
 
@@ -554,6 +556,16 @@ export async function updateOrderStatus(
     throw new Error(err.message || `Error ${res.status}`);
   }
   return res.json();
+}
+
+// ===== Admin Stats =====
+
+export async function getAdminStats(): Promise<AdminStats> {
+  return fetchAPI<AdminStats>("/api/admin/stats");
+}
+
+export async function getAdminChart(days = 30): Promise<AdminChartResponse> {
+  return fetchAPI<AdminChartResponse>(`/api/admin/stats/chart?days=${days}`);
 }
 
 // ===== Auth =====

@@ -347,13 +347,22 @@ export interface AdminOrderDetail {
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   paymentMethod: string;
-  customerName: string;
-  customerPhone: string;
-  customerEmail: string | null;
-  provinceName: string;
-  districtName: string;
-  wardName: string;
-  addressDetail: string;
+  paymentMethodName: string;
+  customer: {
+    name: string;
+    phone: string;
+    email?: string | null;
+  };
+  shipping: {
+    provinceCode: string;
+    provinceName: string;
+    districtCode: string;
+    districtName: string;
+    wardCode: string;
+    wardName: string;
+    addressDetail: string;
+    fullAddress: string;
+  };
   subtotal: number;
   shippingFee: number;
   total: number;
@@ -368,8 +377,38 @@ export interface AdminOrderDetail {
     totalPrice: number;
     itemType: string;
   }[];
+  transitions?: OrderTransitions;
+  bankTransferInfo?: {
+    bankName: string;
+    accountNumber: string;
+    accountHolder: string;
+    amount: number;
+    content: string;
+    qrUrl: string;
+  };
   createdAt: string;
   updatedAt: string;
+}
+
+// ========== Admin Stats ==========
+export interface AdminStats {
+  ordersToday: number;
+  pendingOrders: number;
+  totalOrders: number;
+  revenueToday: number;
+  revenueThisWeek: number;
+  totalRevenue: number;
+}
+
+export interface AdminChartDay {
+  date: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface AdminChartResponse {
+  days: number;
+  data: AdminChartDay[];
 }
 
 // ========== Auth ==========

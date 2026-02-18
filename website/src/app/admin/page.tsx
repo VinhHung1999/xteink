@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import AdminPageClient from "@/components/AdminPageClient";
+import AdminDashboardClient from "@/components/AdminDashboardClient";
 
 export const metadata: Metadata = {
-  title: "Admin — Quản lý đơn hàng",
+  title: "Dashboard — Admin",
   robots: { index: false, follow: false },
 };
 
 export default function AdminPage() {
-  return <AdminPageClient />;
+  return <AdminDashboardClient />;
 }
