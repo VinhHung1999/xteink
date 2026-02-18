@@ -521,11 +521,19 @@ export async function getShippingFee(
 export async function getAdminOrders(
   page = 1,
   limit = 20,
-  status?: OrderStatus
+  status?: OrderStatus,
+  search?: string
 ): Promise<AdminOrderListResponse> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   if (status) params.set("status", status);
+  if (search) params.set("search", search);
   return fetchAPI<AdminOrderListResponse>(`/api/admin/orders?${params}`);
+}
+
+export async function getAdminOrderDetail(
+  orderId: string
+): Promise<AdminOrderDetail> {
+  return fetchAPI<AdminOrderDetail>(`/api/admin/orders/${orderId}`);
 }
 
 export async function updateOrderStatus(

@@ -11,6 +11,8 @@ import {
   LogOut,
   RefreshCw,
   RotateCcw,
+  Search,
+  X,
   XCircle,
 } from "lucide-react";
 import { getAdminOrders, updateOrderStatus } from "@/services/api";
@@ -160,7 +162,7 @@ function StatusDropdown({
   }
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative" onClick={(e) => e.stopPropagation()}>
       <button
         onClick={() => hasOptions && setOpen(!open)}
         aria-haspopup={hasOptions ? "menu" : undefined}
@@ -375,13 +377,18 @@ function OrderCard({
   order,
   isUpdating,
   onStatusSelect,
+  onClick,
 }: {
   order: AdminOrderSummary;
   isUpdating: boolean;
   onStatusSelect: (order: AdminOrderSummary, newStatus: OrderStatus) => void;
+  onClick: () => void;
 }) {
   return (
-    <div className="glass-card rounded-2xl p-4 space-y-3">
+    <div
+      onClick={onClick}
+      className="glass-card rounded-2xl p-4 space-y-3 cursor-pointer transition-colors hover:bg-gold/[0.03]"
+    >
       <div className="flex items-start justify-between">
         <div>
           <p className="font-mono text-xs text-gold">{order.orderNumber}</p>
@@ -428,6 +435,8 @@ export default function AdminOrdersClient() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState<OrderStatus | "">("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<{
     order: AdminOrderSummary;
@@ -443,7 +452,8 @@ export default function AdminOrdersClient() {
       const result = await getAdminOrders(
         page,
         20,
-        filterStatus || undefined
+        filterStatus || undefined,
+        searchQuery || undefined
       );
       setData(result);
     } catch (e) {
@@ -453,7 +463,19 @@ export default function AdminOrdersClient() {
     } finally {
       setLoading(false);
     }
-  }, [page, filterStatus]);
+  }, [page, filterStatus, searchQuery]);
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    setSearchQuery(searchInput.trim());
+    setPage(1);
+  }
+
+  function clearSearch() {
+    setSearchInput("");
+    setSearchQuery("");
+    setPage(1);
+  }
 
   useEffect(() => {
     fetchOrders();
@@ -528,8 +550,38 @@ export default function AdminOrdersClient() {
           </div>
         </div>
 
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mt-6 glass-card rounded-2xl p-3 flex items-center gap-2">
+          <Search size={16} className="shrink-0 text-paper/40" />
+          <input
+            type="text"
+            name="search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Tìm theo SĐT hoặc mã đơn..."
+            className="flex-1 bg-transparent text-sm text-paper placeholder:text-paper/30 outline-none"
+            data-testid="order-search-input"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="shrink-0 rounded-lg p-1 text-paper/40 transition-colors hover:text-paper"
+              aria-label="Xóa tìm kiếm"
+            >
+              <X size={16} />
+            </button>
+          )}
+          <button
+            type="submit"
+            className="shrink-0 rounded-xl bg-gold/20 px-3 py-1.5 text-xs font-medium text-gold transition-colors hover:bg-gold/30"
+          >
+            Tìm
+          </button>
+        </form>
+
         {/* Filters */}
-        <div className="mt-6 glass-card rounded-2xl p-3 flex flex-wrap gap-2">
+        <div className="mt-3 glass-card rounded-2xl p-3 flex flex-wrap gap-2">
           <button
             onClick={() => {
               setFilterStatus("");
@@ -618,7 +670,8 @@ export default function AdminOrdersClient() {
                   return (
                     <tr
                       key={order.id}
-                      className="border-b border-paper/5 transition-colors hover:bg-gold/[0.03]"
+                      onClick={() => router.push(`/admin/orders/${order.id}`)}
+                      className="border-b border-paper/5 transition-colors hover:bg-gold/[0.03] cursor-pointer"
                     >
                       <td className="px-5 py-4 font-mono text-xs text-gold">
                         {order.orderNumber}
@@ -682,6 +735,7 @@ export default function AdminOrdersClient() {
                 order={order}
                 isUpdating={updatingId === order.id}
                 onStatusSelect={handleStatusSelect}
+                onClick={() => router.push(`/admin/orders/${order.id}`)}
               />
             ))
           )}
